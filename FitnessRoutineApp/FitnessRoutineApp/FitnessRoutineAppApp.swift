@@ -1,11 +1,5 @@
-//
-//  FitnessRoutineAppApp.swift
-//  FitnessRoutineApp
-//
-//  Created by Jean Casique on 12/9/24.
-//
-
 import SwiftUI
+
 
 @main
 struct FitnessRoutineAppApp: App {
@@ -13,7 +7,7 @@ struct FitnessRoutineAppApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView(viewModel: LoginViewModel()) 
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

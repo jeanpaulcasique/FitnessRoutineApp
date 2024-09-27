@@ -1,9 +1,3 @@
-//
-//  Persistence.swift
-//  FitnessRoutineApp
-//
-//  Created by Jean Casique on 12/9/24.
-//
 
 import CoreData
 
