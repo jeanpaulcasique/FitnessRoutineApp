@@ -1,9 +1,3 @@
-//
-//  FitnessRoutineAppTests.swift
-//  FitnessRoutineAppTests
-//
-//  Created by Jean Casique on 12/9/24.
-//
 
 import XCTest
 @testable import FitnessRoutineApp
@@ -33,4 +27,4 @@ final class FitnessRoutineAppTests: XCTestCase {
         }
     }
 
-}
+ }

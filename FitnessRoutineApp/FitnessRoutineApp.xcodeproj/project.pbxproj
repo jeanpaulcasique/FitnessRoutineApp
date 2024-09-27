@@ -16,6 +16,24 @@
 		692562E32C92FB8E0002524D /* FitnessRoutineAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 692562E22C92FB8E0002524D /* FitnessRoutineAppTests.swift */; };
 		692562ED2C92FB8E0002524D /* FitnessRoutineAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 692562EC2C92FB8E0002524D /* FitnessRoutineAppUITests.swift */; };
 		692562EF2C92FB8E0002524D /* FitnessRoutineAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 692562EE2C92FB8E0002524D /* FitnessRoutineAppUITestsLaunchTests.swift */; };
+		693B07E82C963ADD00722E48 /* Rutina+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07E42C963ADD00722E48 /* Rutina+CoreDataClass.swift */; };
+		693B07E92C963ADD00722E48 /* Rutina+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07E52C963ADD00722E48 /* Rutina+CoreDataProperties.swift */; };
+		693B07EA2C963ADD00722E48 /* Ejercicio+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07E62C963ADD00722E48 /* Ejercicio+CoreDataClass.swift */; };
+		693B07EB2C963ADD00722E48 /* Ejercicio+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07E72C963ADD00722E48 /* Ejercicio+CoreDataProperties.swift */; };
+		693B07ED2C963C6200722E48 /* RoutineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07EC2C963C6200722E48 /* RoutineViewModel.swift */; };
+		693B07EF2C97114700722E48 /* AddRoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07EE2C97114700722E48 /* AddRoutineView.swift */; };
+		693B07F12C97118500722E48 /* RoutineListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07F02C97118500722E48 /* RoutineListView.swift */; };
+		693B07F32C977F1D00722E48 /* RoutineDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07F22C977F1D00722E48 /* RoutineDetailView.swift */; };
+		69969F572C9F6BE900682635 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F562C9F6BE700682635 /* User.swift */; };
+		69969F592C9F6C2800682635 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F582C9F6C1A00682635 /* LoginView.swift */; };
+		69969F5B2C9F6C3100682635 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F5A2C9F6C2A00682635 /* LoginViewModel.swift */; };
+		69969F5D2CA09E3400682635 /* GenderSelecctionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F5C2CA09E2300682635 /* GenderSelecctionViewModel.swift */; };
+		69969F5F2CA09E5700682635 /* GenderSelectionVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F5E2CA09E4800682635 /* GenderSelectionVIew.swift */; };
+		69969F612CA17BE400682635 /* GoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F602CA17BDF00682635 /* GoalView.swift */; };
+		69969F632CA17BEE00682635 /* GoalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F622CA17BE600682635 /* GoalViewModel.swift */; };
+		69969F652CA2BC2800682635 /* UserSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F642CA2BC1B00682635 /* UserSessionManager.swift */; };
+		69969F6B2CA35DA400682635 /* BodyCurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F6A2CA35D7400682635 /* BodyCurrentView.swift */; };
+		69969F6D2CA35DB100682635 /* BodyCurrentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +66,24 @@
 		692562E82C92FB8E0002524D /* FitnessRoutineAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FitnessRoutineAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		692562EC2C92FB8E0002524D /* FitnessRoutineAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessRoutineAppUITests.swift; sourceTree = "<group>"; };
 		692562EE2C92FB8E0002524D /* FitnessRoutineAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessRoutineAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		693B07E42C963ADD00722E48 /* Rutina+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Rutina+CoreDataClass.swift"; sourceTree = "<group>"; };
+		693B07E52C963ADD00722E48 /* Rutina+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Rutina+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		693B07E62C963ADD00722E48 /* Ejercicio+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ejercicio+CoreDataClass.swift"; sourceTree = "<group>"; };
+		693B07E72C963ADD00722E48 /* Ejercicio+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ejercicio+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		693B07EC2C963C6200722E48 /* RoutineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineViewModel.swift; sourceTree = "<group>"; };
+		693B07EE2C97114700722E48 /* AddRoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRoutineView.swift; sourceTree = "<group>"; };
+		693B07F02C97118500722E48 /* RoutineListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineListView.swift; sourceTree = "<group>"; };
+		693B07F22C977F1D00722E48 /* RoutineDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailView.swift; sourceTree = "<group>"; };
+		69969F562C9F6BE700682635 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		69969F582C9F6C1A00682635 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		69969F5A2C9F6C2A00682635 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		69969F5C2CA09E2300682635 /* GenderSelecctionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderSelecctionViewModel.swift; sourceTree = "<group>"; };
+		69969F5E2CA09E4800682635 /* GenderSelectionVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderSelectionVIew.swift; sourceTree = "<group>"; };
+		69969F602CA17BDF00682635 /* GoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalView.swift; sourceTree = "<group>"; };
+		69969F622CA17BE600682635 /* GoalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalViewModel.swift; sourceTree = "<group>"; };
+		69969F642CA2BC1B00682635 /* UserSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionManager.swift; sourceTree = "<group>"; };
+		69969F6A2CA35D7400682635 /* BodyCurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyCurrentView.swift; sourceTree = "<group>"; };
+		69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyCurrentViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +134,9 @@
 		692562CB2C92FB8D0002524D /* FitnessRoutineApp */ = {
 			isa = PBXGroup;
 			children = (
+				693B07E32C9614AB00722E48 /* ViewModel */,
+				693B07E22C9614A400722E48 /* Views */,
+				693B07E12C96149000722E48 /* Models */,
 				692562CC2C92FB8D0002524D /* FitnessRoutineAppApp.swift */,
 				692562CE2C92FB8D0002524D /* ContentView.swift */,
 				692562D02C92FB8E0002524D /* Assets.xcassets */,
@@ -131,6 +170,45 @@
 				692562EE2C92FB8E0002524D /* FitnessRoutineAppUITestsLaunchTests.swift */,
 			);
 			path = FitnessRoutineAppUITests;
+			sourceTree = "<group>";
+		};
+		693B07E12C96149000722E48 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				69969F562C9F6BE700682635 /* User.swift */,
+				69969F642CA2BC1B00682635 /* UserSessionManager.swift */,
+				693B07E42C963ADD00722E48 /* Rutina+CoreDataClass.swift */,
+				693B07E52C963ADD00722E48 /* Rutina+CoreDataProperties.swift */,
+				693B07E62C963ADD00722E48 /* Ejercicio+CoreDataClass.swift */,
+				693B07E72C963ADD00722E48 /* Ejercicio+CoreDataProperties.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		693B07E22C9614A400722E48 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				69969F6A2CA35D7400682635 /* BodyCurrentView.swift */,
+				69969F602CA17BDF00682635 /* GoalView.swift */,
+				69969F5E2CA09E4800682635 /* GenderSelectionVIew.swift */,
+				69969F582C9F6C1A00682635 /* LoginView.swift */,
+				693B07EE2C97114700722E48 /* AddRoutineView.swift */,
+				693B07F02C97118500722E48 /* RoutineListView.swift */,
+				693B07F22C977F1D00722E48 /* RoutineDetailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		693B07E32C9614AB00722E48 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */,
+				69969F622CA17BE600682635 /* GoalViewModel.swift */,
+				69969F5C2CA09E2300682635 /* GenderSelecctionViewModel.swift */,
+				69969F5A2C9F6C2A00682635 /* LoginViewModel.swift */,
+				693B07EC2C963C6200722E48 /* RoutineViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,7 +282,6 @@
 					};
 					692562DD2C92FB8E0002524D = {
 						CreatedOnToolsVersion = 15.4;
-						TestTargetID = 692562C82C92FB8D0002524D;
 					};
 					692562E72C92FB8E0002524D = {
 						CreatedOnToolsVersion = 15.4;
@@ -263,9 +340,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				693B07E82C963ADD00722E48 /* Rutina+CoreDataClass.swift in Sources */,
+				69969F5F2CA09E5700682635 /* GenderSelectionVIew.swift in Sources */,
+				693B07E92C963ADD00722E48 /* Rutina+CoreDataProperties.swift in Sources */,
+				693B07F12C97118500722E48 /* RoutineListView.swift in Sources */,
+				693B07EA2C963ADD00722E48 /* Ejercicio+CoreDataClass.swift in Sources */,
+				69969F5D2CA09E3400682635 /* GenderSelecctionViewModel.swift in Sources */,
+				693B07EF2C97114700722E48 /* AddRoutineView.swift in Sources */,
+				69969F612CA17BE400682635 /* GoalView.swift in Sources */,
+				693B07EB2C963ADD00722E48 /* Ejercicio+CoreDataProperties.swift in Sources */,
+				693B07F32C977F1D00722E48 /* RoutineDetailView.swift in Sources */,
+				693B07ED2C963C6200722E48 /* RoutineViewModel.swift in Sources */,
+				69969F632CA17BEE00682635 /* GoalViewModel.swift in Sources */,
+				69969F5B2C9F6C3100682635 /* LoginViewModel.swift in Sources */,
+				69969F652CA2BC2800682635 /* UserSessionManager.swift in Sources */,
+				69969F592C9F6C2800682635 /* LoginView.swift in Sources */,
 				692562D62C92FB8E0002524D /* Persistence.swift in Sources */,
 				692562D92C92FB8E0002524D /* FitnessRoutineApp.xcdatamodeld in Sources */,
+				69969F572C9F6BE900682635 /* User.swift in Sources */,
+				69969F6D2CA35DB100682635 /* BodyCurrentViewModel.swift in Sources */,
 				692562CF2C92FB8D0002524D /* ContentView.swift in Sources */,
+				69969F6B2CA35DA400682635 /* BodyCurrentView.swift in Sources */,
 				692562CD2C92FB8D0002524D /* FitnessRoutineAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -484,7 +579,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N72WWK779U;
@@ -496,7 +590,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FitnessRoutineApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FitnessRoutineApp";
 			};
 			name = Debug;
 		};
@@ -504,7 +597,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = N72WWK779U;
@@ -516,7 +608,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FitnessRoutineApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FitnessRoutineApp";
 			};
 			name = Release;
 		};
