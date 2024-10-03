@@ -2,22 +2,14 @@ import SwiftUI
 
 struct BodyCurrentView: View {
     @ObservedObject var viewModel = BodyCurrentViewModel()
-    @Environment(\.presentationMode) var presentationMode // Añadir para controlar la navegación
+    @ObservedObject var progressViewModel: ProgressViewModel // Añadir el ProgressViewModel
+    @State private var navigateToNextView = false // Controla la navegación
 
     var body: some View {
         VStack {
             // Barra de progreso
-            HStack {
-                Spacer()
-                Rectangle()
-                    .frame(width: 75, height: 3)
-                    .foregroundColor(.blue)
-                Rectangle()
-                    .frame(width: 25, height: 3)
-                    .foregroundColor(.gray.opacity(0.3))
-                Spacer()
-            }
-            .padding(.top, 20)
+            ProgressBarView(progressViewModel: progressViewModel)
+                .padding(.top, 20)
 
             // Título
             Text("What's your current body shape?")
@@ -58,25 +50,28 @@ struct BodyCurrentView: View {
 
             // Botón para continuar, solo aparece si se selecciona una opción
             if viewModel.selectedBodyShape != nil {
-                Spacer(minLength: 50) // Espacio adicional para bajar más el botón
                 Button(action: {
-                    // Aquí puedes guardar la información del usuario o navegar a la siguiente pantalla
+                    progressViewModel.advanceProgress() // Avanza el progreso
+                    navigateToNextView = true // Cambia el estado para navegar
                 }) {
                     Text("Continue")
                         .font(.title)
                         .foregroundColor(.white)
-                        .padding()
+                        .padding(.vertical, 8)
                         .frame(maxWidth: .infinity)
                         .background(Color.blue)
                         .cornerRadius(10)
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 10)
+                .padding(.bottom, 10)
+
+                // Este NavigationLink se añade pero se mantiene oculto hasta que haya una vista real
+                NavigationLink(destination: Text("Next View Placeholder"), isActive: $navigateToNextView) {
+                    EmptyView()
+                }
             }
 
-            Spacer() // Otro espaciador para más separación en la parte inferior
         }
-        .padding(.top)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarBackButtonHidden(false) // Mostrar el botón "back" automático
     }
@@ -124,7 +119,7 @@ struct BodyOptionView: View {
 // Preview para BodyCurrentView
 struct BodyCurrentView_Previews: PreviewProvider {
     static var previews: some View {
-        BodyCurrentView()
+        BodyCurrentView(viewModel: BodyCurrentViewModel(), progressViewModel: ProgressViewModel()) // Añadido ProgressViewModel
     }
 }
 

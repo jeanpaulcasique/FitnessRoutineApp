@@ -34,6 +34,8 @@
 		69969F652CA2BC2800682635 /* UserSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F642CA2BC1B00682635 /* UserSessionManager.swift */; };
 		69969F6B2CA35DA400682635 /* BodyCurrentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F6A2CA35D7400682635 /* BodyCurrentView.swift */; };
 		69969F6D2CA35DB100682635 /* BodyCurrentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */; };
+		69B752422CA734D800C0C126 /* ProgressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B752412CA734CA00C0C126 /* ProgressViewModel.swift */; };
+		69B752442CADB6FA00C0C126 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B752432CADB6E000C0C126 /* ProgressBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,8 @@
 		69969F642CA2BC1B00682635 /* UserSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionManager.swift; sourceTree = "<group>"; };
 		69969F6A2CA35D7400682635 /* BodyCurrentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyCurrentView.swift; sourceTree = "<group>"; };
 		69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyCurrentViewModel.swift; sourceTree = "<group>"; };
+		69B752412CA734CA00C0C126 /* ProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewModel.swift; sourceTree = "<group>"; };
+		69B752432CADB6E000C0C126 /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,10 +192,11 @@
 		693B07E22C9614A400722E48 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				69969F6A2CA35D7400682635 /* BodyCurrentView.swift */,
-				69969F602CA17BDF00682635 /* GoalView.swift */,
-				69969F5E2CA09E4800682635 /* GenderSelectionVIew.swift */,
+				69B752432CADB6E000C0C126 /* ProgressBarView.swift */,
 				69969F582C9F6C1A00682635 /* LoginView.swift */,
+				69969F5E2CA09E4800682635 /* GenderSelectionVIew.swift */,
+				69969F602CA17BDF00682635 /* GoalView.swift */,
+				69969F6A2CA35D7400682635 /* BodyCurrentView.swift */,
 				693B07EE2C97114700722E48 /* AddRoutineView.swift */,
 				693B07F02C97118500722E48 /* RoutineListView.swift */,
 				693B07F22C977F1D00722E48 /* RoutineDetailView.swift */,
@@ -202,6 +207,7 @@
 		693B07E32C9614AB00722E48 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				69B752412CA734CA00C0C126 /* ProgressViewModel.swift */,
 				69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */,
 				69969F622CA17BE600682635 /* GoalViewModel.swift */,
 				69969F5C2CA09E2300682635 /* GenderSelecctionViewModel.swift */,
@@ -353,9 +359,11 @@
 				693B07ED2C963C6200722E48 /* RoutineViewModel.swift in Sources */,
 				69969F632CA17BEE00682635 /* GoalViewModel.swift in Sources */,
 				69969F5B2C9F6C3100682635 /* LoginViewModel.swift in Sources */,
+				69B752442CADB6FA00C0C126 /* ProgressBarView.swift in Sources */,
 				69969F652CA2BC2800682635 /* UserSessionManager.swift in Sources */,
 				69969F592C9F6C2800682635 /* LoginView.swift in Sources */,
 				692562D62C92FB8E0002524D /* Persistence.swift in Sources */,
+				69B752422CA734D800C0C126 /* ProgressViewModel.swift in Sources */,
 				692562D92C92FB8E0002524D /* FitnessRoutineApp.xcdatamodeld in Sources */,
 				69969F572C9F6BE900682635 /* User.swift in Sources */,
 				69969F6D2CA35DB100682635 /* BodyCurrentViewModel.swift in Sources */,
