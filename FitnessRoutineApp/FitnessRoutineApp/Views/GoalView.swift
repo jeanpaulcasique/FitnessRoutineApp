@@ -1,23 +1,16 @@
 import SwiftUI
 
 struct GoalView: View {
-    @ObservedObject var viewModel = GoalViewModel()
-    @State private var navigateToBodyCurrent = false // Controla la navegación
+    @ObservedObject var viewModel: GoalViewModel // Cambia esto a una variable pasada
+    @ObservedObject var progressViewModel: ProgressViewModel
+    @State private var navigateToBodyCurrent = false
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     var body: some View {
         VStack {
             // Barra de progreso
-            HStack {
-                Spacer()
-                Rectangle()
-                    .frame(width: 50, height: 3)
-                    .foregroundColor(.blue)
-                Rectangle()
-                    .frame(width: 50, height: 3)
-                    .foregroundColor(.gray.opacity(0.3))
-                Spacer()
-            }
-            .padding(.top, 20)
+            ProgressBarView(progressViewModel: progressViewModel)
+                .padding(.top, 20)
 
             // Título
             Text("What's your main goal?")
@@ -25,9 +18,9 @@ struct GoalView: View {
                 .fontWeight(.bold)
                 .padding(.top, 20)
 
-            // Cuadro de texto con el estilo solicitado
+            // Cuadro de texto
             HStack {
-                Image("robotIcon") // Reemplaza con tu imagen de robot
+                Image("robotIcon")
                     .resizable()
                     .frame(width: 50, height: 50)
 
@@ -53,20 +46,17 @@ struct GoalView: View {
 
             // Opciones de objetivos
             VStack(spacing: 20) {
-                // Opción: Lose Weight
-                GoalOptionView(text: "Lose Weight", imageName: "figure.walk", isSelected: viewModel.selectedGoal == .loseWeight)
+                GoalOptionImageView(imageName: "lossMen", isSelected: viewModel.selectedGoal == .loseWeight)
                     .onTapGesture {
                         viewModel.selectGoal(.loseWeight)
                     }
 
-                // Opción: Build Muscle
-                GoalOptionView(text: "Build Muscle", imageName: "figure.strength", isSelected: viewModel.selectedGoal == .buildMuscle)
+                GoalOptionImageView(imageName: "buildMen", isSelected: viewModel.selectedGoal == .buildMuscle)
                     .onTapGesture {
                         viewModel.selectGoal(.buildMuscle)
                     }
 
-                // Opción: Keep Fit
-                GoalOptionView(text: "Keep Fit", imageName: "figure.run", isSelected: viewModel.selectedGoal == .keepFit)
+                GoalOptionImageView(imageName: "keepMen", isSelected: viewModel.selectedGoal == .keepFit)
                     .onTapGesture {
                         viewModel.selectGoal(.keepFit)
                     }
@@ -74,77 +64,93 @@ struct GoalView: View {
             .padding(.horizontal, 20)
             .padding(.top, 10)
 
-            Spacer() // Empuja el botón hacia abajo
+            Spacer()
 
             // Botón para continuar
-            if viewModel.selectedGoal != nil {
-                NavigationLink(destination: BodyCurrentView(), isActive: $navigateToBodyCurrent) {
-                    Button(action: {
-                        viewModel.saveUserGoal() // Guarda la información del usuario
-                        navigateToBodyCurrent = true // Navegar a BodyCurrentView
-                    }) {
-                        Text("Continue")
-                            .font(.title)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.blue)
-                            .cornerRadius(10)
-                    }
+            if let _ = viewModel.selectedGoal {
+                Button(action: {
+                    viewModel.saveUserGoal() // Guarda la información del usuario
+                    progressViewModel.advanceProgress() // Actualiza el progreso al avanzar
+                    navigateToBodyCurrent = true // Navegar a BodyCurrentView
+                }) {
+                    Text("Continue")
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(10)
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 20) // Espacio en la parte inferior
+                .padding(.bottom, 10)
+                .background(
+                    NavigationLink(destination: BodyCurrentView(viewModel: BodyCurrentViewModel(), progressViewModel: progressViewModel), isActive: $navigateToBodyCurrent) {
+                        EmptyView()
+                    }
+                )
             }
         }
         .padding(.top)
+        .background(Color(red: 249/255, green: 249/255, blue: 253/255))
         .navigationBarTitle("", displayMode: .inline)
-        .navigationBarBackButtonHidden(false) // Mostrar el botón "back" automático
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    progressViewModel.decreaseProgress() // Retroceder el progreso
+                    self.presentationMode.wrappedValue.dismiss() // Retroceder a la vista anterior
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue)
+                        .font(.title)
+                }
+            }
+        }
+        .onAppear {
+            // No avanzar automáticamente
+        }
     }
 }
 
-struct GoalOptionView: View {
-    let text: String
+struct GoalOptionImageView: View {
     let imageName: String
     let isSelected: Bool
 
     var body: some View {
-        HStack {
-            Image(systemName: imageName)
+        ZStack {
+            Image(imageName)
                 .resizable()
-                .frame(width: 60, height: 60)
-                .aspectRatio(contentMode: .fit)
-                .padding(.trailing, 10)
-
-            Text(text)
-                .font(.title3)
-                .fontWeight(.bold)
-                .foregroundColor(.black)
-
-            Spacer()
+                .scaledToFill()
+                .frame(height: 100)
+                .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 2)
+                        .animation(.easeInOut)
+                )
+                .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+                .scaleEffect(isSelected ? 1.05 : 1.0)
+                .animation(.easeInOut, value: isSelected)
 
             if isSelected {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.blue)
-                    .font(.title)
+                Circle()
+                    .fill(Color.blue)
+                    .frame(width: 30, height: 30)
+                    .overlay(
+                        Image(systemName: "checkmark")
+                            .foregroundColor(.white)
+                            .font(.system(size: 18))
+                    )
+                    .offset(x: 160, y: 0)
             }
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(12)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 2) // Borde azul solo si está seleccionado
-        )
-        .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.black.opacity(0.1), radius: 10, x: 0, y: 5) // Sombra azul solo si está seleccionado
-        .scaleEffect(isSelected ? 1.05 : 1.0) // Efecto de escala al seleccionar
-        .animation(.easeInOut, value: isSelected) // Animación suave
     }
 }
 
 // Preview para GoalView
 struct GoalView_Previews: PreviewProvider {
     static var previews: some View {
-        GoalView()
+        GoalView(viewModel: GoalViewModel(), progressViewModel: ProgressViewModel())
     }
 }
 
