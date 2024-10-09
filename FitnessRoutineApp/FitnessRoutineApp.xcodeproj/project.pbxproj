@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		692562CD2C92FB8D0002524D /* FitnessRoutineAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 692562CC2C92FB8D0002524D /* FitnessRoutineAppApp.swift */; };
-		692562CF2C92FB8D0002524D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 692562CE2C92FB8D0002524D /* ContentView.swift */; };
 		692562D12C92FB8E0002524D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 692562D02C92FB8E0002524D /* Assets.xcassets */; };
 		692562D42C92FB8E0002524D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 692562D32C92FB8E0002524D /* Preview Assets.xcassets */; };
 		692562D62C92FB8E0002524D /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 692562D52C92FB8E0002524D /* Persistence.swift */; };
@@ -36,6 +35,8 @@
 		69969F6D2CA35DB100682635 /* BodyCurrentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */; };
 		69B752422CA734D800C0C126 /* ProgressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B752412CA734CA00C0C126 /* ProgressViewModel.swift */; };
 		69B752442CADB6FA00C0C126 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B752432CADB6E000C0C126 /* ProgressBarView.swift */; };
+		69B752462CB4B59F00C0C126 /* DesiredBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B752452CB4B57C00C0C126 /* DesiredBodyView.swift */; };
+		69B752482CB4B5B200C0C126 /* DesiredBodyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B752472CB4B5A900C0C126 /* DesiredBodyViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +59,6 @@
 /* Begin PBXFileReference section */
 		692562C92C92FB8D0002524D /* FitnessRoutineApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitnessRoutineApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		692562CC2C92FB8D0002524D /* FitnessRoutineAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessRoutineAppApp.swift; sourceTree = "<group>"; };
-		692562CE2C92FB8D0002524D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		692562D02C92FB8E0002524D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		692562D32C92FB8E0002524D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		692562D52C92FB8E0002524D /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -88,6 +88,8 @@
 		69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyCurrentViewModel.swift; sourceTree = "<group>"; };
 		69B752412CA734CA00C0C126 /* ProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewModel.swift; sourceTree = "<group>"; };
 		69B752432CADB6E000C0C126 /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
+		69B752452CB4B57C00C0C126 /* DesiredBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesiredBodyView.swift; sourceTree = "<group>"; };
+		69B752472CB4B5A900C0C126 /* DesiredBodyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesiredBodyViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,7 +144,6 @@
 				693B07E22C9614A400722E48 /* Views */,
 				693B07E12C96149000722E48 /* Models */,
 				692562CC2C92FB8D0002524D /* FitnessRoutineAppApp.swift */,
-				692562CE2C92FB8D0002524D /* ContentView.swift */,
 				692562D02C92FB8E0002524D /* Assets.xcassets */,
 				692562D52C92FB8E0002524D /* Persistence.swift */,
 				692562D72C92FB8E0002524D /* FitnessRoutineApp.xcdatamodeld */,
@@ -197,6 +198,7 @@
 				69969F5E2CA09E4800682635 /* GenderSelectionVIew.swift */,
 				69969F602CA17BDF00682635 /* GoalView.swift */,
 				69969F6A2CA35D7400682635 /* BodyCurrentView.swift */,
+				69B752452CB4B57C00C0C126 /* DesiredBodyView.swift */,
 				693B07EE2C97114700722E48 /* AddRoutineView.swift */,
 				693B07F02C97118500722E48 /* RoutineListView.swift */,
 				693B07F22C977F1D00722E48 /* RoutineDetailView.swift */,
@@ -207,6 +209,7 @@
 		693B07E32C9614AB00722E48 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				69B752472CB4B5A900C0C126 /* DesiredBodyViewModel.swift */,
 				69B752412CA734CA00C0C126 /* ProgressViewModel.swift */,
 				69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */,
 				69969F622CA17BE600682635 /* GoalViewModel.swift */,
@@ -348,6 +351,7 @@
 			files = (
 				693B07E82C963ADD00722E48 /* Rutina+CoreDataClass.swift in Sources */,
 				69969F5F2CA09E5700682635 /* GenderSelectionVIew.swift in Sources */,
+				69B752462CB4B59F00C0C126 /* DesiredBodyView.swift in Sources */,
 				693B07E92C963ADD00722E48 /* Rutina+CoreDataProperties.swift in Sources */,
 				693B07F12C97118500722E48 /* RoutineListView.swift in Sources */,
 				693B07EA2C963ADD00722E48 /* Ejercicio+CoreDataClass.swift in Sources */,
@@ -359,6 +363,7 @@
 				693B07ED2C963C6200722E48 /* RoutineViewModel.swift in Sources */,
 				69969F632CA17BEE00682635 /* GoalViewModel.swift in Sources */,
 				69969F5B2C9F6C3100682635 /* LoginViewModel.swift in Sources */,
+				69B752482CB4B5B200C0C126 /* DesiredBodyViewModel.swift in Sources */,
 				69B752442CADB6FA00C0C126 /* ProgressBarView.swift in Sources */,
 				69969F652CA2BC2800682635 /* UserSessionManager.swift in Sources */,
 				69969F592C9F6C2800682635 /* LoginView.swift in Sources */,
@@ -367,7 +372,6 @@
 				692562D92C92FB8E0002524D /* FitnessRoutineApp.xcdatamodeld in Sources */,
 				69969F572C9F6BE900682635 /* User.swift in Sources */,
 				69969F6D2CA35DB100682635 /* BodyCurrentViewModel.swift in Sources */,
-				692562CF2C92FB8D0002524D /* ContentView.swift in Sources */,
 				69969F6B2CA35DA400682635 /* BodyCurrentView.swift in Sources */,
 				692562CD2C92FB8D0002524D /* FitnessRoutineAppApp.swift in Sources */,
 			);

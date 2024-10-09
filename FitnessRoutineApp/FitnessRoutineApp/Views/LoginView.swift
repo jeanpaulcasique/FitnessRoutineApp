@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct LoginView: View {
@@ -8,6 +7,7 @@ struct LoginView: View {
     var body: some View {
         NavigationView {  // Envuelve todo el contenido en NavigationView
             ZStack {
+                // Fondo blanco que se ignora cuando las opciones de login están visibles
                 Color.white
                     .ignoresSafeArea()
                     .onTapGesture {
@@ -15,6 +15,7 @@ struct LoginView: View {
                             viewModel.hideLoginOptions()
                         }
                     }
+                    .allowsHitTesting(!viewModel.showLoginOptions) // Deshabilita la interacción cuando se muestran las opciones
 
                 VStack {
                     Spacer()
@@ -51,11 +52,12 @@ struct LoginView: View {
                             .foregroundColor(.blue)
                     }
                     .padding(.bottom, 05)
+                }
+                .allowsHitTesting(!viewModel.showLoginOptions) // Deshabilita la interacción con los botones de fondo
 
-                    // Cuadro de opciones de inicio de sesión
-                    if viewModel.showLoginOptions {
-                        optionsView
-                    }
+                // Cuadro de opciones de inicio de sesión
+                if viewModel.showLoginOptions {
+                    optionsView
                 }
             }
         }
@@ -64,6 +66,7 @@ struct LoginView: View {
     // Vista de opciones de inicio de sesión
     var optionsView: some View {
         ZStack {
+            // Cubre la pantalla completa con un fondo oscuro semitransparente
             Color.black.opacity(0.5)
                 .ignoresSafeArea()
                 .onTapGesture {
@@ -144,3 +147,4 @@ struct LoginView_Previews: PreviewProvider {
         LoginView()
     }
 }
+
