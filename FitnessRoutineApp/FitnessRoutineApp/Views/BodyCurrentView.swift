@@ -10,35 +10,38 @@ struct BodyCurrentView: View {
             // Barra de progreso
             ProgressBarView(progressViewModel: progressViewModel)
                 .padding(.top, 20)
+                .padding(.horizontal, 20)
 
             // Título
             Text("What's your current body shape?")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding(.top, 20)
+                // Limita el texto a una sola línea
+                .minimumScaleFactor(0.5)
 
             // Opciones de formas corporales
             VStack(spacing: 20) {
                 // Opción: Medium
-                BodyOptionView(text: "Medium", imageName: "figure.walk", isSelected: viewModel.selectedBodyShape == .medium)
+                BodyOptionView(text: "", imageName: "mediumMen", isSelected: viewModel.selectedBodyShape == .medium)
                     .onTapGesture {
                         viewModel.selectBodyShape(.medium)
                     }
 
                 // Opción: Flabby
-                BodyOptionView(text: "Flabby", imageName: "figure.sitting", isSelected: viewModel.selectedBodyShape == .flabby)
+                BodyOptionView(text: "", imageName: "flabbyMen", isSelected: viewModel.selectedBodyShape == .flabby)
                     .onTapGesture {
                         viewModel.selectBodyShape(.flabby)
                     }
 
                 // Opción: Skinny
-                BodyOptionView(text: "Skinny", imageName: "figure.stand", isSelected: viewModel.selectedBodyShape == .skinny)
+                BodyOptionView(text: "", imageName: "skinnyMen", isSelected: viewModel.selectedBodyShape == .skinny)
                     .onTapGesture {
                         viewModel.selectBodyShape(.skinny)
                     }
 
                 // Opción: Muscular
-                BodyOptionView(text: "Muscular", imageName: "figure.strength", isSelected: viewModel.selectedBodyShape == .muscular)
+                BodyOptionView(text: "", imageName: "muscularMen", isSelected: viewModel.selectedBodyShape == .muscular)
                     .onTapGesture {
                         viewModel.selectBodyShape(.muscular)
                     }
@@ -51,26 +54,31 @@ struct BodyCurrentView: View {
             // Botón para continuar, solo aparece si se selecciona una opción
             if viewModel.selectedBodyShape != nil {
                 Button(action: {
-                    progressViewModel.advanceProgress() // Avanza el progreso
-                    navigateToNextView = true // Cambia el estado para navegar
+                    // Acción del botón
+                    navigateToNextView = true // Navegar a la siguiente vista
                 }) {
-                    Text("Continue")
-                        .font(.title)
+                    Text("Next")
+                        .font(.headline)
                         .foregroundColor(.white)
-                        .padding(.vertical, 8)
+                        .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.blue)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                         .cornerRadius(10)
+                        .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 10)
 
-                // Este NavigationLink se añade pero se mantiene oculto hasta que haya una vista real
-                NavigationLink(destination: Text("Next View Placeholder"), isActive: $navigateToNextView) {
+                // Navegación hacia DesiredBodyView
+                NavigationLink(destination: DesiredBodyView(progressViewModel: progressViewModel), isActive: $navigateToNextView) {
                     EmptyView()
                 }
             }
-
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarBackButtonHidden(false) // Mostrar el botón "back" automático
@@ -84,12 +92,11 @@ struct BodyOptionView: View {
 
     var body: some View {
         HStack {
-            Image(systemName: imageName)
+            Image(imageName) // Usar la imagen personalizada
                 .resizable()
-                .frame(width: 60, height: 60)
-                .aspectRatio(contentMode: .fit)
-                .padding(.trailing, 10)
-
+                .aspectRatio(contentMode: .fill) // Asegura que la imagen se expanda y llene todo el rectángulo
+                .frame(width: 290, height: 70) // Ajusta las dimensiones del frame al tamaño del rectángulo
+                
             Text(text)
                 .font(.title3)
                 .fontWeight(.bold)
@@ -119,7 +126,7 @@ struct BodyOptionView: View {
 // Preview para BodyCurrentView
 struct BodyCurrentView_Previews: PreviewProvider {
     static var previews: some View {
-        BodyCurrentView(viewModel: BodyCurrentViewModel(), progressViewModel: ProgressViewModel()) // Añadido ProgressViewModel
+        BodyCurrentView(progressViewModel: ProgressViewModel()) // Añadido ProgressViewModel
     }
 }
 

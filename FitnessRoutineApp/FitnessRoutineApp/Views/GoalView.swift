@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct GoalView: View {
-    @ObservedObject var viewModel: GoalViewModel // Cambia esto a una variable pasada
+    @ObservedObject var viewModel: GoalViewModel
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToBodyCurrent = false
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -11,6 +11,7 @@ struct GoalView: View {
             // Barra de progreso
             ProgressBarView(progressViewModel: progressViewModel)
                 .padding(.top, 20)
+                .padding(.horizontal, 20)
 
             // Título
             Text("What's your main goal?")
@@ -18,7 +19,7 @@ struct GoalView: View {
                 .fontWeight(.bold)
                 .padding(.top, 20)
 
-            // Cuadro de texto
+            // Descripción
             HStack {
                 Image("robotIcon")
                     .resizable()
@@ -48,17 +49,23 @@ struct GoalView: View {
             VStack(spacing: 20) {
                 GoalOptionImageView(imageName: "lossMen", isSelected: viewModel.selectedGoal == .loseWeight)
                     .onTapGesture {
-                        viewModel.selectGoal(.loseWeight)
+                        withAnimation {
+                            viewModel.selectGoal(.loseWeight)
+                        }
                     }
 
                 GoalOptionImageView(imageName: "buildMen", isSelected: viewModel.selectedGoal == .buildMuscle)
                     .onTapGesture {
-                        viewModel.selectGoal(.buildMuscle)
+                        withAnimation {
+                            viewModel.selectGoal(.buildMuscle)
+                        }
                     }
 
                 GoalOptionImageView(imageName: "keepMen", isSelected: viewModel.selectedGoal == .keepFit)
                     .onTapGesture {
-                        viewModel.selectGoal(.keepFit)
+                        withAnimation {
+                            viewModel.selectGoal(.keepFit)
+                        }
                     }
             }
             .padding(.horizontal, 20)
@@ -66,28 +73,36 @@ struct GoalView: View {
 
             Spacer()
 
-            // Botón para continuar
-            if let _ = viewModel.selectedGoal {
+            // Botón "Next", solo visible si se selecciona una opción
+            if viewModel.selectedGoal != nil {
                 Button(action: {
-                    viewModel.saveUserGoal() // Guarda la información del usuario
-                    progressViewModel.advanceProgress() // Actualiza el progreso al avanzar
-                    navigateToBodyCurrent = true // Navegar a BodyCurrentView
+                    // Guardar el objetivo y avanzar en la barra de progreso
+                    viewModel.saveUserGoal()
+                    progressViewModel.advanceProgress()
+                    // Activar la navegación
+                    navigateToBodyCurrent = true
                 }) {
-                    Text("Continue")
-                        .font(.title)
+                    Text("Next")
+                        .font(.headline)
                         .foregroundColor(.white)
-                        .padding(.vertical, 8)
+                        .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.blue)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                         .cornerRadius(10)
+                        .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 10)
-                .background(
-                    NavigationLink(destination: BodyCurrentView(viewModel: BodyCurrentViewModel(), progressViewModel: progressViewModel), isActive: $navigateToBodyCurrent) {
-                        EmptyView()
-                    }
-                )
+
+                // Enlace de navegación
+                NavigationLink(destination: BodyCurrentView(viewModel: BodyCurrentViewModel(), progressViewModel: progressViewModel), isActive: $navigateToBodyCurrent) {
+                    EmptyView()
+                }
             }
         }
         .padding(.top)
@@ -97,17 +112,15 @@ struct GoalView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
-                    progressViewModel.decreaseProgress() // Retroceder el progreso
-                    self.presentationMode.wrappedValue.dismiss() // Retroceder a la vista anterior
+                    // Disminuir el progreso y volver atrás
+                    progressViewModel.decreaseProgress()
+                    self.presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "chevron.left")
                         .foregroundColor(.blue)
                         .font(.title)
                 }
             }
-        }
-        .onAppear {
-            // No avanzar automáticamente
         }
     }
 }
@@ -121,27 +134,22 @@ struct GoalOptionImageView: View {
             Image(imageName)
                 .resizable()
                 .scaledToFill()
-                .frame(height: 100)
+                .frame(height: 90)
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 2)
-                        .animation(.easeInOut)
+                        .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 3)
                 )
-                .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+                .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.clear, radius: 10, x: 0, y: 5)
+                .animation(.easeInOut(duration: 0.3), value: isSelected)
                 .scaleEffect(isSelected ? 1.05 : 1.0)
-                .animation(.easeInOut, value: isSelected)
 
             if isSelected {
-                Circle()
-                    .fill(Color.blue)
-                    .frame(width: 30, height: 30)
-                    .overlay(
-                        Image(systemName: "checkmark")
-                            .foregroundColor(.white)
-                            .font(.system(size: 18))
-                    )
-                    .offset(x: 160, y: 0)
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(.blue)
+                    .font(.largeTitle)
+                    .offset(x: 160, y: -5)
+                    .animation(.easeInOut(duration: 0.3))
             }
         }
     }
