@@ -2,12 +2,14 @@ import SwiftUI
 
 struct LoginView: View {
     @ObservedObject var viewModel = LoginViewModel()
-    @State private var navigateToGenderSelection = false // Variable de estado para la navegación
+    @State private var navigateToGenderSelection = false
+    // Inicializamos los ViewModels fuera del cuerpo de la vista para que se reutilicen.
+    @StateObject var genderSelectionViewModel = GenderSelectionViewModel()
+    @StateObject var progressViewModel = ProgressViewModel()
 
     var body: some View {
-        NavigationView {  // Envuelve todo el contenido en NavigationView
+        NavigationView {
             ZStack {
-                // Fondo blanco que se ignora cuando las opciones de login están visibles
                 Color.white
                     .ignoresSafeArea()
                     .onTapGesture {
@@ -15,14 +17,13 @@ struct LoginView: View {
                             viewModel.hideLoginOptions()
                         }
                     }
-                    .allowsHitTesting(!viewModel.showLoginOptions) // Deshabilita la interacción cuando se muestran las opciones
+                    .allowsHitTesting(!viewModel.showLoginOptions)  // Deshabilitar interacción solo si las opciones están visibles.
 
                 VStack {
                     Spacer()
 
-                    // Botón estilizado de "Inicio"
                     Button(action: {
-                        navigateToGenderSelection = true  // Cambia la variable para navegar
+                        navigateToGenderSelection = true
                     }) {
                         Text("START")
                             .fontWeight(.bold)
@@ -34,8 +35,8 @@ struct LoginView: View {
                             .padding(.horizontal, 20)
                     }
 
-                    // Enlace de navegación a GenderSelectionView
-                    NavigationLink(destination: GenderSelectionView(viewModel: GenderSelectionViewModel(), progressViewModel: ProgressViewModel()), isActive: $navigateToGenderSelection) {
+                    // Usamos los ViewModels inicializados externamente
+                    NavigationLink(destination: GenderSelectionView(viewModel: genderSelectionViewModel, progressViewModel: progressViewModel), isActive: $navigateToGenderSelection) {
                         EmptyView()
                     }
 
@@ -43,7 +44,6 @@ struct LoginView: View {
                         .foregroundColor(.gray)
                         .padding(.top, 10)
 
-                    // Botón para continuar con la cuenta existente
                     Button(action: {
                         viewModel.showExistingAccountOptions()
                     }) {
@@ -51,22 +51,21 @@ struct LoginView: View {
                             .font(.footnote)
                             .foregroundColor(.blue)
                     }
-                    .padding(.bottom, 05)
+                    .padding(.bottom, 5)  // Se cambió de 05 a 5 para seguir convención
                 }
-                .allowsHitTesting(!viewModel.showLoginOptions) // Deshabilita la interacción con los botones de fondo
+                .allowsHitTesting(!viewModel.showLoginOptions)
 
-                // Cuadro de opciones de inicio de sesión
                 if viewModel.showLoginOptions {
                     optionsView
                 }
             }
+            .navigationBarTitle("", displayMode: .inline)
+            .navigationBarBackButtonHidden(true) // Mantén oculto el botón de retroceso si es el comportamiento esperado.
         }
     }
 
-    // Vista de opciones de inicio de sesión
     var optionsView: some View {
         ZStack {
-            // Cubre la pantalla completa con un fondo oscuro semitransparente
             Color.black.opacity(0.5)
                 .ignoresSafeArea()
                 .onTapGesture {
@@ -87,49 +86,17 @@ struct LoginView: View {
                     .padding(.trailing, 10)
                 }
 
-                Button(action: {
+                // Botones reutilizados
+                socialLoginButton(imageName: "applelogo", text: "Iniciar sesión con Apple", backgroundColor: .black) {
                     viewModel.signInWithApple()
-                }) {
-                    HStack {
-                        Image(systemName: "applelogo")
-                        Text("Iniciar sesión con Apple")
-                            .fontWeight(.bold)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.black)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
                 }
 
-                Button(action: {
+                socialLoginButton(imageName: "globe", text: "Google", backgroundColor: .red) {
                     viewModel.signInWithGoogle()
-                }) {
-                    HStack {
-                        Image(systemName: "globe")
-                        Text("Google")
-                            .fontWeight(.bold)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.red)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
                 }
 
-                Button(action: {
+                socialLoginButton(imageName: "facebook", text: "Facebook", backgroundColor: .blue) {
                     viewModel.signInWithFacebook()
-                }) {
-                    HStack {
-                        Image(systemName: "facebook")
-                        Text("Facebook")
-                            .fontWeight(.bold)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
                 }
             }
             .padding()
@@ -139,9 +106,26 @@ struct LoginView: View {
             .frame(maxWidth: 300)
         }
     }
+
+    // Función auxiliar para crear botones de inicio de sesión
+    func socialLoginButton(imageName: String, text: String, backgroundColor: Color, action: @escaping () -> Void) -> some View {
+        Button(action: {
+            action()
+        }) {
+            HStack {
+                Image(systemName: imageName)
+                Text(text)
+                    .fontWeight(.bold)
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(backgroundColor)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+        }
+    }
 }
 
-// Preview para LoginView
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()

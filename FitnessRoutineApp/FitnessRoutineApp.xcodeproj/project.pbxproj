@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		690495B52CB80EA700E82BC9 /* BirthYearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690495B42CB80E9F00E82BC9 /* BirthYearView.swift */; };
+		690495B72CB80EAB00E82BC9 /* BirthYearViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690495B62CB80EA900E82BC9 /* BirthYearViewModel.swift */; };
+		690495B92CB8C7C200E82BC9 /* HeightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690495B82CB8C7B900E82BC9 /* HeightView.swift */; };
+		690495BB2CB989BB00E82BC9 /* HeightViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690495BA2CB989B400E82BC9 /* HeightViewModel.swift */; };
 		692562CD2C92FB8D0002524D /* FitnessRoutineAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 692562CC2C92FB8D0002524D /* FitnessRoutineAppApp.swift */; };
 		692562D12C92FB8E0002524D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 692562D02C92FB8E0002524D /* Assets.xcassets */; };
 		692562D42C92FB8E0002524D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 692562D32C92FB8E0002524D /* Preview Assets.xcassets */; };
@@ -57,6 +61,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		690495B42CB80E9F00E82BC9 /* BirthYearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthYearView.swift; sourceTree = "<group>"; };
+		690495B62CB80EA900E82BC9 /* BirthYearViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthYearViewModel.swift; sourceTree = "<group>"; };
+		690495B82CB8C7B900E82BC9 /* HeightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightView.swift; sourceTree = "<group>"; };
+		690495BA2CB989B400E82BC9 /* HeightViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightViewModel.swift; sourceTree = "<group>"; };
 		692562C92C92FB8D0002524D /* FitnessRoutineApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitnessRoutineApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		692562CC2C92FB8D0002524D /* FitnessRoutineAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessRoutineAppApp.swift; sourceTree = "<group>"; };
 		692562D02C92FB8E0002524D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -199,6 +207,8 @@
 				69969F602CA17BDF00682635 /* GoalView.swift */,
 				69969F6A2CA35D7400682635 /* BodyCurrentView.swift */,
 				69B752452CB4B57C00C0C126 /* DesiredBodyView.swift */,
+				690495B42CB80E9F00E82BC9 /* BirthYearView.swift */,
+				690495B82CB8C7B900E82BC9 /* HeightView.swift */,
 				693B07EE2C97114700722E48 /* AddRoutineView.swift */,
 				693B07F02C97118500722E48 /* RoutineListView.swift */,
 				693B07F22C977F1D00722E48 /* RoutineDetailView.swift */,
@@ -209,6 +219,8 @@
 		693B07E32C9614AB00722E48 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				690495BA2CB989B400E82BC9 /* HeightViewModel.swift */,
+				690495B62CB80EA900E82BC9 /* BirthYearViewModel.swift */,
 				69B752472CB4B5A900C0C126 /* DesiredBodyViewModel.swift */,
 				69B752412CA734CA00C0C126 /* ProgressViewModel.swift */,
 				69969F6C2CA35DA900682635 /* BodyCurrentViewModel.swift */,
@@ -350,10 +362,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				693B07E82C963ADD00722E48 /* Rutina+CoreDataClass.swift in Sources */,
+				690495B52CB80EA700E82BC9 /* BirthYearView.swift in Sources */,
+				690495B92CB8C7C200E82BC9 /* HeightView.swift in Sources */,
 				69969F5F2CA09E5700682635 /* GenderSelectionVIew.swift in Sources */,
 				69B752462CB4B59F00C0C126 /* DesiredBodyView.swift in Sources */,
 				693B07E92C963ADD00722E48 /* Rutina+CoreDataProperties.swift in Sources */,
 				693B07F12C97118500722E48 /* RoutineListView.swift in Sources */,
+				690495B72CB80EAB00E82BC9 /* BirthYearViewModel.swift in Sources */,
 				693B07EA2C963ADD00722E48 /* Ejercicio+CoreDataClass.swift in Sources */,
 				69969F5D2CA09E3400682635 /* GenderSelecctionViewModel.swift in Sources */,
 				693B07EF2C97114700722E48 /* AddRoutineView.swift in Sources */,
@@ -366,6 +381,7 @@
 				69B752482CB4B5B200C0C126 /* DesiredBodyViewModel.swift in Sources */,
 				69B752442CADB6FA00C0C126 /* ProgressBarView.swift in Sources */,
 				69969F652CA2BC2800682635 /* UserSessionManager.swift in Sources */,
+				690495BB2CB989BB00E82BC9 /* HeightViewModel.swift in Sources */,
 				69969F592C9F6C2800682635 /* LoginView.swift in Sources */,
 				692562D62C92FB8E0002524D /* Persistence.swift in Sources */,
 				69B752422CA734D800C0C126 /* ProgressViewModel.swift in Sources */,
