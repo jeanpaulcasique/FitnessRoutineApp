@@ -1,6 +1,5 @@
 import SwiftUI
-import UIKit // Importa UIKit para la vibración
-
+import UIKit 
 struct BodyCurrentView: View {
     @ObservedObject var viewModel = BodyCurrentViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
@@ -29,9 +28,7 @@ struct BodyCurrentView: View {
                         .onTapGesture {
                             withAnimation {
                                 viewModel.selectBodyShape(shape) // Seleccionar la opción
-                                // Vibrar al seleccionar una opción
-                                let generator = UIImpactFeedbackGenerator(style: .medium)
-                                generator.impactOccurred()
+                                vibrate() // Vibrar al seleccionar una opción
                             }
                         }
                 }
@@ -42,13 +39,9 @@ struct BodyCurrentView: View {
             Spacer()
 
             // Botón "Next", visible solo si hay una opción seleccionada
-            if viewModel.selectedBodyShape != nil { // Solo mostrar el botón si se ha seleccionado una opción
+            if let _ = viewModel.selectedBodyShape { // Solo mostrar el botón si se ha seleccionado una opción
                 Button(action: {
-                    // Vibrar al pulsar el botón
-                    let generator = UIImpactFeedbackGenerator(style: .medium)
-                    generator.impactOccurred()
-
-                    // Avanzar el progreso
+                    vibrate() // Vibrar al pulsar el botón
                     progressViewModel.advanceProgress()
                 }) {
                     Text("Next")
@@ -72,9 +65,6 @@ struct BodyCurrentView: View {
                     .onChanged { _ in isButtonPressed = true } // Cambia el estado al presionar
                     .onEnded { _ in
                         isButtonPressed = false // Restaura el estado al soltar
-                        if viewModel.selectedBodyShape != nil { // Solo navega si hay una selección
-                            navigateToNextView() // Navegar
-                        }
                     }
                 )
                 .padding(.horizontal, 20)
@@ -86,23 +76,18 @@ struct BodyCurrentView: View {
                 .hidden() // Ocultar el NavigationLink
             }
 
-            // Navegación a DesiredBodyView
-            NavigationLink(destination: DesiredBodyView(viewModel: DesiredBodyViewModel(), progressViewModel: progressViewModel), isActive: .constant(viewModel.selectedBodyShape != nil && isButtonPressed)) {
-                EmptyView()
-            }
-            .hidden() // Ocultar el NavigationLink
         }
         .navigationBarTitle("", displayMode: .inline)
         .onDisappear {
-            progressViewModel.decreaseProgress()
+    
         }
         .background(Color(red: 249/255, green: 249/255, blue: 253/255)) // Fondo claro
     }
 
-    // Función de navegación
-    private func navigateToNextView() {
-        // Asegúrate de que la lógica de navegación se maneje aquí
-        // Aquí ya no necesitas la variable navigateToNextView, ya que la condición está en el NavigationLink.
+    // Función de vibración
+    private func vibrate() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
     }
 }
 

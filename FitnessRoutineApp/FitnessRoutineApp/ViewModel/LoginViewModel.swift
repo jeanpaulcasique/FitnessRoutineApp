@@ -1,49 +1,49 @@
 import SwiftUI
-
 class LoginViewModel: ObservableObject {
     @Published var isLoggedIn: Bool = false
     @Published var errorMessage: String?
-    @Published var showLoginOptions: Bool = false  // Controla la visibilidad del cuadro de login
-    @Published var showExistingAccount = false
+    @Published var showLoginOptions: Bool = false
+    @Published var isLoggingIn: Bool = false  // Indica si se está iniciando sesión
 
-    // Función para simular el inicio de sesión con Apple
     func signInWithApple() {
         performLogin {
             print("Inicio de sesión simulado con Apple exitoso")
         }
     }
 
-    // Función para simular el inicio de sesión con Google
     func signInWithGoogle() {
         performLogin {
             print("Inicio de sesión simulado con Google exitoso")
         }
     }
 
-    // Función para simular el inicio de sesión con Facebook
     func signInWithFacebook() {
         performLogin {
             print("Inicio de sesión simulado con Facebook exitoso")
         }
     }
 
-    // Función para mostrar las opciones de cuenta existente
     func showExistingAccountOptions() {
         showLoginOptions = true
         print("Opciones de cuenta existente desplegadas")
     }
 
-    // Función para ocultar las opciones de inicio de sesión
     func hideLoginOptions() {
         showLoginOptions = false
     }
 
-    // Función privada para manejar el inicio de sesión simulado
     private func performLogin(completion: @escaping () -> Void) {
+        isLoggingIn = true  // Inicia el estado de carga
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.isLoggedIn = true
-            completion()  // Llama al bloque de finalización para imprimir el mensaje
+            self.isLoggingIn = false  // Termina el estado de carga
+            // Simula un error aleatorio en el inicio de sesión
+            if Bool.random() {
+                self.isLoggedIn = true
+                completion()  // Llama al bloque de finalización
+            } else {
+                self.errorMessage = "Error en el inicio de sesión. Inténtalo de nuevo."
+                print(self.errorMessage ?? "")
+            }
         }
     }
 }
-

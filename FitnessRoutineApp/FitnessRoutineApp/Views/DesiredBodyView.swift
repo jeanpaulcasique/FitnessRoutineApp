@@ -8,17 +8,20 @@ struct DesiredBodyView: View {
 
     var body: some View {
         VStack {
+            // Progress bar at the top
             ProgressBarView(progressViewModel: progressViewModel)
                 .padding(.top, 20)
                 .padding(.horizontal, 20)
-            
+
+            // Title text
             Text("What's your desired body shape?")
                 .font(.system(size: 31, weight: .bold))
                 .padding(.top, 10)
                 .foregroundColor(.black)
                 .padding(.horizontal, 10)
-            
+
             GeometryReader { geometry in
+                // Main body image selection view
                 TabView(selection: $selectedBodyIndex) {
                     ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
                         ZStack {
@@ -37,27 +40,39 @@ struct DesiredBodyView: View {
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .frame(width: geometry.size.width, height: 320)
                 .clipped()
-                .onChange(of: selectedBodyIndex) { newIndex in
-                    // Vibrar al cambiar de imagen
+                .onChange(of: selectedBodyIndex) { _ in
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
                 }
             }
             .padding(.vertical, 10)
-            
-            Slider(value: Binding(
-                get: { Double(selectedBodyIndex) },
-                set: { newValue in
-                    selectedBodyIndex = Int(newValue)
-                    viewModel.selectBody(index: Int(newValue))
-                    // Vibrar al cambiar con el slider
-                    let generator = UIImpactFeedbackGenerator(style: .medium)
-                    generator.impactOccurred()
+
+            // Custom slider with more spacing between circles
+            ZStack {
+                HStack(spacing: 30) { // Espaciado mayor entre los círculos
+                    ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
+                        Circle()
+                            .fill(index == selectedBodyIndex ? Color.blue : Color.blue.opacity(0.3))
+                            .frame(width: index == selectedBodyIndex ? 20 : 12, height: index == selectedBodyIndex ? 20 : 12) // Círculos más grandes y más pequeños
+                            .animation(.easeInOut(duration: 0.2), value: selectedBodyIndex)
+                    }
                 }
-            ), in: 0...Double(viewModel.bodyImages.count - 1), step: 1)
-            .padding(.horizontal, 20)
-            .accentColor(.blue)
-            
+                .frame(height: 20)
+                .padding(.horizontal, 40)
+
+                Slider(value: Binding(
+                    get: { Double(selectedBodyIndex) },
+                    set: { newValue in
+                        selectedBodyIndex = Int(newValue)
+                        viewModel.selectBody(index: selectedBodyIndex)
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
+                    }
+                ), in: 0...Double(viewModel.bodyImages.count - 1), step: 1)
+                .opacity(0.01) // Invisible slider to allow swiping
+            }
+
+            // Labels under the slider
             HStack {
                 Text("Cut")
                     .font(.system(size: 16, weight: .semibold))
@@ -67,7 +82,8 @@ struct DesiredBodyView: View {
             }
             .padding(.horizontal, 40)
             .padding(.top, 5)
-            
+
+            // Body fat and goal description
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
                     Image(systemName: "target")
@@ -81,7 +97,7 @@ struct DesiredBodyView: View {
                 Text(viewModel.bodyFatRanges[selectedBodyIndex])
                     .font(.system(size: 16))
                     .foregroundColor(viewModel.bodyFatRanges[selectedBodyIndex].contains("Consult a doctor") ? .red : .green)
-                
+
                 Text(viewModel.bodyFatDescriptions[selectedBodyIndex])
                     .font(.system(size: 13))
                     .foregroundColor(.gray)
@@ -91,8 +107,8 @@ struct DesiredBodyView: View {
             .cornerRadius(10)
             .padding(.horizontal, 20)
             .padding(.bottom, 15)
-            
-            // Botón "Next"
+
+            // Next button for navigation
             NavigationLink(destination: BirthYearView(viewModel: BirthYearViewModel(), progressViewModel: progressViewModel), isActive: $isNavigatingToBirthYearView) {
                 Text("Next")
                     .font(.system(size: 18, weight: .bold))
@@ -111,12 +127,10 @@ struct DesiredBodyView: View {
             }
             .padding(.horizontal, 20)
             .simultaneousGesture(TapGesture().onEnded {
-                // Vibrar al presionar "Next"
                 let generator = UIImpactFeedbackGenerator(style: .medium)
                 generator.impactOccurred()
-                
-                progressViewModel.advanceProgress() // Actualiza la barra de progreso antes de navegar
-                isNavigatingToBirthYearView = true // Cambiar el estado para navegar
+
+                isNavigatingToBirthYearView = true
             })
         }
         .navigationBarTitle("", displayMode: .inline)
@@ -124,7 +138,7 @@ struct DesiredBodyView: View {
     }
 }
 
-// Vista previa
+// Preview
 struct DesiredBodyView_Previews: PreviewProvider {
     static var previews: some View {
         DesiredBodyView(progressViewModel: ProgressViewModel())
