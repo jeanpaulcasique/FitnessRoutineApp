@@ -3,7 +3,6 @@ import SwiftUI
 struct LoginView: View {
     @ObservedObject var viewModel = LoginViewModel()
     @State private var navigateToGenderSelection = false
-    // Inicializamos los ViewModels fuera del cuerpo de la vista para que se reutilicen.
     @StateObject var genderSelectionViewModel = GenderSelectionViewModel()
     @StateObject var progressViewModel = ProgressViewModel()
 
@@ -17,12 +16,13 @@ struct LoginView: View {
                             viewModel.hideLoginOptions()
                         }
                     }
-                    .allowsHitTesting(!viewModel.showLoginOptions)  // Deshabilitar interacción solo si las opciones están visibles.
+                    .allowsHitTesting(!viewModel.showLoginOptions)
 
                 VStack {
                     Spacer()
 
                     Button(action: {
+                        // Navegación rápida al presionar START
                         navigateToGenderSelection = true
                     }) {
                         Text("START")
@@ -35,8 +35,14 @@ struct LoginView: View {
                             .padding(.horizontal, 20)
                     }
 
-                    // Usamos los ViewModels inicializados externamente
-                    NavigationLink(destination: GenderSelectionView(viewModel: genderSelectionViewModel, progressViewModel: progressViewModel), isActive: $navigateToGenderSelection) {
+                    // Navegación sin animaciones
+                    NavigationLink(
+                        destination: GenderSelectionView(
+                            viewModel: genderSelectionViewModel,
+                            progressViewModel: progressViewModel
+                        ),
+                        isActive: $navigateToGenderSelection
+                    ) {
                         EmptyView()
                     }
 
@@ -51,7 +57,7 @@ struct LoginView: View {
                             .font(.footnote)
                             .foregroundColor(.blue)
                     }
-                    .padding(.bottom, 5)  // Se cambió de 05 a 5 para seguir convención
+                    .padding(.bottom, 5)
                 }
                 .allowsHitTesting(!viewModel.showLoginOptions)
 
@@ -60,7 +66,7 @@ struct LoginView: View {
                 }
             }
             .navigationBarTitle("", displayMode: .inline)
-            .navigationBarBackButtonHidden(true) // Mantén oculto el botón de retroceso si es el comportamiento esperado.
+            .navigationBarBackButtonHidden(true)
         }
     }
 
@@ -69,14 +75,20 @@ struct LoginView: View {
             Color.black.opacity(0.5)
                 .ignoresSafeArea()
                 .onTapGesture {
-                    viewModel.hideLoginOptions()
+                    // Cierra el optionsView de inmediato sin animación
+                    withAnimation(nil) {
+                        viewModel.hideLoginOptions()
+                    }
                 }
 
             VStack(spacing: 20) {
                 HStack {
                     Spacer()
                     Button(action: {
-                        viewModel.hideLoginOptions()
+                        // Cierra el optionsView de inmediato sin animación
+                        withAnimation(nil) {
+                            viewModel.hideLoginOptions()
+                        }
                     }) {
                         Image(systemName: "xmark")
                             .foregroundColor(.gray)
@@ -86,7 +98,7 @@ struct LoginView: View {
                     .padding(.trailing, 10)
                 }
 
-                // Botones reutilizados
+                // Botones de inicio de sesión
                 socialLoginButton(imageName: "applelogo", text: "Iniciar sesión con Apple", backgroundColor: .black) {
                     viewModel.signInWithApple()
                 }

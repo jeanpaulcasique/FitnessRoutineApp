@@ -27,11 +27,15 @@
 		693B07EF2C97114700722E48 /* AddRoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07EE2C97114700722E48 /* AddRoutineView.swift */; };
 		693B07F12C97118500722E48 /* RoutineListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07F02C97118500722E48 /* RoutineListView.swift */; };
 		693B07F32C977F1D00722E48 /* RoutineDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693B07F22C977F1D00722E48 /* RoutineDetailView.swift */; };
+		695D27492CC3506E00821610 /* WeightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D27482CC3506B00821610 /* WeightView.swift */; };
+		695D274B2CC3507800821610 /* WeightViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695D274A2CC3507400821610 /* WeightViewModel.swift */; };
+		696BBAB12CCB1A270087724E /* TargetWeightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696BBAB02CCB1A160087724E /* TargetWeightView.swift */; };
+		696BBAB32CCB1A320087724E /* TargetWeightViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696BBAB22CCB1A2D0087724E /* TargetWeightViewModel.swift */; };
 		69969F572C9F6BE900682635 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F562C9F6BE700682635 /* User.swift */; };
 		69969F592C9F6C2800682635 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F582C9F6C1A00682635 /* LoginView.swift */; };
 		69969F5B2C9F6C3100682635 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F5A2C9F6C2A00682635 /* LoginViewModel.swift */; };
 		69969F5D2CA09E3400682635 /* GenderSelecctionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F5C2CA09E2300682635 /* GenderSelecctionViewModel.swift */; };
-		69969F5F2CA09E5700682635 /* GenderSelectionVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F5E2CA09E4800682635 /* GenderSelectionVIew.swift */; };
+		69969F5F2CA09E5700682635 /* GenderSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F5E2CA09E4800682635 /* GenderSelectionView.swift */; };
 		69969F612CA17BE400682635 /* GoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F602CA17BDF00682635 /* GoalView.swift */; };
 		69969F632CA17BEE00682635 /* GoalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F622CA17BE600682635 /* GoalViewModel.swift */; };
 		69969F652CA2BC2800682635 /* UserSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69969F642CA2BC1B00682635 /* UserSessionManager.swift */; };
@@ -41,6 +45,12 @@
 		69B752442CADB6FA00C0C126 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B752432CADB6E000C0C126 /* ProgressBarView.swift */; };
 		69B752462CB4B59F00C0C126 /* DesiredBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B752452CB4B57C00C0C126 /* DesiredBodyView.swift */; };
 		69B752482CB4B5B200C0C126 /* DesiredBodyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B752472CB4B5A900C0C126 /* DesiredBodyViewModel.swift */; };
+		69C6CC732CDC6FE60043B135 /* LevelActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C6CC722CDC6FDD0043B135 /* LevelActivityView.swift */; };
+		69C6CC752CE065D00043B135 /* LevelActivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C6CC742CDC6FE90043B135 /* LevelActivityViewModel.swift */; };
+		69C6CC772CEADD780043B135 /* WorkoutLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C6CC762CEADD690043B135 /* WorkoutLevelView.swift */; };
+		69C6CC792CEADDB20043B135 /* WorkoutLevelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C6CC782CEADD8D0043B135 /* WorkoutLevelViewModel.swift */; };
+		69FDC18A2CD7E64D0075F0CA /* HowOfgtenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FDC1892CD7E6460075F0CA /* HowOfgtenView.swift */; };
+		69FDC18C2CD7E65A0075F0CA /* HowOftenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FDC18B2CD7E6520075F0CA /* HowOftenViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,11 +94,15 @@
 		693B07EE2C97114700722E48 /* AddRoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRoutineView.swift; sourceTree = "<group>"; };
 		693B07F02C97118500722E48 /* RoutineListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineListView.swift; sourceTree = "<group>"; };
 		693B07F22C977F1D00722E48 /* RoutineDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailView.swift; sourceTree = "<group>"; };
+		695D27482CC3506B00821610 /* WeightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightView.swift; sourceTree = "<group>"; };
+		695D274A2CC3507400821610 /* WeightViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightViewModel.swift; sourceTree = "<group>"; };
+		696BBAB02CCB1A160087724E /* TargetWeightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetWeightView.swift; sourceTree = "<group>"; };
+		696BBAB22CCB1A2D0087724E /* TargetWeightViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetWeightViewModel.swift; sourceTree = "<group>"; };
 		69969F562C9F6BE700682635 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		69969F582C9F6C1A00682635 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		69969F5A2C9F6C2A00682635 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		69969F5C2CA09E2300682635 /* GenderSelecctionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderSelecctionViewModel.swift; sourceTree = "<group>"; };
-		69969F5E2CA09E4800682635 /* GenderSelectionVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderSelectionVIew.swift; sourceTree = "<group>"; };
+		69969F5E2CA09E4800682635 /* GenderSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderSelectionView.swift; sourceTree = "<group>"; };
 		69969F602CA17BDF00682635 /* GoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalView.swift; sourceTree = "<group>"; };
 		69969F622CA17BE600682635 /* GoalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalViewModel.swift; sourceTree = "<group>"; };
 		69969F642CA2BC1B00682635 /* UserSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionManager.swift; sourceTree = "<group>"; };
@@ -98,6 +112,12 @@
 		69B752432CADB6E000C0C126 /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		69B752452CB4B57C00C0C126 /* DesiredBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesiredBodyView.swift; sourceTree = "<group>"; };
 		69B752472CB4B5A900C0C126 /* DesiredBodyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesiredBodyViewModel.swift; sourceTree = "<group>"; };
+		69C6CC722CDC6FDD0043B135 /* LevelActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelActivityView.swift; sourceTree = "<group>"; };
+		69C6CC742CDC6FE90043B135 /* LevelActivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelActivityViewModel.swift; sourceTree = "<group>"; };
+		69C6CC762CEADD690043B135 /* WorkoutLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLevelView.swift; sourceTree = "<group>"; };
+		69C6CC782CEADD8D0043B135 /* WorkoutLevelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLevelViewModel.swift; sourceTree = "<group>"; };
+		69FDC1892CD7E6460075F0CA /* HowOfgtenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowOfgtenView.swift; sourceTree = "<group>"; };
+		69FDC18B2CD7E6520075F0CA /* HowOftenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowOftenViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,12 +223,17 @@
 			children = (
 				69B752432CADB6E000C0C126 /* ProgressBarView.swift */,
 				69969F582C9F6C1A00682635 /* LoginView.swift */,
-				69969F5E2CA09E4800682635 /* GenderSelectionVIew.swift */,
+				69969F5E2CA09E4800682635 /* GenderSelectionView.swift */,
 				69969F602CA17BDF00682635 /* GoalView.swift */,
 				69969F6A2CA35D7400682635 /* BodyCurrentView.swift */,
 				69B752452CB4B57C00C0C126 /* DesiredBodyView.swift */,
 				690495B42CB80E9F00E82BC9 /* BirthYearView.swift */,
 				690495B82CB8C7B900E82BC9 /* HeightView.swift */,
+				695D27482CC3506B00821610 /* WeightView.swift */,
+				696BBAB02CCB1A160087724E /* TargetWeightView.swift */,
+				69FDC1892CD7E6460075F0CA /* HowOfgtenView.swift */,
+				69C6CC722CDC6FDD0043B135 /* LevelActivityView.swift */,
+				69C6CC762CEADD690043B135 /* WorkoutLevelView.swift */,
 				693B07EE2C97114700722E48 /* AddRoutineView.swift */,
 				693B07F02C97118500722E48 /* RoutineListView.swift */,
 				693B07F22C977F1D00722E48 /* RoutineDetailView.swift */,
@@ -219,6 +244,11 @@
 		693B07E32C9614AB00722E48 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				69C6CC782CEADD8D0043B135 /* WorkoutLevelViewModel.swift */,
+				69C6CC742CDC6FE90043B135 /* LevelActivityViewModel.swift */,
+				69FDC18B2CD7E6520075F0CA /* HowOftenViewModel.swift */,
+				696BBAB22CCB1A2D0087724E /* TargetWeightViewModel.swift */,
+				695D274A2CC3507400821610 /* WeightViewModel.swift */,
 				690495BA2CB989B400E82BC9 /* HeightViewModel.swift */,
 				690495B62CB80EA900E82BC9 /* BirthYearViewModel.swift */,
 				69B752472CB4B5A900C0C126 /* DesiredBodyViewModel.swift */,
@@ -361,10 +391,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69FDC18C2CD7E65A0075F0CA /* HowOftenViewModel.swift in Sources */,
+				695D27492CC3506E00821610 /* WeightView.swift in Sources */,
+				69C6CC732CDC6FE60043B135 /* LevelActivityView.swift in Sources */,
 				693B07E82C963ADD00722E48 /* Rutina+CoreDataClass.swift in Sources */,
+				69C6CC792CEADDB20043B135 /* WorkoutLevelViewModel.swift in Sources */,
 				690495B52CB80EA700E82BC9 /* BirthYearView.swift in Sources */,
 				690495B92CB8C7C200E82BC9 /* HeightView.swift in Sources */,
-				69969F5F2CA09E5700682635 /* GenderSelectionVIew.swift in Sources */,
+				69969F5F2CA09E5700682635 /* GenderSelectionView.swift in Sources */,
 				69B752462CB4B59F00C0C126 /* DesiredBodyView.swift in Sources */,
 				693B07E92C963ADD00722E48 /* Rutina+CoreDataProperties.swift in Sources */,
 				693B07F12C97118500722E48 /* RoutineListView.swift in Sources */,
@@ -378,18 +412,24 @@
 				693B07ED2C963C6200722E48 /* RoutineViewModel.swift in Sources */,
 				69969F632CA17BEE00682635 /* GoalViewModel.swift in Sources */,
 				69969F5B2C9F6C3100682635 /* LoginViewModel.swift in Sources */,
+				695D274B2CC3507800821610 /* WeightViewModel.swift in Sources */,
+				69C6CC772CEADD780043B135 /* WorkoutLevelView.swift in Sources */,
 				69B752482CB4B5B200C0C126 /* DesiredBodyViewModel.swift in Sources */,
 				69B752442CADB6FA00C0C126 /* ProgressBarView.swift in Sources */,
 				69969F652CA2BC2800682635 /* UserSessionManager.swift in Sources */,
+				69FDC18A2CD7E64D0075F0CA /* HowOfgtenView.swift in Sources */,
 				690495BB2CB989BB00E82BC9 /* HeightViewModel.swift in Sources */,
 				69969F592C9F6C2800682635 /* LoginView.swift in Sources */,
 				692562D62C92FB8E0002524D /* Persistence.swift in Sources */,
 				69B752422CA734D800C0C126 /* ProgressViewModel.swift in Sources */,
 				692562D92C92FB8E0002524D /* FitnessRoutineApp.xcdatamodeld in Sources */,
 				69969F572C9F6BE900682635 /* User.swift in Sources */,
+				696BBAB12CCB1A270087724E /* TargetWeightView.swift in Sources */,
 				69969F6D2CA35DB100682635 /* BodyCurrentViewModel.swift in Sources */,
 				69969F6B2CA35DA400682635 /* BodyCurrentView.swift in Sources */,
+				69C6CC752CE065D00043B135 /* LevelActivityViewModel.swift in Sources */,
 				692562CD2C92FB8D0002524D /* FitnessRoutineAppApp.swift in Sources */,
+				696BBAB32CCB1A320087724E /* TargetWeightViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

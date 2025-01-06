@@ -25,26 +25,20 @@ struct GenderSelectionView: View {
                 // Opciones de género con animación al seleccionar
                 HStack(spacing: 37) {
                     GenderSelectionCard(gender: .male, isSelected: viewModel.selectedGender == .male) {
-                        withAnimation {
-                            viewModel.selectGender(.male)
-                            // Añadir vibración al seleccionar un género
-                            let generator = UIImpactFeedbackGenerator(style: .medium)
-                            generator.impactOccurred()
-                        }
+                        viewModel.selectGender(.male) // Mueve la selección antes de la animación
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred() // Vibración al seleccionar
                     }
-                    .scaleEffect(viewModel.selectedGender == .male ? 1.1 : 1.0)
-                    .animation(.easeInOut(duration: 0.1), value: viewModel.selectedGender)
+                    .scaleEffect(viewModel.selectedGender == .male ? 1.05 : 1.0)
+                    .animation(.easeInOut(duration: 0.05), value: viewModel.selectedGender) // Animación más rápida
 
                     GenderSelectionCard(gender: .female, isSelected: viewModel.selectedGender == .female) {
-                        withAnimation {
-                            viewModel.selectGender(.female)
-                            // Añadir vibración al seleccionar un género
-                            let generator = UIImpactFeedbackGenerator(style: .medium)
-                            generator.impactOccurred()
-                        }
+                        viewModel.selectGender(.female)
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred() // Vibración al seleccionar
                     }
-                    .scaleEffect(viewModel.selectedGender == .female ? 1.1 : 1.0)
-                    .animation(.easeInOut(duration: 0.2), value: viewModel.selectedGender)
+                    .scaleEffect(viewModel.selectedGender == .female ? 1.05 : 1.0)
+                    .animation(.easeInOut(duration: 0.05), value: viewModel.selectedGender) // Animación más rápida
                 }
                 .padding(.top, 150) // Añadir padding a la parte superior del HStack
                 .padding() // Padding horizontal
@@ -54,14 +48,10 @@ struct GenderSelectionView: View {
                 // Botón de continuar, solo aparece si se seleccionó un género
                 if viewModel.selectedGender != nil {
                     Button(action: {
-                        // Avanzar el progreso solo al presionar el botón Next
-                        withAnimation {
-                            progressViewModel.advanceProgress()
-                            navigateToGoal = true
-                            // Añadir vibración al pulsar el botón Next
-                            let generator = UIImpactFeedbackGenerator(style: .medium)
-                            generator.impactOccurred()
-                        }
+                        progressViewModel.advanceProgress()
+                        navigateToGoal = true
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred() // Vibración al pulsar Next
                     }) {
                         Text("Next")
                             .font(.headline)
@@ -172,16 +162,16 @@ struct GenderSelectionCard: View {
                     )
             }
            
-            .scaleEffect(isSelected ? 1.1 : 1.0)
-            .animation(.easeInOut(duration: 0.1), value: isSelected)
+            .scaleEffect(isSelected ? 1.05 : 1.0)
+            .animation(.easeInOut(duration: 0.05), value: isSelected)
             .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.clear, radius: 10, x: 0, y: 5)
 
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.blue)
                     .font(.largeTitle)
-                    .offset(x: 60, y: -130)
-                    .animation(.easeInOut(duration: 0.3))
+                    .offset(x: 55, y: -120)
+                    .animation(.easeInOut(duration: 0.1))
             }
         }
     }

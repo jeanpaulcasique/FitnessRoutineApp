@@ -45,4 +45,3 @@ class HeightViewModel: ObservableObject {
         return Int(cmHeight)
     }
 }
-

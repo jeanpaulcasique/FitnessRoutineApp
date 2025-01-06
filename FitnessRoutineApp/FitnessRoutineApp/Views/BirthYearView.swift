@@ -40,7 +40,6 @@ struct BirthYearView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.horizontal)
                         .scaleEffect(viewModel.selectedYear == year ? 1.2 : 1.0)
-                      
                         .animation(.easeInOut(duration: 0.2), value: viewModel.selectedYear)
                         .tag(year)
                         .onChange(of: viewModel.selectedYear) { _ in
@@ -82,28 +81,17 @@ struct BirthYearView: View {
                     .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
             }
             .padding(.horizontal, 20)
-            .disabled(!viewModel.canProceed)
-            .scaleEffect(viewModel.canProceed ? 1.0 : 0.95)
-            .opacity(viewModel.canProceed ? 1.0 : 0.5)
-            .animation(.easeInOut(duration: 0.3), value: viewModel.canProceed)
-            
-            // Control de navegación
+            .disabled(!viewModel.canProceed) // Deshabilitar si no se puede avanzar
+
+            // Navegación condicional
             NavigationLink(destination: HeightView(viewModel: HeightViewModel(), progressViewModel: progressViewModel), isActive: $isNavigatingToNextScreen) {
-                EmptyView()
+                EmptyView() // Vista vacía para la navegación
             }
         }
-        .background(Color(red: 249/255, green: 249/255, blue: 253/255)) // Fondo de la vista
         .navigationBarTitle("", displayMode: .inline)
-        .onAppear {
-            // Manejo de progreso
-            if viewModel.selectedYear != nil {
-                progressViewModel.decreaseProgress()
-            } else {
-                progressViewModel.advanceProgress()
-            }
-        }
+        .background(Color(red: 249/255, green: 249/255, blue: 253/255))
     }
-    
+
     // Función para vibrar
     private func vibrate() {
         let generator = UIImpactFeedbackGenerator(style: .medium)
@@ -111,12 +99,10 @@ struct BirthYearView: View {
     }
 }
 
-// Vista previa
+// Preview
 struct BirthYearView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            BirthYearView(viewModel: BirthYearViewModel(), progressViewModel: ProgressViewModel())
-        }
+        BirthYearView(viewModel: BirthYearViewModel(), progressViewModel: ProgressViewModel())
     }
 }
 
