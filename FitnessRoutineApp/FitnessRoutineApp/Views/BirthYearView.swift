@@ -8,6 +8,8 @@ struct BirthYearView: View {
     // Estado para controlar la navegación
     @State private var isNavigatingToNextScreen = false
 
+    @Environment(\.presentationMode) var presentationMode // Para manejar la navegación
+
     var body: some View {
         VStack {
             // Barra de progreso
@@ -89,6 +91,18 @@ struct BirthYearView: View {
             }
         }
         .navigationBarTitle("", displayMode: .inline)
+        .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss() // Regresa a la pantalla anterior
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue) // Azul
+                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                }
+            }
+        }
         .background(Color(red: 249/255, green: 249/255, blue: 253/255))
     }
 

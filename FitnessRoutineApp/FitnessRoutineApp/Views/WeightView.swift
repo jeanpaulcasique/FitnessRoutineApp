@@ -6,6 +6,8 @@ struct WeightView: View {
     @State private var isNavigatingToTargetWeightView = false // Estado para controlar la navegación
     var userHeight: Double
 
+    @Environment(\.presentationMode) var presentationMode // Para manejar la navegación
+
     var body: some View {
         VStack {
             // Barra de progreso
@@ -92,6 +94,10 @@ struct WeightView: View {
             // Botón Next con navegación
             NavigationLink(destination: TargetWeightView(viewModel: TargetWeightViewModel(), progressViewModel: progressViewModel), isActive: $isNavigatingToTargetWeightView) {
                 Button(action: {
+                    // Activar vibración
+                    let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                    impactFeedback.impactOccurred()
+                    
                     progressViewModel.advanceProgress()
                     isNavigatingToTargetWeightView = true
                 }) {
@@ -119,7 +125,18 @@ struct WeightView: View {
         }
         .navigationTitle("") // Título vacío
         .navigationBarTitleDisplayMode(.inline) // Mantiene el estilo inline
-        .navigationBarBackButtonHidden(false) // Muestra solo el ícono sin texto
+        .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss() // Regresa a la pantalla anterior
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue) // Azul
+                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                }
+            }
+        }
         .background(Color(red: 249/255, green: 249/255, blue: 253/255)) // Fondo añadido
     }
 }

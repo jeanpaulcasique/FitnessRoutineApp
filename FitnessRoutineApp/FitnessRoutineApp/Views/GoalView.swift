@@ -8,6 +8,8 @@ struct GoalView: View {
     @State private var buttonScale: CGFloat = 1.0 // Variable para controlar la escala del botón
     @State private var showInfo: Bool = false // Controlar la visibilidad del texto informativo
 
+    @Environment(\.presentationMode) var presentationMode // Agregar esta línea
+
     var body: some View {
         VStack {
             // Barra de progreso
@@ -43,6 +45,18 @@ struct GoalView: View {
         .padding(.top)
         .background(Color(red: 249/255, green: 249/255, blue: 253/255))
         .navigationBarTitle("", displayMode: .inline) // Mantener el título en modo inline
+        .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss() // Regresar a la pantalla anterior
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue) // Azul
+                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                }
+            }
+        }
     }
 
     // Opciones de objetivos
