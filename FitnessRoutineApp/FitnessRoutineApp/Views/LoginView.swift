@@ -22,6 +22,10 @@ struct LoginView: View {
                     Spacer()
 
                     Button(action: {
+                        // Vibración al presionar el botón
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
+
                         // Navegación rápida al presionar START
                         navigateToGenderSelection = true
                     }) {

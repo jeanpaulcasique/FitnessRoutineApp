@@ -6,6 +6,7 @@ struct GenderSelectionView: View {
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToGoal = false // Estado para controlar la navegación
     @State private var showInfo = false // Estado para mostrar/ocultar el texto de información
+    @Environment(\.presentationMode) var presentationMode // Para manejar la navegación
 
     var body: some View {
         ZStack {
@@ -80,12 +81,24 @@ struct GenderSelectionView: View {
                 }
             }
             .navigationBarTitle("", displayMode: .inline) // Mantener el título en modo inline
+            .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
             .background(Color(red: 249/255, green: 249/255, blue: 253/255)) // Usar el color de fondo adecuado
 
             // Cuadro de información interactivo
             GenderInfoView(showInfo: $showInfo)
                 .padding()
                 .zIndex(1) // Asegura que esté por encima de otros elementos
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss() // Regresar a la pantalla anterior
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue) // Azul
+                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                }
+            }
         }
     }
 }

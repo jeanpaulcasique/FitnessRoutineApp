@@ -6,14 +6,16 @@ struct DesiredBodyView: View {
     @State private var selectedBodyIndex: Int = 0 // Usar @State para manejar el índice seleccionado
     @State private var isNavigatingToBirthYearView = false // Estado para controlar la navegación
 
+    @Environment(\.presentationMode) var presentationMode // Para manejar la navegación
+
     var body: some View {
         VStack {
-            // Progress bar at the top
+            // Barra de progreso en la parte superior
             ProgressBarView(progressViewModel: progressViewModel)
                 .padding(.top, 20)
                 .padding(.horizontal, 20)
 
-            // Title text
+            // Título
             Text("What's your desired body shape?")
                 .font(.system(size: 31, weight: .bold))
                 .padding(.top, 10)
@@ -21,7 +23,7 @@ struct DesiredBodyView: View {
                 .padding(.horizontal, 10)
 
             GeometryReader { geometry in
-                // Main body image selection view
+                // Vista principal de selección de imagen de cuerpo
                 TabView(selection: $selectedBodyIndex) {
                     ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
                         ZStack {
@@ -47,7 +49,7 @@ struct DesiredBodyView: View {
             }
             .padding(.vertical, 10)
 
-            // Custom slider with more spacing between circles
+            // Slider personalizado con mayor separación entre círculos
             ZStack {
                 HStack(spacing: 30) { // Espaciado mayor entre los círculos
                     ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
@@ -69,10 +71,10 @@ struct DesiredBodyView: View {
                         generator.impactOccurred()
                     }
                 ), in: 0...Double(viewModel.bodyImages.count - 1), step: 1)
-                .opacity(0.01) // Invisible slider to allow swiping
+                .opacity(0.01) // Slider invisible para permitir el deslizamiento
             }
 
-            // Labels under the slider
+            // Etiquetas debajo del slider
             HStack {
                 Text("Cut")
                     .font(.system(size: 16, weight: .semibold))
@@ -83,7 +85,7 @@ struct DesiredBodyView: View {
             .padding(.horizontal, 40)
             .padding(.top, 5)
 
-            // Body fat and goal description
+            // Descripción sobre la grasa corporal y el objetivo
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
                     Image(systemName: "target")
@@ -108,7 +110,7 @@ struct DesiredBodyView: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 15)
 
-            // Next button for navigation
+            // Botón "Next" para navegación
             NavigationLink(destination: BirthYearView(viewModel: BirthYearViewModel(), progressViewModel: progressViewModel), isActive: $isNavigatingToBirthYearView) {
                 Text("Next")
                     .font(.system(size: 18, weight: .bold))
@@ -134,6 +136,18 @@ struct DesiredBodyView: View {
             })
         }
         .navigationBarTitle("", displayMode: .inline)
+        .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss() // Regresa a la pantalla anterior
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue) // Azul
+                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                }
+            }
+        }
         .background(Color(red: 249/255, green: 249/255, blue: 253/255))
     }
 }

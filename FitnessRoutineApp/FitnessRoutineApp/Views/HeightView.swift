@@ -5,12 +5,14 @@ struct HeightView: View {
     @ObservedObject var progressViewModel = ProgressViewModel()
     @State private var navigateToWeightView = false // Propiedad de estado para la navegación
 
+    @Environment(\.presentationMode) var presentationMode // Para manejar la navegación
+
     var body: some View {
         HStack {
             VStack {
                 // Barra de progreso
                 ProgressBarView(progressViewModel: progressViewModel)
-                    .padding(.top, 100)
+                    .padding(.top, 120)
                     .padding(.horizontal, 20)
 
                 // Título
@@ -47,8 +49,6 @@ struct HeightView: View {
                     }
                 }
                 .padding(.horizontal, 40)
-
-               
 
                 // Mostrar altura seleccionada
                 if viewModel.isCmSelected {
@@ -138,6 +138,18 @@ struct HeightView: View {
         .background(Color(red: 249/255, green: 249/255, blue: 253/255))
         .edgesIgnoringSafeArea(.all)
         .navigationBarTitle("", displayMode: .inline)
+        .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss() // Regresa a la pantalla anterior
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue) // Azul
+                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                }
+            }
+        }
     }
 
     private func getHeightRange() -> [Int] {
@@ -164,3 +176,4 @@ struct HeightView_Previews: PreviewProvider {
         HeightView()
     }
 }
+

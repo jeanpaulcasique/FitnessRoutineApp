@@ -1,5 +1,6 @@
 import SwiftUI
-import UIKit 
+import UIKit
+
 struct BodyCurrentView: View {
     @ObservedObject var viewModel = BodyCurrentViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
@@ -78,8 +79,17 @@ struct BodyCurrentView: View {
 
         }
         .navigationBarTitle("", displayMode: .inline)
-        .onDisappear {
-    
+        .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss() // Regresa a la pantalla anterior
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.blue) // Azul
+                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                }
+            }
         }
         .background(Color(red: 249/255, green: 249/255, blue: 253/255)) // Fondo claro
     }
