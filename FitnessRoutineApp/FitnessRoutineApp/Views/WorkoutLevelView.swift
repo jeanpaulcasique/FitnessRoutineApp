@@ -17,11 +17,12 @@ struct WorkoutLevelView: View {
 
             // Título principal
             Text("Choose your preferred workout level")
-                .font(.system(size: 24, weight: .bold))
+                .font(.system(size: 29, weight: .bold))
                 .multilineTextAlignment(.center)
                 .foregroundColor(.black)
-                .padding(.top, 40)
-                .padding(.bottom, 20)
+                .padding(.top, 10)
+                .padding(.bottom, 15)
+                .padding(.horizontal, 20)
 
             // Lista de niveles
             levelOptionsList
@@ -105,7 +106,7 @@ struct WorkoutLevelView: View {
                 .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
         }
         .padding(.horizontal, 20)
-        .padding(.bottom, 50)
+        .padding(.bottom, 15)
     }
 
     private var backButton: some ToolbarContent {
@@ -124,7 +125,7 @@ struct WorkoutLevelView: View {
             progressViewModel.advanceProgress()
         }
         triggerHapticFeedback()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             navigateToNextScreen = true
         }
     }

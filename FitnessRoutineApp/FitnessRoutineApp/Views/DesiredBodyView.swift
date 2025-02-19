@@ -18,7 +18,7 @@ struct DesiredBodyView: View {
             
             // Título
             Text("What's your desired body shape?")
-                .font(.system(size: 31, weight: .bold))
+                .font(.system(size: 29, weight: .bold))
                 .padding(.top, 10)
                 .foregroundColor(.black)
                 .padding(.horizontal, 10)
@@ -190,7 +190,7 @@ private extension DesiredBodyView {
         }
         generateHapticFeedback()
         // Retraso para permitir que la animación se muestre antes de navegar
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isNavigatingToBirthYearView = true
         }
     }

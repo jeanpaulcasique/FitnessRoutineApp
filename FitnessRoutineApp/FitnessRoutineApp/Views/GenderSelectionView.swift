@@ -100,7 +100,7 @@ struct GenderSelectionView: View {
         generateHapticFeedback()
 
         // Esperar un poco antes de navegar a la siguiente vista
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToGoal = true
             withAnimation {
                 progressUpdating = false
