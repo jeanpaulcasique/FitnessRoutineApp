@@ -1,12 +1,10 @@
-
-
 import SwiftUI
+import Combine
 
+// MARK: - LevelActivityViewModel
 class LevelActivityViewModel: ObservableObject {
     @Published var sliderValue: Double = 0 {
-        didSet {
-            updateActivityLevel()
-        }
+        didSet { updateActivityLevel() }
     }
     
     @Published var currentImageName: String = "1level"
@@ -20,13 +18,12 @@ class LevelActivityViewModel: ObservableObject {
         "I am very active and work out daily"
     ]
     
+    var imageCount: Int { imageNames.count }
+    
     private func updateActivityLevel() {
         let index = Int(sliderValue)
         currentImageName = imageNames[index]
         activityDescription = descriptions[index]
     }
-    
-    func nextAction() {
-        // Acción del botón "Next"
-    }
 }
+

@@ -1,11 +1,11 @@
 import SwiftUI
 
+// MARK: - DesiredBodyViewModel
 class DesiredBodyViewModel: ObservableObject {
     @Published var selectedBodyIndex: Int = 0
-    @Published var dragOffset: CGFloat = 0 // Control del desplazamiento
+    @Published var dragOffset: CGFloat = 0
     let bodyImages = ["1m", "2m", "3m", "4m", "5m", "6m", "7m"]
     
-    // Textos para cada imagen
     let bodyFatRanges = [
         "4% ~ 6% (Reasonable Goal!)",
         "7% ~ 10% (Reasonable Goal!)",
@@ -42,3 +42,4 @@ class DesiredBodyViewModel: ObservableObject {
         selectedBodyIndex = index
     }
 }
+

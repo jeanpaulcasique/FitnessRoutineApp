@@ -4,8 +4,9 @@ import UIKit
 struct BodyCurrentView: View {
     @ObservedObject var viewModel = BodyCurrentViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
-    @State private var isButtonPressed = false // Estado para la animación del botón
-    @Environment(\.presentationMode) var presentationMode // Para manejar la navegación
+    @State private var isButtonPressed = false // Para animación del botón
+    @State private var navigateToNextView = false // Control de navegación
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         VStack {
@@ -14,7 +15,7 @@ struct BodyCurrentView: View {
                 .padding(.top, 20)
                 .padding(.horizontal, 20)
 
-            // Título de la vista
+            // Título
             Text("What's your current body shape?")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -28,8 +29,8 @@ struct BodyCurrentView: View {
                     BodyOptionView(imageName: shape.rawValue, isSelected: viewModel.selectedBodyShape == shape)
                         .onTapGesture {
                             withAnimation {
-                                viewModel.selectBodyShape(shape) // Seleccionar la opción
-                                vibrate() // Vibrar al seleccionar una opción
+                                viewModel.selectBodyShape(shape) // Seleccionar opción
+                                vibrate() // Vibrar al seleccionar
                             }
                         }
                 }
@@ -40,11 +41,8 @@ struct BodyCurrentView: View {
             Spacer()
 
             // Botón "Next", visible solo si hay una opción seleccionada
-            if let _ = viewModel.selectedBodyShape { // Solo mostrar el botón si se ha seleccionado una opción
-                Button(action: {
-                    vibrate() // Vibrar al pulsar el botón
-                    progressViewModel.advanceProgress()
-                }) {
+            if viewModel.selectedBodyShape != nil {
+                Button(action: proceedToNext) {
                     Text("Next")
                         .font(.headline)
                         .foregroundColor(.white)
@@ -59,39 +57,47 @@ struct BodyCurrentView: View {
                         )
                         .cornerRadius(10)
                         .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
-                        .scaleEffect(isButtonPressed ? 0.95 : 1.0) // Animación de escala
-                        .animation(.easeInOut, value: isButtonPressed) // Añadir animación
+                        .scaleEffect(isButtonPressed ? 0.95 : 1.0)
+                        .animation(.easeInOut, value: isButtonPressed)
                 }
-                .simultaneousGesture(DragGesture(minimumDistance: 0)
-                    .onChanged { _ in isButtonPressed = true } // Cambia el estado al presionar
-                    .onEnded { _ in
-                        isButtonPressed = false // Restaura el estado al soltar
-                    }
-                )
                 .padding(.horizontal, 20)
-
-                // Navegación a DesiredBodyView
-                NavigationLink(destination: DesiredBodyView(viewModel: DesiredBodyViewModel(), progressViewModel: progressViewModel), isActive: .constant(isButtonPressed && viewModel.selectedBodyShape != nil)) {
-                    EmptyView()
-                }
-                .hidden() // Ocultar el NavigationLink
             }
 
+            // Navegación a DesiredBodyView
+            NavigationLink(destination: DesiredBodyView(viewModel: DesiredBodyViewModel(), progressViewModel: progressViewModel),
+                           isActive: $navigateToNextView) {
+                EmptyView()
+            }
+            .hidden()
         }
         .navigationBarTitle("", displayMode: .inline)
-        .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
+        .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss() // Regresa a la pantalla anterior
-                }) {
+                Button(action: goBack) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.blue) // Azul
-                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                        .foregroundColor(.blue)
+                        .imageScale(.large)
                 }
             }
         }
-        .background(Color(red: 249/255, green: 249/255, blue: 253/255)) // Fondo claro
+        .background(Color(red: 249/255, green: 249/255, blue: 253/255))
+    }
+
+    // Función para avanzar a la siguiente pantalla
+    private func proceedToNext() {
+        vibrate()
+        isButtonPressed = true
+        progressViewModel.advanceProgress() // Aumentar progreso
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            navigateToNextView = true
+        }
+    }
+
+    // Función para retroceder
+    private func goBack() {
+        progressViewModel.decreaseProgress() // Reducir progreso al retroceder
+        presentationMode.wrappedValue.dismiss()
     }
 
     // Función de vibración
@@ -134,7 +140,7 @@ struct BodyOptionView: View {
     }
 }
 
-// Preview para BodyCurrentView
+// Preview
 struct BodyCurrentView_Previews: PreviewProvider {
     static var previews: some View {
         BodyCurrentView(progressViewModel: ProgressViewModel())

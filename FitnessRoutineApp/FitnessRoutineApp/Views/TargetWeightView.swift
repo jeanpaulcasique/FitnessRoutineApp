@@ -1,29 +1,27 @@
 import SwiftUI
 
+// MARK: - TargetWeightView
 struct TargetWeightView: View {
-    @ObservedObject var viewModel: TargetWeightViewModel
+    @StateObject var viewModel: TargetWeightViewModel  // Cambiado a @StateObject para que persista
     @ObservedObject var progressViewModel: ProgressViewModel
-    @State private var navigateToHowOftenView = false // Estado para controlar la navegación
-    @Environment(\.presentationMode) var presentationMode // Para manejar la navegación
+    @State private var navigateToHowOftenView = false
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         VStack {
-            // Barra de progreso simulada
             ProgressBarView(progressViewModel: progressViewModel)
                 .padding(.top, 20)
                 .padding(.horizontal, 20)
-
-            // Título principal
+            
             Text("What's your target weight?")
                 .font(.system(size: 24, weight: .bold))
                 .multilineTextAlignment(.center)
                 .padding(.top, 40)
                 .padding(.bottom, 10)
                 .foregroundColor(.black)
-
+            
             Spacer(minLength: 100)
-
-            // Selector de kg y lb
+            
             HStack {
                 Button(action: {
                     viewModel.toggleUnit(toKg: true)
@@ -46,38 +44,31 @@ struct TargetWeightView: View {
                         .cornerRadius(20)
                 }
             }
-            .padding(.bottom, 30)
             .padding(.top, 20)
-
-            // Peso objetivo
+            .padding(.bottom, 30)
+            
             Text("\(Int(viewModel.weightInPreferredUnit)) \(viewModel.isKgSelected ? "kg" : "lb")")
                 .font(.system(size: 48, weight: .bold))
-                .padding(.bottom, 5)
                 .foregroundColor(.black)
-
-            // Deslizador de peso
+                .padding(.bottom, 5)
+            
             Slider(value: $viewModel.selectedWeightKg, in: 60...90, step: 0.5)
                 .accentColor(.blue)
                 .padding(.horizontal, 40)
                 .onChange(of: viewModel.selectedWeightKg) { newValue in
                     viewModel.updateWeight(newWeight: newValue)
                 }
-
+            
             Spacer()
-
-            // Botón Next con navegación
+            
             NavigationLink(
-                destination: HowOftenView(viewModel: HowOftenViewModel(), progressViewModel: progressViewModel),
+                destination: HowOftenView(progressViewModel: progressViewModel),
                 isActive: $navigateToHowOftenView
             ) {
                 EmptyView()
             }
-
-            Button(action: {
-                let generator = UIImpactFeedbackGenerator(style: .medium) // Vibración de impacto
-                generator.impactOccurred() // Genera la vibración
-                navigateToHowOftenView = true
-            }) {
+            
+            Button(action: proceedToNext) {
                 Text("Next")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.white)
@@ -90,7 +81,7 @@ struct TargetWeightView: View {
                             endPoint: .trailing
                         )
                     )
-                    .cornerRadius(10)
+                    .cornerRadius(12)
                     .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
             }
             .padding(.horizontal, 20)
@@ -99,24 +90,39 @@ struct TargetWeightView: View {
         .onAppear {
             viewModel.updateHealthBenefitMessage()
         }
-        .navigationTitle("") // Título vacío
-        .navigationBarTitleDisplayMode(.inline) // Mantiene el estilo inline
-        .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss() // Regresa a la pantalla anterior
-                }) {
+                Button(action: goBack) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.blue) // Azul
-                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                        .foregroundColor(.blue)
+                        .imageScale(.large)
                 }
             }
         }
-        .background(Color(red: 249/255, green: 249/255, blue: 253/255)) // Fondo añadido
+        .background(Color(red: 249/255, green: 249/255, blue: 253/255))
+    }
+    
+    // MARK: - Acciones
+    private func proceedToNext() {
+        withAnimation(.easeInOut(duration: 0.5)) {
+            progressViewModel.advanceProgress()
+        }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.navigateToHowOftenView = true
+        }
+    }
+    
+    private func goBack() {
+        progressViewModel.decreaseProgress()
+        presentationMode.wrappedValue.dismiss()
     }
 }
 
+// MARK: - Preview
 struct TargetWeightView_Previews: PreviewProvider {
     static var previews: some View {
         TargetWeightView(viewModel: TargetWeightViewModel(), progressViewModel: ProgressViewModel())
