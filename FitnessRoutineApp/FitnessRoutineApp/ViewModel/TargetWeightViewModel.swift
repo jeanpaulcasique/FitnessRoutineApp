@@ -1,16 +1,17 @@
 import SwiftUI
 
+// MARK: - TargetWeightViewModel
 class TargetWeightViewModel: ObservableObject {
-    @Published var selectedWeightKg: Double = 74.0 // Peso inicial
-    @Published var isKgSelected: Bool = true // Para manejar la selección entre kg y lb
+    @Published var selectedWeightKg: Double = 74.0
+    @Published var isKgSelected: Bool = true
     @Published var healthBenefitMessage: String = ""
     
     var selectedWeightLb: Double {
-        return selectedWeightKg * 2.20462
+        selectedWeightKg * 2.20462
     }
     
     var weightInPreferredUnit: Double {
-        return isKgSelected ? selectedWeightKg : selectedWeightLb
+        isKgSelected ? selectedWeightKg : selectedWeightLb
     }
     
     func toggleUnit(toKg: Bool) {
@@ -33,3 +34,4 @@ class TargetWeightViewModel: ObservableObject {
         updateHealthBenefitMessage()
     }
 }
+

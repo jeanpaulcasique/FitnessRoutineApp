@@ -1,8 +1,20 @@
 import Foundation
+import CoreData
 
-struct User {
-    var gender: Gender?
-    var goal: String?
-    
-    // Puedes agregar más campos según sea necesario
+@objc(User)
+public class User: NSManagedObject {
+
 }
+extension User {
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<User> {
+        return NSFetchRequest<User>(entityName: "User")
+    }
+    
+    @NSManaged public var gender: String?
+    @NSManaged public var goal: String?
+    @NSManaged public var currentBodyShape: String?
+    @NSManaged public var desiredBodyShape: String?
+    @NSManaged public var birthYear: Int16
+    @NSManaged public var height: Double
+}
+

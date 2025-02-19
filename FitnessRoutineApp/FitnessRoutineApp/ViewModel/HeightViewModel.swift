@@ -1,24 +1,25 @@
 import SwiftUI
 
+// MARK: - HeightViewModel
 class HeightViewModel: ObservableObject {
     @Published var selectedHeightCm: Int = 175
     @Published var selectedHeightFt: Int = 5
     @Published var selectedHeightInch: Int = 9
     @Published var isCmSelected: Bool = true
 
-    // Función para alternar entre centímetros y pies
+    // MARK: - Unit Toggle
     func toggleUnit(toCm: Bool) {
         isCmSelected = toCm
     }
 
-    // Función para cambiar el valor del selector en cm
+    // MARK: - Update Height (cm)
     func updateHeightInCm(_ value: Double) {
-        if value >= 100 && value <= 230 { // Limitar el rango de altura en cm
+        if value >= 100 && value <= 230 {
             selectedHeightCm = Int(value)
         }
     }
 
-    // Función para incrementar pies y pulgadas
+    // MARK: - Increment / Decrement for Feet & Inches
     func incrementFeetAndInches() {
         if selectedHeightInch < 11 {
             selectedHeightInch += 1
@@ -28,7 +29,6 @@ class HeightViewModel: ObservableObject {
         }
     }
 
-    // Función para decrementar pies y pulgadas
     func decrementFeetAndInches() {
         if selectedHeightInch > 0 {
             selectedHeightInch -= 1
@@ -38,10 +38,11 @@ class HeightViewModel: ObservableObject {
         }
     }
 
-    // Convierte la altura de pies/pulgadas a centímetros
+    // MARK: - Height Conversion Helper
     func heightInCm() -> Int {
         let totalInches = (selectedHeightFt * 12) + selectedHeightInch
         let cmHeight = Double(totalInches) * 2.54
         return Int(cmHeight)
     }
 }
+

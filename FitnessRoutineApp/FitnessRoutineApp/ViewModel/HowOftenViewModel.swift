@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 
+// MARK: - HowOftenViewModel
 class HowOftenViewModel: ObservableObject {
     @Published var currentIndex = 0
     let imageNames = ["1time", "2time", "3time", "4time"]
@@ -11,17 +12,11 @@ class HowOftenViewModel: ObservableObject {
         "I'm committed to daily workouts for optimal results"
     ]
     
-    var imageCount: Int {
-        imageNames.count
-    }
+    var imageCount: Int { imageNames.count }
     
-    var currentImageName: String {
-        imageNames[currentIndex]
-    }
+    var currentImageName: String { imageNames[currentIndex] }
     
-    var descriptionText: String {
-        descriptions[currentIndex]
-    }
+    var descriptionText: String { descriptions[currentIndex] }
     
     func nextImage() {
         if currentIndex < imageNames.count - 1 {

@@ -1,59 +1,47 @@
 import SwiftUI
-import UIKit // Asegúrate de importar UIKit para la vibración
+import UIKit
 
+// MARK: - GenderSelectionView
 struct GenderSelectionView: View {
     @ObservedObject var viewModel: GenderSelectionViewModel
     @ObservedObject var progressViewModel: ProgressViewModel
-    @State private var navigateToGoal = false // Estado para controlar la navegación
-    @State private var showInfo = false // Estado para mostrar/ocultar el texto de información
-    @Environment(\.presentationMode) var presentationMode // Para manejar la navegación
-
+    @State private var navigateToGoal = false
+    @State private var showInfo = false
+    @State private var progressUpdating = false // Nuevo estado para manejar la animación
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         ZStack {
             VStack {
-                // Barra de progreso controlada por el ProgressViewModel
+                // Barra de progreso con animación condicional
                 ProgressBarView(progressViewModel: progressViewModel)
                     .padding(.top, 20)
                     .padding(.horizontal)
+                    .opacity(progressUpdating ? 0.5 : 1.0) // Reducir opacidad durante la actualización
 
-                // Título de la pantalla
                 Text("What's your gender?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundColor(.black) // Asegura que el texto sea negro
+                    .foregroundColor(.black)
                     .padding(.top, 0)
-
-                // Opciones de género con animación al seleccionar
+                
                 HStack(spacing: 37) {
                     GenderSelectionCard(gender: .male, isSelected: viewModel.selectedGender == .male) {
-                        viewModel.selectGender(.male) // Mueve la selección antes de la animación
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred() // Vibración al seleccionar
+                        viewModel.selectGender(.male)
+                        generateHapticFeedback()
                     }
-                    .scaleEffect(viewModel.selectedGender == .male ? 1.05 : 1.0)
-                    .animation(.easeInOut(duration: 0.05), value: viewModel.selectedGender) // Animación más rápida
-
                     GenderSelectionCard(gender: .female, isSelected: viewModel.selectedGender == .female) {
                         viewModel.selectGender(.female)
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred() // Vibración al seleccionar
+                        generateHapticFeedback()
                     }
-                    .scaleEffect(viewModel.selectedGender == .female ? 1.05 : 1.0)
-                    .animation(.easeInOut(duration: 0.05), value: viewModel.selectedGender) // Animación más rápida
                 }
-                .padding(.top, 150) // Añadir padding a la parte superior del HStack
-                .padding() // Padding horizontal
-
-                Spacer() // Añadimos un Spacer para empujar el botón hacia abajo
-
-                // Botón de continuar, solo aparece si se seleccionó un género
+                .padding(.top, 150)
+                .padding()
+                
+                Spacer()
+                
                 if viewModel.selectedGender != nil {
-                    Button(action: {
-                        progressViewModel.advanceProgress()
-                        navigateToGoal = true
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred() // Vibración al pulsar Next
-                    }) {
+                    Button(action: proceedToNext) {
                         Text("Next")
                             .font(.headline)
                             .foregroundColor(.white)
@@ -70,73 +58,89 @@ struct GenderSelectionView: View {
                             .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
                     }
                     .padding(.horizontal, 20)
-
+                    
                     NavigationLink(
                         destination: GoalView(viewModel: GoalViewModel(), progressViewModel: progressViewModel),
                         isActive: $navigateToGoal
                     ) {
                         EmptyView()
                     }
-                    .padding(.bottom, 10) // Alinea el botón con otras pantallas colocando más espacio en la parte inferior
+                    .padding(.bottom, 10)
                 }
             }
-            .navigationBarTitle("", displayMode: .inline) // Mantener el título en modo inline
-            .navigationBarBackButtonHidden(true) // Ocultar el botón de retroceso predeterminado
-            .background(Color(red: 249/255, green: 249/255, blue: 253/255)) // Usar el color de fondo adecuado
-
-            // Cuadro de información interactivo
+            .navigationBarTitle("", displayMode: .inline)
+            .navigationBarBackButtonHidden(true)
+            .background(Color(red: 249/255, green: 249/255, blue: 253/255))
+            
             GenderInfoView(showInfo: $showInfo)
                 .padding()
-                .zIndex(1) // Asegura que esté por encima de otros elementos
+                .zIndex(1)
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss() // Regresar a la pantalla anterior
-                }) {
+                Button(action: goBack) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.blue) // Azul
-                        .imageScale(.large) // Tamaño de la flecha igual a las otras pantallas
+                        .foregroundColor(.blue)
+                        .imageScale(.large)
                 }
             }
         }
     }
+    
+    private func proceedToNext() {
+        // Actualizar la barra de progreso con animación antes de continuar
+        withAnimation(.easeInOut(duration: 0.5)) {
+            progressUpdating = true
+        }
+        
+        // Avanzar en la barra de progreso
+        progressViewModel.advanceProgress()
+        
+        // Generar feedback háptico
+        generateHapticFeedback()
+
+        // Esperar un poco antes de navegar a la siguiente vista
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.navigateToGoal = true
+            withAnimation {
+                progressUpdating = false
+            }
+        }
+    }
+    
+    private func goBack() {
+        progressViewModel.decreaseProgress()
+        presentationMode.wrappedValue.dismiss()
+    }
+    
+    private func generateHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
+    }
 }
 
-// Vista de información encapsulada
+// MARK: - GenderInfoView
 struct GenderInfoView: View {
     @Binding var showInfo: Bool
-        
+    
     var body: some View {
         ZStack {
-            
-            // HStack para los íconos de información
             HStack {
-                
                 Image(systemName: "info.circle")
                     .foregroundColor(.blue)
                     .font(.title)
                     .padding(.top, -290)
-                    .onTapGesture {
-                        withAnimation {
-                            showInfo.toggle()
-                        }
-                    }
-
+                    .onTapGesture { withAnimation { showInfo.toggle() } }
+                
                 Text("Why we ask this?")
                     .font(.headline)
                     .padding(.top, -285)
                     .foregroundColor(.blue)
-                    .onTapGesture {
-                        withAnimation {
-                            showInfo.toggle()
-                        }
-                    }
+                    .onTapGesture { withAnimation { showInfo.toggle() } }
                 Spacer()
             }
             .padding(.horizontal)
-
-            // Texto informativo que aparece como un overlay
+            
             if showInfo {
                 Text("This will help us tailor your workout to match your metabolic rate perfectly.")
                     .padding()
@@ -147,20 +151,19 @@ struct GenderInfoView: View {
                     .transition(.opacity)
                     .padding(.horizontal)
                     .padding(.top, -290)
-
-                    .zIndex(1) // Asegura que esté por encima de otros elementos
-                    .offset(y: 50) // Ajusta la posición vertical si es necesario
+                    .zIndex(1)
+                    .offset(y: 50)
             }
         }
     }
 }
 
-// Vista de la tarjeta de selección de género
+// MARK: - GenderSelectionCard
 struct GenderSelectionCard: View {
     let gender: Gender
     let isSelected: Bool
     let action: () -> Void
-
+    
     var body: some View {
         ZStack {
             Button(action: action) {
@@ -174,27 +177,23 @@ struct GenderSelectionCard: View {
                             .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 3)
                     )
             }
-           
             .scaleEffect(isSelected ? 1.05 : 1.0)
-            .animation(.easeInOut(duration: 0.05), value: isSelected)
             .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.clear, radius: 10, x: 0, y: 5)
-
+            
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.blue)
                     .font(.largeTitle)
                     .offset(x: 55, y: -120)
-                    .animation(.easeInOut(duration: 0.1))
             }
         }
     }
 }
 
+// MARK: - Preview
 struct GenderSelectionView_Previews: PreviewProvider {
     static var previews: some View {
-        let viewModel = GenderSelectionViewModel()
-        let progressViewModel = ProgressViewModel()
-        GenderSelectionView(viewModel: viewModel, progressViewModel: progressViewModel)
+        GenderSelectionView(viewModel: GenderSelectionViewModel(), progressViewModel: ProgressViewModel())
     }
 }
 
