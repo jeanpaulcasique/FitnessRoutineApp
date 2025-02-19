@@ -15,9 +15,9 @@ struct HowOftenView: View {
                 .padding(.horizontal, 20)
             
             Text("How often would you like to work out?")
-                .font(.system(size: 24, weight: .bold))
+                .font(.system(size: 29, weight: .bold))
                 .multilineTextAlignment(.center)
-                .padding(.top, 40)
+                .padding(.top, 15)
                 .padding(.bottom, 20)
                 .foregroundColor(.black)
             
@@ -104,7 +104,7 @@ struct HowOftenView: View {
                     .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .padding(.bottom, 0)
             
             // NavigationLink oculto para la siguiente pantalla
             NavigationLink(destination: LevelActivityView(progressViewModel: progressViewModel),
@@ -133,7 +133,7 @@ struct HowOftenView: View {
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         // Reducir el retraso para una transición más rápida
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToNextView = true
         }
     }

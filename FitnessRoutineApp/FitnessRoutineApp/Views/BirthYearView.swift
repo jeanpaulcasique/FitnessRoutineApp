@@ -123,7 +123,7 @@ private extension BirthYearView {
             progressViewModel.advanceProgress()
         }
         vibrate()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isNavigatingToNextScreen = true
         }
     }

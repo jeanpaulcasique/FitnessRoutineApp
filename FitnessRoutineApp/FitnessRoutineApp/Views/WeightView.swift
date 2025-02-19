@@ -42,10 +42,11 @@ private extension WeightView {
     
     var title: some View {
         Text("What's your current weight?")
-            .font(.system(size: 24, weight: .bold))
+            .font(.system(size: 27, weight: .bold))
             .foregroundColor(.black)
             .padding(.top, 40)
             .padding(.bottom, 10)
+            .padding(.horizontal, 20)
     }
     
     var unitSelector: some View {
@@ -131,7 +132,7 @@ private extension WeightView {
                     .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 15)
+            .padding(.bottom, 0)
             
             NavigationLink(
                 destination: TargetWeightView(viewModel: TargetWeightViewModel(), progressViewModel: progressViewModel),
@@ -163,7 +164,7 @@ private extension WeightView {
             progressViewModel.advanceProgress()
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isNavigatingToTargetWeightView = true
         }
     }

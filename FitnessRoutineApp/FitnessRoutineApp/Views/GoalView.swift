@@ -120,7 +120,7 @@ struct GoalView: View {
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
 
         // Esperar un poco antes de navegar a la siguiente vista para hacer la transición suave
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToBodyCurrent = true
             withAnimation {
                 progressUpdating = false

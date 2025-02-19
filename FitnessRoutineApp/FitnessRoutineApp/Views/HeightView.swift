@@ -60,6 +60,7 @@ private extension HeightView {
             .padding(.horizontal, 10)
             .lineLimit(1)
             .foregroundColor(.black)
+            .padding(.bottom, 180)
     }
     
     var unitSelector: some View {
@@ -116,7 +117,7 @@ private extension HeightView {
                 .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
         }
         .padding(.horizontal, 20)
-        .padding(.bottom, 40)
+        .padding(.bottom, 30)
         .simultaneousGesture(TapGesture().onEnded {
             generateHapticFeedback()
         })
@@ -199,7 +200,7 @@ private extension HeightView {
             progressViewModel.advanceProgress()
         }
         generateHapticFeedback()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToWeightView = true
         }
     }

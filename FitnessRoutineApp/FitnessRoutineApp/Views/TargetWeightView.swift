@@ -14,13 +14,14 @@ struct TargetWeightView: View {
                 .padding(.horizontal, 20)
             
             Text("What's your target weight?")
-                .font(.system(size: 24, weight: .bold))
+                .font(.system(size: 29, weight: .bold))
                 .multilineTextAlignment(.center)
-                .padding(.top, 40)
-                .padding(.bottom, 10)
+                .padding(.top, 20)
+               
                 .foregroundColor(.black)
             
-            Spacer(minLength: 100)
+            
+            Spacer(minLength: 70)
             
             HStack {
                 Button(action: {
@@ -85,7 +86,7 @@ struct TargetWeightView: View {
                     .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 15)
+            .padding(.bottom, 0)
         }
         .onAppear {
             viewModel.updateHealthBenefitMessage()
@@ -110,8 +111,9 @@ struct TargetWeightView: View {
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
+        
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToHowOftenView = true
         }
     }

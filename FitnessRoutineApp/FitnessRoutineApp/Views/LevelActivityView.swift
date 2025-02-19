@@ -37,11 +37,12 @@ private extension LevelActivityView {
     
     var titleView: some View {
         Text("What's your activity level?")
-            .font(.system(size: 24, weight: .bold))
+            .font(.system(size: 29, weight: .bold))
             .multilineTextAlignment(.center)
-            .padding(.top, 40)
+            .padding(.top, 15)
             .padding(.bottom, 20)
             .foregroundColor(.black)
+            .padding(.horizontal, 20)
     }
     
     var representativeImage: some View {
@@ -95,7 +96,7 @@ private extension LevelActivityView {
                 .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
         }
         .padding(.horizontal, 20)
-        .padding(.bottom, 20)
+        .padding(.bottom, 0)
     }
     
     var navigationLink: some View {
@@ -127,7 +128,7 @@ private extension LevelActivityView {
             progressViewModel.advanceProgress()
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToNextView = true
         }
     }

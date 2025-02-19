@@ -5,7 +5,7 @@ class NewScreenViewModel: ObservableObject {
     @Published var options: [(title: String, icon: String)] = [
         ("At home", "house"),
         ("At the gym", "figure.walk"),
-        ("Outdoors", "sun.max"),
+       
         ("Any place is ok", "hand.thumbsup")
     ]
     
