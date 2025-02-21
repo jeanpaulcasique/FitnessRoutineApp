@@ -4,20 +4,34 @@ import UIKit
 // MARK: - NewScreenView
 struct NewScreenView: View {
     @StateObject private var viewModel = NewScreenViewModel() // ViewModel local
-    @ObservedObject var progressViewModel: ProgressViewModel // ProgressViewModel compartido
+    @ObservedObject var progressViewModel: ProgressViewModel  // ProgressViewModel compartido
     @Environment(\.presentationMode) var presentationMode
 
+    // Controla la navegación a la siguiente vista
     @State private var navigateToNextView = false
-
+    @State private var navigateToShowInfo = false  // Nueva variable para controlar la navegación a ShowInfo
+    
     var body: some View {
         VStack(spacing: 20) {
             progressBar
             titleView
             optionsList
             Spacer()
-            nextButton
-            // NavigationLink oculto para navegar a la siguiente pantalla
-            NavigationLink(destination: /* Reemplaza por la vista destino */ EmptyView(), isActive: $navigateToNextView) {
+            nextButton // El botón se mostrará solo cuando se seleccione una opción
+            
+            // NavigationLink que nos llevará a GymEquipmentView si navigateToNextView es true
+            NavigationLink(
+                destination: GymEquipmentView(progressViewModel: progressViewModel),
+                isActive: $navigateToNextView
+            ) {
+                EmptyView()
+            }
+            
+            // NavigationLink para ShowInfoView si se selecciona "At the gym"
+            NavigationLink(
+                destination: ShowInfoView(),
+                isActive: $navigateToShowInfo
+            ) {
                 EmptyView()
             }
         }
@@ -97,7 +111,9 @@ private extension NewScreenView {
                 .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
         }
         .padding(.horizontal, 20)
-        .padding(.bottom, 15)
+        .padding(.bottom, 0)
+        .opacity(viewModel.selectedIndex == nil ? 0 : 1) // Ocultar el botón hasta que se seleccione una opción
+        .disabled(viewModel.selectedIndex == nil) // Asegura que esté deshabilitado hasta que se seleccione una opción
     }
     
     var backButton: some ToolbarContent {
@@ -122,9 +138,16 @@ private extension NewScreenView {
             progressViewModel.advanceProgress()
         }
         triggerHapticFeedback()
-        // Esperamos 0.5 segundos para permitir que se vea la animación antes de navegar
+        
+        // Esperamos un breve tiempo para que se aprecie la animación
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.navigateToNextView = true
+            // Asegúrate de que solo las opciones "At home" (índice 0) o "Any place is ok" (índice 2) naveguen
+            if viewModel.selectedIndex == 0 || viewModel.selectedIndex == 2 {
+                self.navigateToNextView = true
+            } else if viewModel.selectedIndex == 1 {
+                // Si se selecciona "At the gym" (índice 1), navegamos a ShowInfoView
+                self.navigateToShowInfo = true
+            }
         }
     }
     

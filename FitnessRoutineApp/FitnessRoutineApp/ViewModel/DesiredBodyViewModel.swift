@@ -1,11 +1,14 @@
+
 import SwiftUI
 
-// MARK: - DesiredBodyViewModel
+
 class DesiredBodyViewModel: ObservableObject {
-    @Published var selectedBodyIndex: Int = 0
-    @Published var dragOffset: CGFloat = 0
-    let bodyImages = ["1m", "2m", "3m", "4m", "5m", "6m", "7m"]
+    @Published var selectedBodyIndex: Int
     
+    // Listado de imágenes que representa las formas corporales
+    let bodyImages = ["1m", "2m", "3m", "4m", "5m", "6m", "7m"]
+
+    // Rango de grasa corporal para las distintas formas
     let bodyFatRanges = [
         "4% ~ 6% (Reasonable Goal!)",
         "7% ~ 10% (Reasonable Goal!)",
@@ -16,6 +19,7 @@ class DesiredBodyViewModel: ObservableObject {
         ">40% (Consult a doctor)"
     ]
     
+    // Descripciones relacionadas con cada rango de grasa corporal
     let bodyFatDescriptions = [
         "Step by step! This goal is practical and friendly for beginners.",
         "Step by step! This goal is practical and friendly for beginners.",
@@ -26,20 +30,7 @@ class DesiredBodyViewModel: ObservableObject {
         "This body fat level seems too high for you, which might cause some health issues."
     ]
     
-    func nextBody() {
-        if selectedBodyIndex < bodyImages.count - 1 {
-            selectedBodyIndex += 1
-        }
-    }
-    
-    func previousBody() {
-        if selectedBodyIndex > 0 {
-            selectedBodyIndex -= 1
-        }
-    }
-    
-    func selectBody(index: Int) {
-        selectedBodyIndex = index
+    init() {
+        self.selectedBodyIndex = 0 // Default to first index
     }
 }
-

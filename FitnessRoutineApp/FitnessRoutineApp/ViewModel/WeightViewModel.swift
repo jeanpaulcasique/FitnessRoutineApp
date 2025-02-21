@@ -2,8 +2,18 @@ import SwiftUI
 
 // MARK: - WeightViewModel
 class WeightViewModel: ObservableObject {
-    @Published var selectedWeightKg: Double = 70.0
-    @Published var isKgSelected: Bool = true
+    @Published var selectedWeightKg: Double {
+        didSet {
+            // Guardar el peso cuando cambie
+            UserDefaults.standard.set(selectedWeightKg, forKey: "selectedWeightKg")
+        }
+    }
+    @Published var isKgSelected: Bool {
+        didSet {
+            // Guardar la unidad cuando cambie
+            UserDefaults.standard.set(isKgSelected, forKey: "isKgSelected")
+        }
+    }
     @Published var healthBenefitMessage: String = ""
     
     private var lastWeightInOtherUnit: Double = 70.0
@@ -14,6 +24,23 @@ class WeightViewModel: ObservableObject {
     
     var weightInPreferredUnit: Double {
         isKgSelected ? selectedWeightKg : selectedWeightLb
+    }
+    
+    init() {
+        // Recuperar el peso y la unidad de UserDefaults al inicializar
+        if let savedWeight = UserDefaults.standard.value(forKey: "selectedWeightKg") as? Double {
+            self.selectedWeightKg = savedWeight
+        } else {
+            self.selectedWeightKg = 70.0 // Valor predeterminado si no se encuentra en UserDefaults
+        }
+        
+        if let savedUnit = UserDefaults.standard.value(forKey: "isKgSelected") as? Bool {
+            self.isKgSelected = savedUnit
+        } else {
+            self.isKgSelected = true // Valor predeterminado si no se encuentra en UserDefaults
+        }
+        
+        updateHealthBenefitMessage()
     }
     
     func calculateBMI(heightInCm: Double) -> Double {

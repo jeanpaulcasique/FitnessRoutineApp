@@ -2,9 +2,9 @@ import SwiftUI
 
 class ProgressViewModel: ObservableObject {
     @Published var progress: Double = 0.0
-    private var totalScreens: Int = 11 // Número total de pantallas
+    private var totalScreens: Int = 12 // Número total de pantallas
 
-    init(totalScreens: Int = 11) {
+    init(totalScreens: Int = 12) {
         self.totalScreens = totalScreens
     }
 

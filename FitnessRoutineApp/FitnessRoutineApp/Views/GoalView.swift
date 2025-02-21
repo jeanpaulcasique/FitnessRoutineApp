@@ -59,6 +59,10 @@ struct GoalView: View {
                 }
             }
         }
+        .onAppear {
+            // Cargar el objetivo guardado desde UserDefaults cuando la vista aparece
+            viewModel.loadGoalFromUserDefaults()
+        }
     }
 
     // MARK: - Opciones de objetivos
@@ -204,6 +208,7 @@ struct GoalInfoView: View {
                     .font(.subheadline)
                     .multilineTextAlignment(.center)
                     .transition(.opacity)
+                    .padding(.horizontal, 20)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: showInfo)
