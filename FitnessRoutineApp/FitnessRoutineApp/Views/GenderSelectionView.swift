@@ -9,7 +9,7 @@ struct GenderSelectionView: View {
     @State private var showInfo = false
     @State private var progressUpdating = false // Nuevo estado para manejar la animación
     @Environment(\.presentationMode) var presentationMode
-    
+
     var body: some View {
         ZStack {
             VStack {
@@ -24,22 +24,24 @@ struct GenderSelectionView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.black)
                     .padding(.top, 0)
-                
+
                 HStack(spacing: 37) {
                     GenderSelectionCard(gender: .male, isSelected: viewModel.selectedGender == .male) {
                         viewModel.selectGender(.male)
+                        saveSelection(key: "gender", value: "Male") // Guardar selección
                         generateHapticFeedback()
                     }
                     GenderSelectionCard(gender: .female, isSelected: viewModel.selectedGender == .female) {
                         viewModel.selectGender(.female)
+                        saveSelection(key: "gender", value: "Female") // Guardar selección
                         generateHapticFeedback()
                     }
                 }
                 .padding(.top, 150)
                 .padding()
-                
+
                 Spacer()
-                
+
                 if viewModel.selectedGender != nil {
                     Button(action: proceedToNext) {
                         Text("Next")
@@ -58,7 +60,7 @@ struct GenderSelectionView: View {
                             .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
                     }
                     .padding(.horizontal, 20)
-                    
+
                     NavigationLink(
                         destination: GoalView(viewModel: GoalViewModel(), progressViewModel: progressViewModel),
                         isActive: $navigateToGoal
@@ -71,7 +73,7 @@ struct GenderSelectionView: View {
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
             .background(Color(red: 249/255, green: 249/255, blue: 253/255))
-            
+
             GenderInfoView(showInfo: $showInfo)
                 .padding()
                 .zIndex(1)
@@ -86,16 +88,16 @@ struct GenderSelectionView: View {
             }
         }
     }
-    
+
     private func proceedToNext() {
         // Actualizar la barra de progreso con animación antes de continuar
         withAnimation(.easeInOut(duration: 0.5)) {
             progressUpdating = true
         }
-        
+
         // Avanzar en la barra de progreso
         progressViewModel.advanceProgress()
-        
+
         // Generar feedback háptico
         generateHapticFeedback()
 
@@ -107,22 +109,27 @@ struct GenderSelectionView: View {
             }
         }
     }
-    
+
     private func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
     }
-    
+
     private func generateHapticFeedback() {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
+    }
+
+    // Función para guardar la selección en UserDefaults
+    private func saveSelection(key: String, value: String) {
+        UserDefaults.standard.set(value, forKey: key)
     }
 }
 
 // MARK: - GenderInfoView
 struct GenderInfoView: View {
     @Binding var showInfo: Bool
-    
+
     var body: some View {
         ZStack {
             HStack {
@@ -131,7 +138,7 @@ struct GenderInfoView: View {
                     .font(.title)
                     .padding(.top, -290)
                     .onTapGesture { withAnimation { showInfo.toggle() } }
-                
+
                 Text("Why we ask this?")
                     .font(.headline)
                     .padding(.top, -285)
@@ -140,7 +147,7 @@ struct GenderInfoView: View {
                 Spacer()
             }
             .padding(.horizontal)
-            
+
             if showInfo {
                 Text("This will help us tailor your workout to match your metabolic rate perfectly.")
                     .padding()
@@ -163,7 +170,7 @@ struct GenderSelectionCard: View {
     let gender: Gender
     let isSelected: Bool
     let action: () -> Void
-    
+
     var body: some View {
         ZStack {
             Button(action: action) {
@@ -179,7 +186,7 @@ struct GenderSelectionCard: View {
             }
             .scaleEffect(isSelected ? 1.05 : 1.0)
             .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.clear, radius: 10, x: 0, y: 5)
-            
+
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.blue)

@@ -3,7 +3,7 @@ import UIKit
 
 // MARK: - HeightView
 struct HeightView: View {
-    @StateObject  var viewModel = HeightViewModel()
+    @StateObject var viewModel = HeightViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToWeightView = false
     @Environment(\.presentationMode) var presentationMode
@@ -18,6 +18,10 @@ struct HeightView: View {
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .toolbar { backButton }
+        .onAppear {
+            // Cargar valores desde UserDefaults cuando la vista aparece
+            viewModel.loadHeightFromUserDefaults()
+        }
     }
 }
 
@@ -217,10 +221,8 @@ private extension HeightView {
     }
 }
 
-// MARK: - Preview
 struct HeightView_Previews: PreviewProvider {
     static var previews: some View {
         HeightView(progressViewModel: ProgressViewModel())
     }
 }
-

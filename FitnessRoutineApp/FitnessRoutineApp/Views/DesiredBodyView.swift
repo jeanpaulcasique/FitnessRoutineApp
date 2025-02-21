@@ -1,5 +1,5 @@
 import SwiftUI
-import UIKit
+
 
 // MARK: - DesiredBodyView
 struct DesiredBodyView: View {
@@ -23,7 +23,7 @@ struct DesiredBodyView: View {
                 .foregroundColor(.black)
                 .padding(.horizontal, 10)
             
-            // TabView para seleccionar imagen de cuerpo
+            // Selector de imágenes de cuerpo
             bodyImageSelector
                 .padding(.vertical, 10)
             
@@ -36,7 +36,7 @@ struct DesiredBodyView: View {
             // Información sobre la grasa corporal
             infoView
             
-            // NavigationLink para ir a BirthYearView (oculto)
+            // Navegación oculta a BirthYearView
             NavigationLink(
                 destination: BirthYearView(viewModel: BirthYearViewModel(), progressViewModel: progressViewModel),
                 isActive: $isNavigatingToBirthYearView
@@ -63,7 +63,6 @@ struct DesiredBodyView: View {
             }
             .padding(.horizontal, 20)
             .simultaneousGesture(TapGesture().onEnded {
-                // Solo se genera feedback háptico al pulsar el botón Next
                 generateHapticFeedback()
             })
         }
@@ -87,8 +86,7 @@ private extension DesiredBodyView {
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .frame(width: geometry.size.width, height: 320)
             .clipped()
-            .onChange(of: viewModel.selectedBodyIndex) { _ in
-                // Aquí no se actualiza el progreso, solo se genera feedback
+            .onChange(of: viewModel.selectedBodyIndex) { newValue in
                 generateHapticFeedback()
             }
         }
@@ -101,38 +99,24 @@ private extension DesiredBodyView {
             .frame(width: geometry.size.width * 0.65)
         let opacity = viewModel.selectedBodyIndex == index ? 1.0 : 0.5
         let scale = viewModel.selectedBodyIndex == index ? 1.1 : 0.9
-        let offset = viewModel.selectedBodyIndex == index ? 0 : -20
         return image
             .opacity(opacity)
             .scaleEffect(scale)
-            .offset(x: CGFloat(offset))
             .animation(.easeInOut(duration: 0.4), value: viewModel.selectedBodyIndex)
     }
     
     var sliderIndicator: some View {
-        ZStack {
-            HStack(spacing: 30) {
-                ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
-                    Circle()
-                        .fill(index == viewModel.selectedBodyIndex ? Color.blue : Color.blue.opacity(0.3))
-                        .frame(width: index == viewModel.selectedBodyIndex ? 20 : 12,
-                               height: index == viewModel.selectedBodyIndex ? 20 : 12)
-                        .animation(.easeInOut(duration: 0.2), value: viewModel.selectedBodyIndex)
-                }
+        HStack(spacing: 30) {
+            ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
+                Circle()
+                    .fill(index == viewModel.selectedBodyIndex ? Color.blue : Color.blue.opacity(0.3))
+                    .frame(width: index == viewModel.selectedBodyIndex ? 20 : 12,
+                           height: index == viewModel.selectedBodyIndex ? 20 : 12)
+                    .animation(.easeInOut(duration: 0.2), value: viewModel.selectedBodyIndex)
             }
-            .frame(height: 20)
-            .padding(.horizontal, 40)
-            
-            Slider(value: Binding(
-                get: { Double(viewModel.selectedBodyIndex) },
-                set: { newValue in
-                    viewModel.selectedBodyIndex = Int(newValue)
-                    viewModel.selectBody(index: viewModel.selectedBodyIndex)
-                    generateHapticFeedback()
-                }
-            ), in: 0...Double(viewModel.bodyImages.count - 1), step: 1)
-            .opacity(0.01)
         }
+        .frame(height: 20)
+        .padding(.horizontal, 40)
     }
     
     var labelsBelowSlider: some View {
@@ -160,7 +144,7 @@ private extension DesiredBodyView {
             }
             Text(viewModel.bodyFatRanges[viewModel.selectedBodyIndex])
                 .font(.system(size: 16))
-                .foregroundColor(viewModel.bodyFatRanges[viewModel.selectedBodyIndex].contains("Consult a doctor") ? .red : .green)
+                .foregroundColor(.green)
             Text(viewModel.bodyFatDescriptions[viewModel.selectedBodyIndex])
                 .font(.system(size: 13))
                 .foregroundColor(.gray)
@@ -182,20 +166,17 @@ private extension DesiredBodyView {
         }
     }
     
-    // Acción para avanzar: se ejecuta únicamente al presionar el botón "Next"
     func proceedToNext() {
-        // Generar feedback háptico y actualizar la barra de progreso con animación
-        withAnimation(.easeInOut(duration: 0.5)) {
-            progressViewModel.advanceProgress()
-        }
+        // Guardamos la imagen seleccionada en UserDefaults
+        UserDefaults.standard.set(viewModel.bodyImages[viewModel.selectedBodyIndex], forKey: "desiredBodyImage")
+        
+        progressViewModel.advanceProgress()
         generateHapticFeedback()
-        // Retraso para permitir que la animación se muestre antes de navegar
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isNavigatingToBirthYearView = true
         }
     }
     
-    // Acción para retroceder y actualizar la barra de progreso
     func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
@@ -206,6 +187,7 @@ private extension DesiredBodyView {
         generator.impactOccurred()
     }
 }
+
 
 // MARK: - Preview
 struct DesiredBodyView_Previews: PreviewProvider {

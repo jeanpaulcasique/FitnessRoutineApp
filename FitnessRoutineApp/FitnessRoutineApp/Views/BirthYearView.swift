@@ -1,9 +1,10 @@
 import SwiftUI
 import UIKit
+import Combine
 
 // MARK: - BirthYearView
 struct BirthYearView: View {
-    @StateObject  var viewModel: BirthYearViewModel
+    @StateObject var viewModel: BirthYearViewModel
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var isNavigatingToNextScreen = false
     @Environment(\.presentationMode) var presentationMode
@@ -14,6 +15,7 @@ struct BirthYearView: View {
             title
             descriptionText
             birthYearPicker
+            showInfo  // Aquí se agregará el texto para mostrar el año seleccionado
             Spacer()
             nextButton
             navigationLink
@@ -22,6 +24,10 @@ struct BirthYearView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar { backButton }
         .background(backgroundColor)
+        .onAppear {
+            // Cargar el valor almacenado de UserDefaults al aparecer la vista
+            viewModel.selectedYear = UserDefaults.standard.integer(forKey: "selectedBirthYear")
+        }
     }
 }
 
@@ -63,6 +69,8 @@ private extension BirthYearView {
                     .tag(year)
                     .onChange(of: viewModel.selectedYear) { _ in
                         vibrate()
+                        // Guardar en UserDefaults cuando el valor cambia
+                        UserDefaults.standard.set(viewModel.selectedYear, forKey: "selectedBirthYear")
                     }
             }
         }
@@ -71,6 +79,15 @@ private extension BirthYearView {
         .frame(height: 350)
         .clipped()
         .padding(.horizontal, 16)
+    }
+    
+    // Mostrar la fecha de nacimiento seleccionada (Invisible)
+    var showInfo: some View {
+        Text("Selected Birth Year: \(viewModel.selectedYear)")
+            .font(.title2)
+            .padding()
+            .foregroundColor(.black)
+            .opacity(0)  // Esto lo hará invisible pero mantendrá su espacio
     }
     
     var nextButton: some View {
@@ -140,10 +157,10 @@ private extension BirthYearView {
     }
 }
 
+
 // MARK: - Preview
 struct BirthYearView_Previews: PreviewProvider {
     static var previews: some View {
         BirthYearView(viewModel: BirthYearViewModel(), progressViewModel: ProgressViewModel())
     }
 }
-

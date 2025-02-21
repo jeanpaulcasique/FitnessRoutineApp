@@ -3,8 +3,12 @@ import Combine
 
 // MARK: - LevelActivityViewModel
 class LevelActivityViewModel: ObservableObject {
-    @Published var sliderValue: Double = 0 {
-        didSet { updateActivityLevel() }
+    @Published var sliderValue: Double {
+        didSet {
+            // Guardar el valor del slider en UserDefaults
+            UserDefaults.standard.set(sliderValue, forKey: "activityLevelSliderValue")
+            updateActivityLevel()  // Actualizar la imagen y descripción
+        }
     }
     
     @Published var currentImageName: String = "1level"
@@ -19,6 +23,16 @@ class LevelActivityViewModel: ObservableObject {
     ]
     
     var imageCount: Int { imageNames.count }
+    
+    init() {
+        // Recuperar el valor del slider desde UserDefaults
+        if let savedSliderValue = UserDefaults.standard.value(forKey: "activityLevelSliderValue") as? Double {
+            self.sliderValue = savedSliderValue
+        } else {
+            self.sliderValue = 0 // Valor predeterminado
+        }
+        updateActivityLevel()
+    }
     
     private func updateActivityLevel() {
         let index = Int(sliderValue)

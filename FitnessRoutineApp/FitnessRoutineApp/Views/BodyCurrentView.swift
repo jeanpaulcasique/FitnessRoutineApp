@@ -140,10 +140,9 @@ struct BodyOptionView: View {
     }
 }
 
-// Preview
+// Vista Previa
 struct BodyCurrentView_Previews: PreviewProvider {
     static var previews: some View {
         BodyCurrentView(progressViewModel: ProgressViewModel())
     }
 }
-

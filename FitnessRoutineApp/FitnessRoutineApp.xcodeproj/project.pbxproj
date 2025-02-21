@@ -42,6 +42,11 @@
 		69C6CC752CE065D00043B135 /* LevelActivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C6CC742CDC6FE90043B135 /* LevelActivityViewModel.swift */; };
 		69C6CC772CEADD780043B135 /* WorkoutLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C6CC762CEADD690043B135 /* WorkoutLevelView.swift */; };
 		69C6CC792CEADDB20043B135 /* WorkoutLevelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C6CC782CEADD8D0043B135 /* WorkoutLevelViewModel.swift */; };
+		69CDFF1D2D668007006199E9 /* GymEquipmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CDFF1C2D667FF9006199E9 /* GymEquipmentView.swift */; };
+		69CDFF1F2D668022006199E9 /* GymEquipmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CDFF1E2D66801F006199E9 /* GymEquipmentViewModel.swift */; };
+		69CDFF222D6797AE006199E9 /* showInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CDFF212D679153006199E9 /* showInfo.swift */; };
+		69F834DF2D69318900C604B4 /* CoachProcessingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F834DE2D69317F00C604B4 /* CoachProcessingView.swift */; };
+		69F834E12D69319F00C604B4 /* CoachProcessingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F834E02D69319A00C604B4 /* CoachProcessingViewModel.swift */; };
 		69FAB4C22D3FFAE900147987 /* NewScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FAB4C12D3FFAE400147987 /* NewScreenView.swift */; };
 		69FAB4C42D3FFB3000147987 /* NewScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FAB4C32D3FFB2900147987 /* NewScreenViewModel.swift */; };
 		69FDC18A2CD7E64D0075F0CA /* HowOfgtenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FDC1892CD7E6460075F0CA /* HowOfgtenView.swift */; };
@@ -105,6 +110,11 @@
 		69C6CC742CDC6FE90043B135 /* LevelActivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelActivityViewModel.swift; sourceTree = "<group>"; };
 		69C6CC762CEADD690043B135 /* WorkoutLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLevelView.swift; sourceTree = "<group>"; };
 		69C6CC782CEADD8D0043B135 /* WorkoutLevelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLevelViewModel.swift; sourceTree = "<group>"; };
+		69CDFF1C2D667FF9006199E9 /* GymEquipmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymEquipmentView.swift; sourceTree = "<group>"; };
+		69CDFF1E2D66801F006199E9 /* GymEquipmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymEquipmentViewModel.swift; sourceTree = "<group>"; };
+		69CDFF212D679153006199E9 /* showInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = showInfo.swift; sourceTree = "<group>"; };
+		69F834DE2D69317F00C604B4 /* CoachProcessingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachProcessingView.swift; sourceTree = "<group>"; };
+		69F834E02D69319A00C604B4 /* CoachProcessingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachProcessingViewModel.swift; sourceTree = "<group>"; };
 		69FAB4C12D3FFAE400147987 /* NewScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewScreenView.swift; sourceTree = "<group>"; };
 		69FAB4C32D3FFB2900147987 /* NewScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewScreenViewModel.swift; sourceTree = "<group>"; };
 		69FDC1892CD7E6460075F0CA /* HowOfgtenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowOfgtenView.swift; sourceTree = "<group>"; };
@@ -218,6 +228,7 @@
 		693B07E22C9614A400722E48 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				69F834DE2D69317F00C604B4 /* CoachProcessingView.swift */,
 				692044712D5AA02D001CFCD0 /* Base.swift */,
 				69B752432CADB6E000C0C126 /* ProgressBarView.swift */,
 				69969F582C9F6C1A00682635 /* LoginView.swift */,
@@ -233,6 +244,8 @@
 				69C6CC722CDC6FDD0043B135 /* LevelActivityView.swift */,
 				69C6CC762CEADD690043B135 /* WorkoutLevelView.swift */,
 				69FAB4C12D3FFAE400147987 /* NewScreenView.swift */,
+				69CDFF202D679149006199E9 /* gymFlow */,
+				69CDFF1B2D667FDF006199E9 /* HomeFlow */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -240,6 +253,7 @@
 		693B07E32C9614AB00722E48 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				69CDFF1E2D66801F006199E9 /* GymEquipmentViewModel.swift */,
 				69FAB4C32D3FFB2900147987 /* NewScreenViewModel.swift */,
 				69C6CC782CEADD8D0043B135 /* WorkoutLevelViewModel.swift */,
 				69C6CC742CDC6FE90043B135 /* LevelActivityViewModel.swift */,
@@ -254,8 +268,25 @@
 				69969F5C2CA09E2300682635 /* GenderSelecctionViewModel.swift */,
 				69969F5A2C9F6C2A00682635 /* LoginViewModel.swift */,
 				69B752412CA734CA00C0C126 /* ProgressViewModel.swift */,
+				69F834E02D69319A00C604B4 /* CoachProcessingViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		69CDFF1B2D667FDF006199E9 /* HomeFlow */ = {
+			isa = PBXGroup;
+			children = (
+				69CDFF1C2D667FF9006199E9 /* GymEquipmentView.swift */,
+			);
+			path = HomeFlow;
+			sourceTree = "<group>";
+		};
+		69CDFF202D679149006199E9 /* gymFlow */ = {
+			isa = PBXGroup;
+			children = (
+				69CDFF212D679153006199E9 /* showInfo.swift */,
+			);
+			path = gymFlow;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -392,6 +423,7 @@
 				69C6CC732CDC6FE60043B135 /* LevelActivityView.swift in Sources */,
 				69C6CC792CEADDB20043B135 /* WorkoutLevelViewModel.swift in Sources */,
 				690495B52CB80EA700E82BC9 /* BirthYearView.swift in Sources */,
+				69F834DF2D69318900C604B4 /* CoachProcessingView.swift in Sources */,
 				690495B92CB8C7C200E82BC9 /* HeightView.swift in Sources */,
 				69969F5F2CA09E5700682635 /* GenderSelectionView.swift in Sources */,
 				69B752462CB4B59F00C0C126 /* DesiredBodyView.swift in Sources */,
@@ -413,8 +445,12 @@
 				69FAB4C42D3FFB3000147987 /* NewScreenViewModel.swift in Sources */,
 				692562D62C92FB8E0002524D /* Persistence.swift in Sources */,
 				69B752422CA734D800C0C126 /* ProgressViewModel.swift in Sources */,
+				69CDFF1F2D668022006199E9 /* GymEquipmentViewModel.swift in Sources */,
+				69F834E12D69319F00C604B4 /* CoachProcessingViewModel.swift in Sources */,
 				69969F572C9F6BE900682635 /* User.swift in Sources */,
 				696BBAB12CCB1A270087724E /* TargetWeightView.swift in Sources */,
+				69CDFF1D2D668007006199E9 /* GymEquipmentView.swift in Sources */,
+				69CDFF222D6797AE006199E9 /* showInfo.swift in Sources */,
 				69969F6D2CA35DB100682635 /* BodyCurrentViewModel.swift in Sources */,
 				69969F6B2CA35DA400682635 /* BodyCurrentView.swift in Sources */,
 				69C6CC752CE065D00043B135 /* LevelActivityViewModel.swift in Sources */,
