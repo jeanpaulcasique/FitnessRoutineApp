@@ -5,6 +5,7 @@ struct LevelActivityView: View {
     @StateObject private var viewModel = LevelActivityViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToNextView = false
+    @State private var isNextButtonDisabled = false  // Estado para habilitar/deshabilitar el botón
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -97,6 +98,7 @@ private extension LevelActivityView {
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 0)
+        .disabled(isNextButtonDisabled)  // Deshabilitar el botón temporalmente
     }
     
     var navigationLink: some View {
@@ -124,12 +126,22 @@ private extension LevelActivityView {
     
     // Función para avanzar la barra de progreso y navegar a la siguiente pantalla
     func proceedToNext() {
+        // Deshabilitar el botón por 2 segundos
+        isNextButtonDisabled = true
+        
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        
+        // Reducir el retraso para una transición más rápida
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToNextView = true
+        }
+        
+        // Habilitar el botón después de 2 segundos
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.isNextButtonDisabled = false
         }
     }
     

@@ -12,7 +12,6 @@
 		690495B92CB8C7C200E82BC9 /* HeightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690495B82CB8C7B900E82BC9 /* HeightView.swift */; };
 		690495BB2CB989BB00E82BC9 /* HeightViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690495BA2CB989B400E82BC9 /* HeightViewModel.swift */; };
 		6920446F2D5A9A04001CFCD0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6920446E2D5A9A04001CFCD0 /* CoreData.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		692044722D5AA031001CFCD0 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 692044712D5AA02D001CFCD0 /* Base.swift */; };
 		692562CD2C92FB8D0002524D /* FitnessRoutineAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 692562CC2C92FB8D0002524D /* FitnessRoutineAppApp.swift */; };
 		692562D12C92FB8E0002524D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 692562D02C92FB8E0002524D /* Assets.xcassets */; };
 		692562D42C92FB8E0002524D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 692562D32C92FB8E0002524D /* Preview Assets.xcassets */; };
@@ -76,7 +75,6 @@
 		690495B82CB8C7B900E82BC9 /* HeightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightView.swift; sourceTree = "<group>"; };
 		690495BA2CB989B400E82BC9 /* HeightViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightViewModel.swift; sourceTree = "<group>"; };
 		6920446E2D5A9A04001CFCD0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		692044712D5AA02D001CFCD0 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		692562C92C92FB8D0002524D /* FitnessRoutineApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitnessRoutineApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		692562CC2C92FB8D0002524D /* FitnessRoutineAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessRoutineAppApp.swift; sourceTree = "<group>"; };
 		692562D02C92FB8E0002524D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -229,7 +227,6 @@
 			isa = PBXGroup;
 			children = (
 				69F834DE2D69317F00C604B4 /* CoachProcessingView.swift */,
-				692044712D5AA02D001CFCD0 /* Base.swift */,
 				69B752432CADB6E000C0C126 /* ProgressBarView.swift */,
 				69969F582C9F6C1A00682635 /* LoginView.swift */,
 				69969F5E2CA09E4800682635 /* GenderSelectionView.swift */,
@@ -440,7 +437,6 @@
 				69FAB4C22D3FFAE900147987 /* NewScreenView.swift in Sources */,
 				69FDC18A2CD7E64D0075F0CA /* HowOfgtenView.swift in Sources */,
 				690495BB2CB989BB00E82BC9 /* HeightViewModel.swift in Sources */,
-				692044722D5AA031001CFCD0 /* Base.swift in Sources */,
 				69969F592C9F6C2800682635 /* LoginView.swift in Sources */,
 				69FAB4C42D3FFB3000147987 /* NewScreenViewModel.swift in Sources */,
 				692562D62C92FB8E0002524D /* Persistence.swift in Sources */,

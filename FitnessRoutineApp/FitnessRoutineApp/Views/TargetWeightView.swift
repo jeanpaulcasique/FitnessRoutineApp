@@ -5,6 +5,7 @@ struct TargetWeightView: View {
     @StateObject var viewModel: TargetWeightViewModel  // Cambiado a @StateObject para que persista
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToHowOftenView = false
+    @State private var isNextButtonDisabled = false
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -17,15 +18,14 @@ struct TargetWeightView: View {
                 .font(.system(size: 29, weight: .bold))
                 .multilineTextAlignment(.center)
                 .padding(.top, 20)
-               
                 .foregroundColor(.black)
-            
             
             Spacer(minLength: 70)
             
             HStack {
                 Button(action: {
                     viewModel.toggleUnit(toKg: true)
+                    saveWeightUnit(isKg: true) // Guardamos la unidad en UserDefaults
                 }) {
                     Text("kg")
                         .font(.system(size: 18, weight: .bold))
@@ -36,6 +36,7 @@ struct TargetWeightView: View {
                 }
                 Button(action: {
                     viewModel.toggleUnit(toKg: false)
+                    saveWeightUnit(isKg: false) // Guardamos la unidad en UserDefaults
                 }) {
                     Text("lb")
                         .font(.system(size: 18, weight: .bold))
@@ -58,6 +59,7 @@ struct TargetWeightView: View {
                 .padding(.horizontal, 40)
                 .onChange(of: viewModel.selectedWeightKg) { newValue in
                     viewModel.updateWeight(newWeight: newValue)
+                    saveWeightToUserDefaults(weight: newValue) // Guardamos el peso seleccionado
                 }
             
             Spacer()
@@ -87,6 +89,7 @@ struct TargetWeightView: View {
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 0)
+            .disabled(isNextButtonDisabled)
         }
         .onAppear {
             viewModel.updateHealthBenefitMessage()
@@ -108,6 +111,7 @@ struct TargetWeightView: View {
     
     // MARK: - Acciones
     private func proceedToNext() {
+        isNextButtonDisabled = true
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
@@ -116,11 +120,24 @@ struct TargetWeightView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToHowOftenView = true
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isNextButtonDisabled = false
+        }
     }
     
     private func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
+    }
+    
+    // MARK: - Guardar en UserDefaults
+    private func saveWeightToUserDefaults(weight: Double) {
+        UserDefaults.standard.set(weight, forKey: "selectedTarget")
+    }
+    
+    private func saveWeightUnit(isKg: Bool) {
+        UserDefaults.standard.set(isKg, forKey: "isKgSelected")
     }
 }
 

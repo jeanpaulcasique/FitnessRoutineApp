@@ -1,11 +1,11 @@
 import SwiftUI
 
-
 // MARK: - DesiredBodyView
 struct DesiredBodyView: View {
     @StateObject var viewModel = DesiredBodyViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var isNavigatingToBirthYearView = false
+    @State private var isNextButtonDisabled = false
     
     @Environment(\.presentationMode) var presentationMode
 
@@ -62,6 +62,7 @@ struct DesiredBodyView: View {
                     .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
             }
             .padding(.horizontal, 20)
+            .disabled(isNextButtonDisabled)
             .simultaneousGesture(TapGesture().onEnded {
                 generateHapticFeedback()
             })
@@ -78,7 +79,7 @@ private extension DesiredBodyView {
     var bodyImageSelector: some View {
         GeometryReader { geometry in
             TabView(selection: $viewModel.selectedBodyIndex) {
-                ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
+                ForEach(0..<viewModel.bodyImages.count, id: \..self) { index in
                     bodyImageView(for: index, geometry: geometry)
                         .tag(index)
                 }
@@ -107,7 +108,7 @@ private extension DesiredBodyView {
     
     var sliderIndicator: some View {
         HStack(spacing: 30) {
-            ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
+            ForEach(0..<viewModel.bodyImages.count, id: \..self) { index in
                 Circle()
                     .fill(index == viewModel.selectedBodyIndex ? Color.blue : Color.blue.opacity(0.3))
                     .frame(width: index == viewModel.selectedBodyIndex ? 20 : 12,
@@ -167,7 +168,11 @@ private extension DesiredBodyView {
     }
     
     func proceedToNext() {
-        // Guardamos la imagen seleccionada en UserDefaults
+        isNextButtonDisabled = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isNextButtonDisabled = false
+        }
+        
         UserDefaults.standard.set(viewModel.bodyImages[viewModel.selectedBodyIndex], forKey: "desiredBodyImage")
         
         progressViewModel.advanceProgress()
@@ -187,6 +192,7 @@ private extension DesiredBodyView {
         generator.impactOccurred()
     }
 }
+
 
 
 // MARK: - Preview

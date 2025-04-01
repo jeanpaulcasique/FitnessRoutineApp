@@ -6,16 +6,17 @@ struct GoalView: View {
     @State private var navigateToBodyCurrent = false
     @State private var buttonScale: CGFloat = 1.0
     @State private var showInfo: Bool = false
-    @State private var progressUpdating: Bool = false // Nuevo estado para manejar la animación
-
+    @State private var progressUpdating: Bool = false // Estado para animar la barra de progreso
+    @State private var isButtonDisabled = false       // Estado para deshabilitar el botón "Next"
+    
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         VStack {
-            // Barra de progreso (ahora con animación condicional)
+            // Barra de progreso (con animación condicional)
             ProgressBarView(progressViewModel: progressViewModel)
                 .padding(.horizontal, 20)
-                .opacity(progressUpdating ? 0.5 : 1.0) // Reduce opacidad durante la actualización
+                .opacity(progressUpdating ? 0.5 : 1.0)
 
             // Título
             Text("What's your main goal?")
@@ -24,7 +25,7 @@ struct GoalView: View {
                 .foregroundColor(.black)
                 .padding(.top, 20)
 
-            // Información adicional
+            // Vista informativa
             GoalInfoView(showInfo: $showInfo)
                 .padding(.bottom, showInfo ? 20 : 10)
 
@@ -33,7 +34,7 @@ struct GoalView: View {
 
             Spacer()
 
-            // Botón "Next"
+            // Botón "Next" visible cuando se ha seleccionado un objetivo
             if viewModel.selectedGoal != nil {
                 nextButton
             }
@@ -60,7 +61,7 @@ struct GoalView: View {
             }
         }
         .onAppear {
-            // Cargar el objetivo guardado desde UserDefaults cuando la vista aparece
+            // Cargar el objetivo guardado desde UserDefaults cuando aparece la vista
             viewModel.loadGoalFromUserDefaults()
         }
     }
@@ -84,7 +85,16 @@ struct GoalView: View {
 
     // MARK: - Botón "Next"
     private var nextButton: some View {
-        Button(action: proceedToNext) {
+        Button(action: {
+            // Evitar múltiples toques
+            if !isButtonDisabled {
+                isButtonDisabled = true
+                proceedToNext()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    isButtonDisabled = false
+                }
+            }
+        }) {
             Text("Next")
                 .font(.headline)
                 .foregroundColor(.white)
@@ -103,6 +113,7 @@ struct GoalView: View {
                 .animation(.easeInOut(duration: 0.2), value: buttonScale)
         }
         .padding(.horizontal, 20)
+        .disabled(isButtonDisabled)
         .simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in buttonScale = 0.95 }
@@ -116,14 +127,14 @@ struct GoalView: View {
         withAnimation(.easeInOut(duration: 0.5)) {
             progressUpdating = true
         }
-
-        // Llamar a la función para avanzar en la barra
+        
+        // Avanzar la barra de progreso
         progressViewModel.advanceProgress()
-
-        // Haptic feedback
+        
+        // Generar feedback háptico
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-
-        // Esperar un poco antes de navegar a la siguiente vista para hacer la transición suave
+        
+        // Esperar 0.2 segundos para hacer la transición suave y luego navegar a la siguiente vista
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToBodyCurrent = true
             withAnimation {
@@ -131,14 +142,14 @@ struct GoalView: View {
             }
         }
     }
-
+    
     private func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
     }
 }
 
-// MARK: - Extensión para imágenes de objetivos
+// MARK: - Extensión para obtener el nombre de la imagen según el objetivo
 private extension Goal {
     var imageName: String {
         switch self {
@@ -179,7 +190,7 @@ struct GoalOptionImageView: View {
     }
 }
 
-// MARK: - Vista informativa
+// MARK: - Vista informativa de objetivo
 struct GoalInfoView: View {
     @Binding var showInfo: Bool
 

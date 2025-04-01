@@ -9,7 +9,7 @@ class WorkoutLevelViewModel: ObservableObject {
         ("A bit challenging", "figure.strengthtraining.traditional")
     ]
     
-    @Published var selectedIndex: Int {
+    @Published var selectedIndex: Int? {
         didSet {
             // Guardar la selección en UserDefaults
             UserDefaults.standard.set(selectedIndex, forKey: "workoutLevelSelection")

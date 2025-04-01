@@ -6,12 +6,19 @@ struct HeightView: View {
     @StateObject var viewModel = HeightViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToWeightView = false
+    @State private var isNextButtonDisabled = false
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
-        HStack(spacing: 0) {
-            mainContent
-            measurementRuler
+        VStack {
+            progressBar
+            titleView
+            Spacer()
+            unitSelector
+            heightPicker
+            Spacer()
+            nextButton
+            navigationLink
         }
         .background(backgroundColor)
         .edgesIgnoringSafeArea(.all)
@@ -19,7 +26,6 @@ struct HeightView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar { backButton }
         .onAppear {
-            // Cargar valores desde UserDefaults cuando la vista aparece
             viewModel.loadHeightFromUserDefaults()
         }
     }
@@ -27,29 +33,6 @@ struct HeightView: View {
 
 // MARK: - Subviews & Helpers
 private extension HeightView {
-    var mainContent: some View {
-        VStack {
-            progressBar
-            titleView
-            unitSelector
-            selectedHeightDisplay
-            Spacer()
-            nextButton
-            // Navegación oculta a WeightView
-            NavigationLink(
-                destination: WeightView(
-                    progressViewModel: progressViewModel,
-                    userHeight: viewModel.isCmSelected ?
-                        Double(viewModel.selectedHeightCm) :
-                        Double(viewModel.selectedHeightFt) * 30.48
-                ),
-                isActive: $navigateToWeightView
-            ) {
-                EmptyView()
-            }
-        }
-    }
-    
     var progressBar: some View {
         ProgressBarView(progressViewModel: progressViewModel)
             .padding(.top, 120)
@@ -61,12 +44,9 @@ private extension HeightView {
             .font(.title)
             .fontWeight(.bold)
             .padding(.top, 20)
-            .padding(.horizontal, 10)
-            .lineLimit(1)
             .foregroundColor(.black)
-            .padding(.bottom, 180)
     }
-    
+        
     var unitSelector: some View {
         HStack {
             Button(action: { viewModel.toggleUnit(toCm: true) }) {
@@ -78,7 +58,7 @@ private extension HeightView {
                     .cornerRadius(10)
             }
             Button(action: { viewModel.toggleUnit(toCm: false) }) {
-                Text("ft")
+                Text("ft/in")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(!viewModel.isCmSelected ? .white : .black)
                     .padding()
@@ -89,18 +69,28 @@ private extension HeightView {
         .padding(.horizontal, 40)
     }
     
-    var selectedHeightDisplay: some View {
-        Group {
+    var heightPicker: some View {
+        Picker("Select Height", selection: viewModel.isCmSelected ? $viewModel.selectedHeightCm : $viewModel.selectedHeightFt) {
             if viewModel.isCmSelected {
-                Text("\(viewModel.selectedHeightCm) cm")
-                    .font(.system(size: 60, weight: .bold))
-                    .foregroundColor(.blue)
+                ForEach(100...230, id: \..self) { height in
+                    Text("\(height) cm")
+                        .tag(height)
+                        .foregroundColor(viewModel.selectedHeightCm == height ? .blue : .black)
+                }
             } else {
-                Text("\(viewModel.selectedHeightFt) ft \(viewModel.selectedHeightInch) in")
-                    .font(.system(size: 60, weight: .bold))
-                    .foregroundColor(.blue)
+                ForEach(3...7, id: \..self) { feet in
+                    ForEach(0...11, id: \..self) { inch in
+                        Text("\(feet) ft \(inch) in")
+                            .tag(feet * 12 + inch)
+                            .foregroundColor(viewModel.selectedHeightFt == feet * 12 + inch ? .blue : .black)
+                    }
+                }
             }
         }
+        .pickerStyle(WheelPickerStyle())
+        .frame(height: 250)
+        .clipped()
+        .padding(.horizontal, 16)
     }
     
     var nextButton: some View {
@@ -122,65 +112,23 @@ private extension HeightView {
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 30)
+        .disabled(isNextButtonDisabled)
         .simultaneousGesture(TapGesture().onEnded {
             generateHapticFeedback()
         })
     }
     
-    var measurementRuler: some View {
-        VStack {
-            Spacer()
-            VStack(spacing: 15) {
-                ForEach(getHeightRange(), id: \.self) { height in
-                    Text(viewModel.isCmSelected ?
-                         "\(height) cm" :
-                         "\(height / 12) ft \(height % 12) in")
-                        .font(.system(size: 16))
-                        .foregroundColor(.black)
-                        .offset(y: calculateOffset(for: height))
-                }
-            }
-            .frame(width: 60, height: 300)
-            .background(Color.white)
-            .border(Color.black)
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        let threshold: CGFloat = 20
-                        if value.translation.height < -threshold {
-                            if viewModel.isCmSelected {
-                                viewModel.updateHeightInCm(Double(viewModel.selectedHeightCm + 1))
-                            } else {
-                                viewModel.incrementFeetAndInches()
-                            }
-                        } else if value.translation.height > threshold {
-                            if viewModel.isCmSelected {
-                                viewModel.updateHeightInCm(Double(viewModel.selectedHeightCm - 1))
-                            } else {
-                                viewModel.decrementFeetAndInches()
-                            }
-                        }
-                    }
-            )
-            Spacer()
-        }
-        .padding(.trailing, 10)
-    }
-    
-    func getHeightRange() -> [Int] {
-        if viewModel.isCmSelected {
-            return Array(100...230).reversed()
-        } else {
-            return Array(40...98)
-        }
-    }
-    
-    func calculateOffset(for height: Int) -> CGFloat {
-        if viewModel.isCmSelected {
-            return CGFloat(viewModel.selectedHeightCm - height) * 3
-        } else {
-            let totalInches = (viewModel.selectedHeightFt * 12) + viewModel.selectedHeightInch
-            return CGFloat(totalInches - height) * -10
+    var navigationLink: some View {
+        NavigationLink(
+            destination: WeightView(
+                progressViewModel: progressViewModel,
+                userHeight: viewModel.isCmSelected ?
+                    Double(viewModel.selectedHeightCm) :
+                    Double(viewModel.selectedHeightFt) * 2.54
+            ),
+            isActive: $navigateToWeightView
+        ) {
+            EmptyView()
         }
     }
     
@@ -198,8 +146,8 @@ private extension HeightView {
         }
     }
     
-    // Acción para avanzar: actualiza la barra de progreso con animación y, tras un retraso, navega a WeightView
     func proceedToNext() {
+        isNextButtonDisabled = true
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
@@ -207,9 +155,11 @@ private extension HeightView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToWeightView = true
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            isNextButtonDisabled = false
+        }
     }
     
-    // Acción para retroceder: disminuye la barra de progreso y retrocede
     func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
@@ -226,3 +176,4 @@ struct HeightView_Previews: PreviewProvider {
         HeightView(progressViewModel: ProgressViewModel())
     }
 }
+

@@ -8,6 +8,7 @@ struct GenderSelectionView: View {
     @State private var navigateToGoal = false
     @State private var showInfo = false
     @State private var progressUpdating = false // Nuevo estado para manejar la animación
+    @State private var isButtonDisabled = false // Estado para deshabilitar el botón temporalmente
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -43,7 +44,16 @@ struct GenderSelectionView: View {
                 Spacer()
 
                 if viewModel.selectedGender != nil {
-                    Button(action: proceedToNext) {
+                    Button(action: {
+                        if !isButtonDisabled {
+                            isButtonDisabled = true // Deshabilitar el botón
+                            proceedToNext()
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                isButtonDisabled = false // Volver a habilitar el botón después de 2 segundos
+                            }
+                        }
+                    }) {
                         Text("Next")
                             .font(.headline)
                             .foregroundColor(.white)
@@ -60,6 +70,7 @@ struct GenderSelectionView: View {
                             .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
                     }
                     .padding(.horizontal, 20)
+                    .disabled(isButtonDisabled) // Deshabilita el botón temporalmente
 
                     NavigationLink(
                         destination: GoalView(viewModel: GoalViewModel(), progressViewModel: progressViewModel),
@@ -67,7 +78,7 @@ struct GenderSelectionView: View {
                     ) {
                         EmptyView()
                     }
-                    .padding(.bottom, 10)
+                    .padding(.bottom, 0)
                 }
             }
             .navigationBarTitle("", displayMode: .inline)

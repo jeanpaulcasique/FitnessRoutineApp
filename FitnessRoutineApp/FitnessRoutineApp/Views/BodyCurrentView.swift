@@ -6,6 +6,7 @@ struct BodyCurrentView: View {
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var isButtonPressed = false // Para animación del botón
     @State private var navigateToNextView = false // Control de navegación
+    @State private var isButtonDisabled = false // Estado para deshabilitar el botón "Next"
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -42,7 +43,15 @@ struct BodyCurrentView: View {
 
             // Botón "Next", visible solo si hay una opción seleccionada
             if viewModel.selectedBodyShape != nil {
-                Button(action: proceedToNext) {
+                Button(action: {
+                    if !isButtonDisabled {
+                        isButtonDisabled = true
+                        proceedToNext()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            isButtonDisabled = false
+                        }
+                    }
+                }) {
                     Text("Next")
                         .font(.headline)
                         .foregroundColor(.white)
@@ -61,6 +70,7 @@ struct BodyCurrentView: View {
                         .animation(.easeInOut, value: isButtonPressed)
                 }
                 .padding(.horizontal, 20)
+                .disabled(isButtonDisabled)
             }
 
             // Navegación a DesiredBodyView
@@ -146,3 +156,4 @@ struct BodyCurrentView_Previews: PreviewProvider {
         BodyCurrentView(progressViewModel: ProgressViewModel())
     }
 }
+

@@ -10,7 +10,8 @@ struct NewScreenView: View {
     // Controla la navegación a la siguiente vista
     @State private var navigateToNextView = false
     @State private var navigateToShowInfo = false  // Nueva variable para controlar la navegación a ShowInfo
-    
+    @State private var isNextButtonDisabled = false  // Estado para habilitar/deshabilitar el botón
+
     var body: some View {
         VStack(spacing: 20) {
             progressBar
@@ -113,7 +114,7 @@ private extension NewScreenView {
         .padding(.horizontal, 20)
         .padding(.bottom, 0)
         .opacity(viewModel.selectedIndex == nil ? 0 : 1) // Ocultar el botón hasta que se seleccione una opción
-        .disabled(viewModel.selectedIndex == nil) // Asegura que esté deshabilitado hasta que se seleccione una opción
+        .disabled(viewModel.selectedIndex == nil || isNextButtonDisabled) // Deshabilitar el botón temporalmente
     }
     
     var backButton: some ToolbarContent {
@@ -133,6 +134,9 @@ private extension NewScreenView {
     // MARK: - Acciones
     
     func proceedToNext() {
+        // Deshabilitar el botón por 2 segundos
+        isNextButtonDisabled = true
+        
         // Actualizamos la barra de progreso con animación durante 0.5 segundos
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
@@ -148,6 +152,11 @@ private extension NewScreenView {
                 // Si se selecciona "At the gym" (índice 1), navegamos a ShowInfoView
                 self.navigateToShowInfo = true
             }
+        }
+
+        // Habilitar el botón después de 2 segundos
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isNextButtonDisabled = false
         }
     }
     

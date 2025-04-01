@@ -7,6 +7,7 @@ struct BirthYearView: View {
     @StateObject var viewModel: BirthYearViewModel
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var isNavigatingToNextScreen = false
+    @State private var isNextButtonDisabled = false // Estado para deshabilitar el botón temporalmente
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -15,7 +16,7 @@ struct BirthYearView: View {
             title
             descriptionText
             birthYearPicker
-            showInfo  // Aquí se agregará el texto para mostrar el año seleccionado
+            showInfo
             Spacer()
             nextButton
             navigationLink
@@ -25,7 +26,6 @@ struct BirthYearView: View {
         .toolbar { backButton }
         .background(backgroundColor)
         .onAppear {
-            // Cargar el valor almacenado de UserDefaults al aparecer la vista
             viewModel.selectedYear = UserDefaults.standard.integer(forKey: "selectedBirthYear")
         }
     }
@@ -58,7 +58,7 @@ private extension BirthYearView {
     
     var birthYearPicker: some View {
         Picker("Select your birth year", selection: $viewModel.selectedYear) {
-            ForEach(1900..<Calendar.current.component(.year, from: Date()) + 1, id: \.self) { year in
+            ForEach(1900..<Calendar.current.component(.year, from: Date()) + 1, id: \..self) { year in
                 Text(String(year))
                     .font(.system(size: viewModel.selectedYear == year ? 36 : 24, weight: .bold))
                     .foregroundColor(viewModel.selectedYear == year ? .blue : .gray)
@@ -69,7 +69,6 @@ private extension BirthYearView {
                     .tag(year)
                     .onChange(of: viewModel.selectedYear) { _ in
                         vibrate()
-                        // Guardar en UserDefaults cuando el valor cambia
                         UserDefaults.standard.set(viewModel.selectedYear, forKey: "selectedBirthYear")
                     }
             }
@@ -81,13 +80,12 @@ private extension BirthYearView {
         .padding(.horizontal, 16)
     }
     
-    // Mostrar la fecha de nacimiento seleccionada (Invisible)
     var showInfo: some View {
         Text("Selected Birth Year: \(viewModel.selectedYear)")
             .font(.title2)
             .padding()
             .foregroundColor(.black)
-            .opacity(0)  // Esto lo hará invisible pero mantendrá su espacio
+            .opacity(0)
     }
     
     var nextButton: some View {
@@ -108,7 +106,7 @@ private extension BirthYearView {
                 .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
         }
         .padding(.horizontal, 20)
-        .disabled(!viewModel.canProceed)
+        .disabled(isNextButtonDisabled)
     }
     
     var navigationLink: some View {
@@ -134,18 +132,23 @@ private extension BirthYearView {
         Color(red: 249/255, green: 249/255, blue: 253/255)
     }
     
-    // Función para avanzar: se actualiza la barra de progreso con animación y se navega después de un breve retraso
     func proceedToNext() {
+        isNextButtonDisabled = true
+        
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
         vibrate()
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isNavigatingToNextScreen = true
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isNextButtonDisabled = false
+        }
     }
     
-    // Función para retroceder: se disminuye el progreso y se descarta la vista
     func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
@@ -157,10 +160,10 @@ private extension BirthYearView {
     }
 }
 
-
 // MARK: - Preview
 struct BirthYearView_Previews: PreviewProvider {
     static var previews: some View {
         BirthYearView(viewModel: BirthYearViewModel(), progressViewModel: ProgressViewModel())
     }
 }
+

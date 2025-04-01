@@ -5,6 +5,7 @@ struct WeightView: View {
     @StateObject private var viewModel = WeightViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var isNavigatingToTargetWeightView = false
+    @State private var isNextButtonDisabled = false
     var userHeight: Double
 
     @Environment(\.presentationMode) var presentationMode
@@ -77,9 +78,9 @@ private extension WeightView {
     }
     
     var weightSlider: some View {
-        let minWeightKg: Double = 20
+        let minWeightKg: Double = 0
         let maxWeightKg: Double = 200
-        let minWeightLb: Double = 44.09
+        let minWeightLb: Double = 0
         let maxWeightLb: Double = 440.92
         
         return Slider(value: Binding(
@@ -133,6 +134,10 @@ private extension WeightView {
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 0)
+            .disabled(isNextButtonDisabled)
+            .simultaneousGesture(TapGesture().onEnded {
+                generateHapticFeedback()
+            })
             
             NavigationLink(
                 destination: TargetWeightView(viewModel: TargetWeightViewModel(), progressViewModel: progressViewModel),
@@ -158,21 +163,28 @@ private extension WeightView {
         Color(red: 249/255, green: 249/255, blue: 253/255)
     }
     
-    // Acción para avanzar: Se actualiza la barra de progreso con animación y, tras un breve retraso, se navega a TargetWeightView.
     func proceedToNext() {
+        isNextButtonDisabled = true
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        generateHapticFeedback()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isNavigatingToTargetWeightView = true
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            isNextButtonDisabled = false
+        }
     }
     
-    // Acción para retroceder: Se disminuye la barra de progreso y se cierra la vista.
     func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
+    }
+    
+    func generateHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
     }
 }
 

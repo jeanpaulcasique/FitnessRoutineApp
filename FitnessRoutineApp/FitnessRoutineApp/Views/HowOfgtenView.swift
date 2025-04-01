@@ -5,6 +5,7 @@ struct HowOftenView: View {
     @StateObject private var viewModel = HowOftenViewModel()  // Se mantiene la instancia
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToNextView = false
+    @State private var isNextButtonDisabled = false  // Añadimos el estado para habilitar/deshabilitar el botón
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -86,7 +87,7 @@ struct HowOftenView: View {
             
             Spacer()
             
-            // Botón "Next" que actualiza la barra de progreso y luego navega
+            // Botón "Next" que se deshabilita temporalmente
             Button(action: proceedToNext) {
                 Text("Next")
                     .font(.system(size: 18, weight: .bold))
@@ -105,6 +106,7 @@ struct HowOftenView: View {
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 0)
+            .disabled(isNextButtonDisabled)  // Deshabilita el botón temporalmente
             
             // NavigationLink oculto para la siguiente pantalla
             NavigationLink(destination: LevelActivityView(progressViewModel: progressViewModel),
@@ -128,13 +130,22 @@ struct HowOftenView: View {
     
     // Función para avanzar: actualiza la barra de progreso y, tras 0.3 segundos, navega a la siguiente pantalla
     private func proceedToNext() {
+        // Deshabilitar el botón por 2 segundos
+        isNextButtonDisabled = true
+        
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        
         // Reducir el retraso para una transición más rápida
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToNextView = true
+        }
+        
+        // Habilitar el botón después de 2 segundos
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.isNextButtonDisabled = false
         }
     }
     
@@ -151,6 +162,4 @@ struct HowOftenView_Previews: PreviewProvider {
         HowOftenView(progressViewModel: ProgressViewModel())
     }
 }
-
-
 

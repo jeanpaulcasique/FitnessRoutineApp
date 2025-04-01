@@ -4,18 +4,17 @@ import UIKit
 struct WorkoutLevelView: View {
     @StateObject private var viewModel = WorkoutLevelViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
-    @Environment(\.presentationMode) var presentationMode // Para manejar la navegación
+    @Environment(\.presentationMode) var presentationMode
 
-    @State private var navigateToNextScreen = false // Control para la navegación
+    @State private var navigateToNextScreen = false
+    @State private var isNextButtonDisabled = false
 
     var body: some View {
         VStack(spacing: 20) {
-            // Barra de progreso
             ProgressBarView(progressViewModel: progressViewModel)
                 .padding(.top, 20)
                 .padding(.horizontal, 20)
 
-            // Título principal
             Text("Choose your preferred workout level")
                 .font(.system(size: 29, weight: .bold))
                 .multilineTextAlignment(.center)
@@ -24,15 +23,12 @@ struct WorkoutLevelView: View {
                 .padding(.bottom, 15)
                 .padding(.horizontal, 20)
 
-            // Lista de niveles
             levelOptionsList
 
             Spacer()
 
-            // Botón "Next"
             nextButton
 
-            // Navegación oculta
             NavigationLink(
                 destination: NewScreenView(progressViewModel: progressViewModel),
                 isActive: $navigateToNextScreen
@@ -42,11 +38,10 @@ struct WorkoutLevelView: View {
         }
         .background(Color(red: 249 / 255, green: 249 / 255, blue: 253 / 255))
         .edgesIgnoringSafeArea(.bottom)
-        .navigationBarBackButtonHidden(true) // Ocultar el botón predeterminado
+        .navigationBarBackButtonHidden(true)
         .toolbar { backButton }
     }
 
-    // MARK: - Subvistas
     private var levelOptionsList: some View {
         VStack {
             ForEach(viewModel.levels.indices, id: \.self) { index in
@@ -107,6 +102,7 @@ struct WorkoutLevelView: View {
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 15)
+        .disabled(isNextButtonDisabled || viewModel.selectedIndex == nil)
     }
 
     private var backButton: some ToolbarContent {
@@ -119,14 +115,25 @@ struct WorkoutLevelView: View {
         }
     }
 
-    // MARK: - Métodos
     private func proceedToNext() {
+        guard let selectedIndex = viewModel.selectedIndex else { return }
+
+        // Guardar el nivel seleccionado en UserDefaults
+        let selectedLevel = viewModel.levels[selectedIndex].0
+        UserDefaults.standard.set(selectedLevel, forKey: "selectedWorkoutLevel")
+
+        isNextButtonDisabled = true
+
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
         triggerHapticFeedback()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             navigateToNextScreen = true
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isNextButtonDisabled = false
         }
     }
 
@@ -141,7 +148,6 @@ struct WorkoutLevelView: View {
     }
 }
 
-// MARK: - Preview
 struct WorkoutLevelView_Previews: PreviewProvider {
     static var previews: some View {
         WorkoutLevelView(progressViewModel: ProgressViewModel())
