@@ -4,62 +4,64 @@ import SwiftUI
 class WeightViewModel: ObservableObject {
     @Published var selectedWeightKg: Double {
         didSet {
-            // Guardar el peso cuando cambie
             UserDefaults.standard.set(selectedWeightKg, forKey: "selectedWeightKg")
         }
     }
+    
     @Published var isKgSelected: Bool {
         didSet {
-            // Guardar la unidad cuando cambie
             UserDefaults.standard.set(isKgSelected, forKey: "isKgSelected")
         }
     }
+    
     @Published var healthBenefitMessage: String = ""
     
-    private var lastWeightInOtherUnit: Double = 70.0
-    
     var selectedWeightLb: Double {
-        selectedWeightKg * 2.20462
+        get { selectedWeightKg * 2.20462 }
+        set { selectedWeightKg = newValue / 2.20462 }
     }
     
     var weightInPreferredUnit: Double {
         isKgSelected ? selectedWeightKg : selectedWeightLb
     }
-    
+
     init() {
-        // Recuperar el peso y la unidad de UserDefaults al inicializar
         if let savedWeight = UserDefaults.standard.value(forKey: "selectedWeightKg") as? Double {
             self.selectedWeightKg = savedWeight
         } else {
-            self.selectedWeightKg = 70.0 // Valor predeterminado si no se encuentra en UserDefaults
+            self.selectedWeightKg = 70.0
         }
         
         if let savedUnit = UserDefaults.standard.value(forKey: "isKgSelected") as? Bool {
             self.isKgSelected = savedUnit
         } else {
-            self.isKgSelected = true // Valor predeterminado si no se encuentra en UserDefaults
+            self.isKgSelected = true
         }
         
         updateHealthBenefitMessage()
     }
-    
+
     func calculateBMI(heightInCm: Double) -> Double {
         let heightInM = heightInCm / 100
         return selectedWeightKg / (heightInM * heightInM)
     }
     
     func toggleUnit() {
-        isKgSelected.toggle()
         if isKgSelected {
-            selectedWeightKg = lastWeightInOtherUnit / 2.20462
+            // Convertir de kg a lb y mantener el mismo valor perceptivo
+            let currentKg = selectedWeightKg
+            isKgSelected = false
+            selectedWeightLb = currentKg * 2.20462 // esto actualiza selectedWeightKg con su equivalente en lb
         } else {
-            lastWeightInOtherUnit = selectedWeightKg
-            selectedWeightKg = selectedWeightKg * 2.20462
+            // Convertir de lb a kg y mantener el mismo valor perceptivo
+            let currentLb = selectedWeightLb
+            isKgSelected = true
+            selectedWeightKg = currentLb / 2.20462
         }
         selectedWeightKg = max(20, min(200, selectedWeightKg))
         updateHealthBenefitMessage()
     }
-    
+
     func updateHealthBenefitMessage() {
         let weightLossPercentage = ((85.0 - selectedWeightKg) / 85.0) * 100
         healthBenefitMessage = """
@@ -70,10 +72,13 @@ class WeightViewModel: ObservableObject {
         - Boost your metabolism
         """
     }
-    
+
     func updateWeight(newWeight: Double) {
-        selectedWeightKg = newWeight
-        lastWeightInOtherUnit = selectedWeightLb
+        if isKgSelected {
+            selectedWeightKg = newWeight
+        } else {
+            selectedWeightLb = newWeight
+        }
         updateHealthBenefitMessage()
     }
 }

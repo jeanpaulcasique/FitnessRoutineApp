@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // MARK: - DesiredBodyView
 struct DesiredBodyView: View {
@@ -6,6 +7,7 @@ struct DesiredBodyView: View {
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var isNavigatingToBirthYearView = false
     @State private var isNextButtonDisabled = false
+    @State private var isNextButtonLoading = false  // Estado de loading para NextButton
     
     @Environment(\.presentationMode) var presentationMode
 
@@ -44,28 +46,15 @@ struct DesiredBodyView: View {
                 EmptyView()
             }
             
-            // Botón "Next"
-            Button(action: proceedToNext) {
-                Text("Next")
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .cornerRadius(10)
-                    .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
-            }
-            .padding(.horizontal, 20)
-            .disabled(isNextButtonDisabled)
-            .simultaneousGesture(TapGesture().onEnded {
-                generateHapticFeedback()
-            })
+            // NextButton personalizado
+            NextButton(
+                title: "Next",
+                action: proceedToNext,
+                isLoading: $isNextButtonLoading,
+                isDisabled: $isNextButtonDisabled
+            )
+           
+            .padding(.bottom, 0)
         }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
@@ -79,7 +68,7 @@ private extension DesiredBodyView {
     var bodyImageSelector: some View {
         GeometryReader { geometry in
             TabView(selection: $viewModel.selectedBodyIndex) {
-                ForEach(0..<viewModel.bodyImages.count, id: \..self) { index in
+                ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
                     bodyImageView(for: index, geometry: geometry)
                         .tag(index)
                 }
@@ -87,7 +76,7 @@ private extension DesiredBodyView {
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .frame(width: geometry.size.width, height: 320)
             .clipped()
-            .onChange(of: viewModel.selectedBodyIndex) { newValue in
+            .onChange(of: viewModel.selectedBodyIndex) { _ in
                 generateHapticFeedback()
             }
         }
@@ -108,7 +97,7 @@ private extension DesiredBodyView {
     
     var sliderIndicator: some View {
         HStack(spacing: 30) {
-            ForEach(0..<viewModel.bodyImages.count, id: \..self) { index in
+            ForEach(0..<viewModel.bodyImages.count, id: \.self) { index in
                 Circle()
                     .fill(index == viewModel.selectedBodyIndex ? Color.blue : Color.blue.opacity(0.3))
                     .frame(width: index == viewModel.selectedBodyIndex ? 20 : 12,
@@ -168,15 +157,19 @@ private extension DesiredBodyView {
     }
     
     func proceedToNext() {
+        // Deshabilitar y mostrar loading
         isNextButtonDisabled = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isNextButtonDisabled = false
-        }
-        
+        isNextButtonLoading = true
+
+        // Guardar imagen deseada
         UserDefaults.standard.set(viewModel.bodyImages[viewModel.selectedBodyIndex], forKey: "desiredBodyImage")
         
-        progressViewModel.advanceProgress()
+        // Avanzar progreso
+        withAnimation(.easeInOut(duration: 0.5)) {
+            progressViewModel.advanceProgress()
+        }
         generateHapticFeedback()
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isNavigatingToBirthYearView = true
         }
@@ -192,8 +185,6 @@ private extension DesiredBodyView {
         generator.impactOccurred()
     }
 }
-
-
 
 // MARK: - Preview
 struct DesiredBodyView_Previews: PreviewProvider {

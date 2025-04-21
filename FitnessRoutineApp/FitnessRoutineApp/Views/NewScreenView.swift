@@ -11,6 +11,7 @@ struct NewScreenView: View {
     @State private var navigateToNextView = false
     @State private var navigateToShowInfo = false  // Nueva variable para controlar la navegación a ShowInfo
     @State private var isNextButtonDisabled = false  // Estado para habilitar/deshabilitar el botón
+    @State private var isNextButtonLoading = false   // Estado de loading del botón
 
     var body: some View {
         VStack(spacing: 20) {
@@ -18,8 +19,17 @@ struct NewScreenView: View {
             titleView
             optionsList
             Spacer()
-            nextButton // El botón se mostrará solo cuando se seleccione una opción
-            
+
+            // NextButton simplificado
+            NextButton(
+                title: "Next",
+                action: proceedToNext,
+                isLoading: $isNextButtonLoading,
+                isDisabled: $isNextButtonDisabled
+            )
+            .padding(.bottom, 0)
+            .opacity(viewModel.selectedIndex == nil ? 0 : 1)
+
             // NavigationLink que nos llevará a GymEquipmentView si navigateToNextView es true
             NavigationLink(
                 destination: GymEquipmentView(progressViewModel: progressViewModel),
@@ -94,29 +104,6 @@ private extension NewScreenView {
         .padding(.horizontal, 20)
     }
     
-    var nextButton: some View {
-        Button(action: proceedToNext) {
-            Text("Next")
-                .font(.system(size: 18, weight: .bold))
-                .foregroundColor(.white)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .cornerRadius(10)
-                .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
-        }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 0)
-        .opacity(viewModel.selectedIndex == nil ? 0 : 1) // Ocultar el botón hasta que se seleccione una opción
-        .disabled(viewModel.selectedIndex == nil || isNextButtonDisabled) // Deshabilitar el botón temporalmente
-    }
-    
     var backButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
             Button(action: goBack) {
@@ -133,11 +120,11 @@ private extension NewScreenView {
     
     // MARK: - Acciones
     
-    func proceedToNext() {
+    private func proceedToNext() {
         // Deshabilitar el botón por 2 segundos
         isNextButtonDisabled = true
-        
-        // Actualizamos la barra de progreso con animación durante 0.5 segundos
+
+        // Actualizamos la barra de progreso
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
@@ -145,27 +132,26 @@ private extension NewScreenView {
         
         // Esperamos un breve tiempo para que se aprecie la animación
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            // Asegúrate de que solo las opciones "At home" (índice 0) o "Any place is ok" (índice 2) naveguen
             if viewModel.selectedIndex == 0 || viewModel.selectedIndex == 2 {
-                self.navigateToNextView = true
+                navigateToNextView = true
             } else if viewModel.selectedIndex == 1 {
-                // Si se selecciona "At the gym" (índice 1), navegamos a ShowInfoView
-                self.navigateToShowInfo = true
+                navigateToShowInfo = true
             }
         }
 
         // Habilitar el botón después de 2 segundos
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             isNextButtonDisabled = false
+            isNextButtonLoading = false
         }
     }
     
-    func goBack() {
+    private func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
     }
     
-    func triggerHapticFeedback() {
+    private func triggerHapticFeedback() {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
     }

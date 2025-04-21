@@ -1,9 +1,12 @@
-
 import SwiftUI
 
-
 class DesiredBodyViewModel: ObservableObject {
-    @Published var selectedBodyIndex: Int
+    @Published var selectedBodyIndex: Int {
+        didSet {
+            // Guardar el índice seleccionado cuando cambia
+            UserDefaults.standard.set(selectedBodyIndex, forKey: "selectedBodyIndex")
+        }
+    }
     
     // Listado de imágenes que representa las formas corporales
     let bodyImages = ["1m", "2m", "3m", "4m", "5m", "6m", "7m"]
@@ -31,6 +34,17 @@ class DesiredBodyViewModel: ObservableObject {
     ]
     
     init() {
-        self.selectedBodyIndex = 0 // Default to first index
+        // Recuperar el índice guardado, si existe
+        if let savedIndex = UserDefaults.standard.value(forKey: "selectedBodyIndex") as? Int {
+            self.selectedBodyIndex = savedIndex
+        } else {
+            self.selectedBodyIndex = 0 // Default a primer índice si no hay uno guardado
+        }
+    }
+    
+    // Función para actualizar el índice de manera controlada
+    func selectBody(at index: Int) {
+        self.selectedBodyIndex = index
     }
 }
+

@@ -4,19 +4,17 @@ struct GoalView: View {
     @ObservedObject var viewModel: GoalViewModel
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToBodyCurrent = false
-    @State private var buttonScale: CGFloat = 1.0
     @State private var showInfo: Bool = false
-    @State private var progressUpdating: Bool = false // Estado para animar la barra de progreso
-    @State private var isButtonDisabled = false       // Estado para deshabilitar el botón "Next"
-    
+    @State private var isButtonDisabled = false
+    @State private var isLoading = false
+
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         VStack {
-            // Barra de progreso (con animación condicional)
+            // Barra de progreso
             ProgressBarView(progressViewModel: progressViewModel)
                 .padding(.horizontal, 20)
-                .opacity(progressUpdating ? 0.5 : 1.0)
 
             // Título
             Text("What's your main goal?")
@@ -25,7 +23,7 @@ struct GoalView: View {
                 .foregroundColor(.black)
                 .padding(.top, 20)
 
-            // Vista informativa
+            // Información sobre los objetivos
             GoalInfoView(showInfo: $showInfo)
                 .padding(.bottom, showInfo ? 20 : 10)
 
@@ -34,12 +32,12 @@ struct GoalView: View {
 
             Spacer()
 
-            // Botón "Next" visible cuando se ha seleccionado un objetivo
+            // Botón "Next" visible solo si hay selección
             if viewModel.selectedGoal != nil {
                 nextButton
             }
 
-            // Navegación a BodyCurrentView
+            // Navegación a la siguiente vista
             NavigationLink(
                 destination: BodyCurrentView(viewModel: BodyCurrentViewModel(), progressViewModel: progressViewModel),
                 isActive: $navigateToBodyCurrent
@@ -61,16 +59,16 @@ struct GoalView: View {
             }
         }
         .onAppear {
-            // Cargar el objetivo guardado desde UserDefaults cuando aparece la vista
             viewModel.loadGoalFromUserDefaults()
+            viewModel.loadGenderFromUserDefaults()
+            print("GoalView onAppear - Género actual: \(viewModel.gender.rawValue)")
         }
     }
 
-    // MARK: - Opciones de objetivos
     private var goalOptions: some View {
         VStack(spacing: 30) {
             ForEach(Goal.allCases, id: \.self) { goal in
-                GoalOptionImageView(imageName: goal.imageName, isSelected: viewModel.selectedGoal == goal)
+                GoalOptionImageView(imageName: viewModel.imageName(for: goal), isSelected: viewModel.selectedGoal == goal)
                     .onTapGesture {
                         withAnimation {
                             viewModel.selectGoal(goal)
@@ -83,80 +81,26 @@ struct GoalView: View {
         .padding(.top, 10)
     }
 
-    // MARK: - Botón "Next"
     private var nextButton: some View {
-        Button(action: {
-            // Evitar múltiples toques
-            if !isButtonDisabled {
-                isButtonDisabled = true
-                proceedToNext()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    isButtonDisabled = false
-                }
-            }
-        }) {
-            Text("Next")
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .cornerRadius(10)
-                .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
-                .scaleEffect(buttonScale)
-                .animation(.easeInOut(duration: 0.2), value: buttonScale)
-        }
-        .padding(.horizontal, 20)
-        .disabled(isButtonDisabled)
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in buttonScale = 0.95 }
-                .onEnded { _ in buttonScale = 1.0 }
+        NextButton(
+            title: "Next",
+            action: proceedToNext,
+            isLoading: $isLoading,
+            isDisabled: $isButtonDisabled
         )
     }
 
-    // MARK: - Acciones
     private func proceedToNext() {
-        // Actualizar la barra de progreso con animación antes de continuar
-        withAnimation(.easeInOut(duration: 0.5)) {
-            progressUpdating = true
-        }
-        
-        // Avanzar la barra de progreso
-        progressViewModel.advanceProgress()
-        
-        // Generar feedback háptico
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        
-        // Esperar 0.2 segundos para hacer la transición suave y luego navegar a la siguiente vista
+        progressViewModel.advanceProgress()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToBodyCurrent = true
-            withAnimation {
-                progressUpdating = false
-            }
         }
     }
-    
+
     private func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
-    }
-}
-
-// MARK: - Extensión para obtener el nombre de la imagen según el objetivo
-private extension Goal {
-    var imageName: String {
-        switch self {
-        case .loseWeight: return "lossMen"
-        case .buildMuscle: return "buildMen"
-        case .keepFit: return "keepMen"
-        }
     }
 }
 
@@ -184,13 +128,13 @@ struct GoalOptionImageView: View {
                     .foregroundColor(.blue)
                     .font(.largeTitle)
                     .offset(x: 170, y: -25)
-                    .animation(.easeInOut(duration: 0.3))
+                    
             }
         }
     }
 }
 
-// MARK: - Vista informativa de objetivo
+// MARK: - Vista informativa
 struct GoalInfoView: View {
     @Binding var showInfo: Bool
 
@@ -201,12 +145,10 @@ struct GoalInfoView: View {
                     .foregroundColor(.blue)
                     .font(.title)
                     .onTapGesture { withAnimation { showInfo.toggle() } }
-
                 Text("Why we ask this?")
                     .font(.headline)
                     .foregroundColor(.blue)
                     .onTapGesture { withAnimation { showInfo.toggle() } }
-
                 Spacer()
             }
             .padding(.horizontal)
@@ -229,7 +171,9 @@ struct GoalInfoView: View {
 // MARK: - Preview
 struct GoalView_Previews: PreviewProvider {
     static var previews: some View {
-        GoalView(viewModel: GoalViewModel(), progressViewModel: ProgressViewModel())
+        NavigationView {
+            GoalView(viewModel: GoalViewModel(), progressViewModel: ProgressViewModel())
+        }
     }
 }
 

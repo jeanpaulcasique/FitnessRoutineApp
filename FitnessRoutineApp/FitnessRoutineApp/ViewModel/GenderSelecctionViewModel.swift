@@ -1,42 +1,70 @@
 import SwiftUI
 
-// MARK: - Gender Enum
-enum Gender: String {
-    case male = "male"
-    case female = "female"
-}
-
-// MARK: - GenderSelectionViewModel
 class GenderSelectionViewModel: ObservableObject {
     @Published var selectedGender: Gender? {
-        didSet {
-            // Guardar automáticamente cada vez que se cambie el género
-            saveGenderToUserDefaults()
-        }
+        didSet { saveGenderToUserDefaults() }
     }
     
+    @Published var isButtonDisabled = false
+    @Published var isLoading = false
+    @Published var navigateToGoal = false
+    @Published var progressUpdating = false
+    @Published var showInfo = false
+
+    private let userDefaultsKey = "gender"
+    
     init() {
-        // Cargar el género guardado al iniciar
         loadGenderFromUserDefaults()
     }
     
     func selectGender(_ gender: Gender) {
         selectedGender = gender
-        print("Género seleccionado: \(gender.rawValue)")
+        HapticManager.generateImpact()
     }
+    
+    func onNextTapped(progressViewModel: ProgressViewModel) {
+        guard selectedGender != nil && !isButtonDisabled else { return }
 
-    // Guardar el género en UserDefaults
-    private func saveGenderToUserDefaults() {
-        if let gender = selectedGender {
-            UserDefaults.standard.set(gender.rawValue, forKey: "gender")
+        isButtonDisabled = true
+        isLoading = true
+        progressUpdating = true
+
+        HapticManager.generateImpact()
+        progressViewModel.advanceProgress()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.navigateToGoal = true
+            self.progressUpdating = false
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.isButtonDisabled = false
+            self.isLoading = false
         }
     }
 
-    // Cargar el género desde UserDefaults
+    private func saveGenderToUserDefaults() {
+        if let gender = selectedGender {
+            UserDefaults.standard.set(gender.rawValue, forKey: userDefaultsKey)
+        }
+    }
+
     private func loadGenderFromUserDefaults() {
-        if let savedGender = UserDefaults.standard.string(forKey: "gender"),
+        if let savedGender = UserDefaults.standard.string(forKey: userDefaultsKey),
            let gender = Gender(rawValue: savedGender) {
             selectedGender = gender
         }
     }
 }
+
+enum Gender: String, CaseIterable {
+    case male, female
+}
+
+enum HapticManager {
+    static func generateImpact() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
+    }
+}
+

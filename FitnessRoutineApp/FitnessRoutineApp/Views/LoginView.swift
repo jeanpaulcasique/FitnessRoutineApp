@@ -1,69 +1,83 @@
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct LoginView: View {
     @ObservedObject var viewModel = LoginViewModel()
-    @State private var navigateToGenderSelection = false
+    @State private var navigateToFase1 = false
+    @State private var isButtonDisabled = false
     @StateObject var genderSelectionViewModel = GenderSelectionViewModel()
     @StateObject var progressViewModel = ProgressViewModel()
 
     var body: some View {
         NavigationView {
             ZStack {
-                Color.white
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        if viewModel.showLoginOptions {
-                            viewModel.hideLoginOptions()
-                        }
-                    }
-                    .allowsHitTesting(!viewModel.showLoginOptions)
+                Color.black.ignoresSafeArea()
+
+                GeometryReader { geometry in
+                    AnimatedImage(name: "loginBackground.gif")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
+                        .edgesIgnoringSafeArea(.all)
+                }
 
                 VStack {
                     Spacer()
 
                     Button(action: {
-                        // Vibración al presionar el botón
+                        guard !isButtonDisabled else { return }
+                        isButtonDisabled = true
+                        
                         let generator = UIImpactFeedbackGenerator(style: .medium)
                         generator.impactOccurred()
-
-                        // Navegación rápida al presionar START
-                        navigateToGenderSelection = true
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            navigateToFase1 = true
+                        }
                     }) {
                         Text("START")
                             .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color.blue)
+                            .background(isButtonDisabled ? Color.gray : Color.yellow)
                             .cornerRadius(10)
                             .padding(.horizontal, 20)
                     }
+                    .disabled(isButtonDisabled)
+                    .padding(.bottom, 0)
 
-                    // Navegación sin animaciones
                     NavigationLink(
-                        destination: GenderSelectionView(
-                            viewModel: genderSelectionViewModel,
+                        destination: Fase1View(
+                            genderSelectionViewModel: genderSelectionViewModel,
                             progressViewModel: progressViewModel
                         ),
-                        isActive: $navigateToGenderSelection
+                        isActive: $navigateToFase1
                     ) {
                         EmptyView()
                     }
 
                     Text("¿Ya eres usuario?")
-                        .foregroundColor(.gray)
-                        .padding(.top, 10)
+                        .foregroundColor(.white)
+                        .padding(.top, 5)
 
                     Button(action: {
                         viewModel.showExistingAccountOptions()
                     }) {
                         Text("Continuar con tu cuenta existente")
                             .font(.footnote)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.white)
+                            .underline()
                     }
-                    .padding(.bottom, 5)
+                    .padding(.bottom, 18)
                 }
+                .padding(.bottom, 0)
+                .edgesIgnoringSafeArea(.bottom)
                 .allowsHitTesting(!viewModel.showLoginOptions)
+                .onAppear {
+                    isButtonDisabled = false
+                }
 
                 if viewModel.showLoginOptions {
                     optionsView
@@ -79,7 +93,6 @@ struct LoginView: View {
             Color.black.opacity(0.5)
                 .ignoresSafeArea()
                 .onTapGesture {
-                    // Cierra el optionsView de inmediato sin animación
                     withAnimation(nil) {
                         viewModel.hideLoginOptions()
                     }
@@ -89,7 +102,6 @@ struct LoginView: View {
                 HStack {
                     Spacer()
                     Button(action: {
-                        // Cierra el optionsView de inmediato sin animación
                         withAnimation(nil) {
                             viewModel.hideLoginOptions()
                         }
@@ -102,7 +114,6 @@ struct LoginView: View {
                     .padding(.trailing, 10)
                 }
 
-                // Botones de inicio de sesión
                 socialLoginButton(imageName: "applelogo", text: "Iniciar sesión con Apple", backgroundColor: .black) {
                     viewModel.signInWithApple()
                 }
@@ -123,7 +134,6 @@ struct LoginView: View {
         }
     }
 
-    // Función auxiliar para crear botones de inicio de sesión
     func socialLoginButton(imageName: String, text: String, backgroundColor: Color, action: @escaping () -> Void) -> some View {
         Button(action: {
             action()
@@ -147,3 +157,4 @@ struct LoginView_Previews: PreviewProvider {
         LoginView()
     }
 }
+

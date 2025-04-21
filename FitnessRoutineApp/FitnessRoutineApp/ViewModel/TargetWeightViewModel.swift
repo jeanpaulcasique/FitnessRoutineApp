@@ -4,21 +4,27 @@ import SwiftUI
 class TargetWeightViewModel: ObservableObject {
     @Published var selectedWeightKg: Double {
         didSet {
-            // Guardar el peso seleccionado en UserDefaults
             UserDefaults.standard.set(selectedWeightKg, forKey: "targetWeightKg")
         }
     }
     @Published var isKgSelected: Bool = true
     @Published var healthBenefitMessage: String = ""
-
+    
+    // Propiedades para el control del botón Next
+    @Published var isNextButtonDisabled: Bool = false
+    @Published var isLoading: Bool = false
     init() {
-        // Recuperar el peso seleccionado desde UserDefaults si existe
         if let savedWeight = UserDefaults.standard.value(forKey: "targetWeightKg") as? Double {
             self.selectedWeightKg = savedWeight
         } else {
-            self.selectedWeightKg = 74.0 // Valor predeterminado
+            self.selectedWeightKg = 70.0 // Valor predeterminado dentro del nuevo rango
+        }
+
+        if let savedIsKgSelected = UserDefaults.standard.value(forKey: "isKgSelected") as? Bool {
+            self.isKgSelected = savedIsKgSelected
         }
     }
+
 
     var selectedWeightLb: Double {
         selectedWeightKg * 2.20462
@@ -30,6 +36,7 @@ class TargetWeightViewModel: ObservableObject {
 
     func toggleUnit(toKg: Bool) {
         isKgSelected = toKg
+        UserDefaults.standard.set(toKg, forKey: "isKgSelected")
     }
 
     func updateHealthBenefitMessage() {

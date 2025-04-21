@@ -5,7 +5,6 @@ struct HowOftenView: View {
     @StateObject private var viewModel = HowOftenViewModel()  // Se mantiene la instancia
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToNextView = false
-    @State private var isNextButtonDisabled = false  // Añadimos el estado para habilitar/deshabilitar el botón
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -87,26 +86,8 @@ struct HowOftenView: View {
             
             Spacer()
             
-            // Botón "Next" que se deshabilita temporalmente
-            Button(action: proceedToNext) {
-                Text("Next")
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .cornerRadius(10)
-                    .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 0)
-            .disabled(isNextButtonDisabled)  // Deshabilita el botón temporalmente
+            // Usar el NextButton
+            NextButton(title: "Next", action: proceedToNext, isLoading: $viewModel.isLoading, isDisabled: $viewModel.isNextButtonDisabled)
             
             // NavigationLink oculto para la siguiente pantalla
             NavigationLink(destination: LevelActivityView(progressViewModel: progressViewModel),
@@ -131,7 +112,7 @@ struct HowOftenView: View {
     // Función para avanzar: actualiza la barra de progreso y, tras 0.3 segundos, navega a la siguiente pantalla
     private func proceedToNext() {
         // Deshabilitar el botón por 2 segundos
-        isNextButtonDisabled = true
+        viewModel.disableNextButtonTemporarily()
         
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
@@ -141,11 +122,6 @@ struct HowOftenView: View {
         // Reducir el retraso para una transición más rápida
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToNextView = true
-        }
-        
-        // Habilitar el botón después de 2 segundos
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.isNextButtonDisabled = false
         }
     }
     

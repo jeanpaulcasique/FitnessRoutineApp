@@ -7,7 +7,8 @@ struct BirthYearView: View {
     @StateObject var viewModel: BirthYearViewModel
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var isNavigatingToNextScreen = false
-    @State private var isNextButtonDisabled = false // Estado para deshabilitar el botón temporalmente
+    @State private var isLoading = false
+    @State private var isDisabled = false
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -58,7 +59,7 @@ private extension BirthYearView {
     
     var birthYearPicker: some View {
         Picker("Select your birth year", selection: $viewModel.selectedYear) {
-            ForEach(1900..<Calendar.current.component(.year, from: Date()) + 1, id: \..self) { year in
+            ForEach(1900..<Calendar.current.component(.year, from: Date()) + 1, id: \.self) { year in
                 Text(String(year))
                     .font(.system(size: viewModel.selectedYear == year ? 36 : 24, weight: .bold))
                     .foregroundColor(viewModel.selectedYear == year ? .blue : .gray)
@@ -89,24 +90,20 @@ private extension BirthYearView {
     }
     
     var nextButton: some View {
-        Button(action: proceedToNext) {
-            Text("Next")
-                .font(.system(size: 18, weight: .bold))
-                .foregroundColor(.white)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .cornerRadius(12)
-                .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
-        }
-        .padding(.horizontal, 20)
-        .disabled(isNextButtonDisabled)
+        NextButton(
+            title: "Next",
+            action: {
+                withAnimation {
+                    progressViewModel.advanceProgress()
+                }
+                vibrate()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.isNavigatingToNextScreen = true
+                }
+            },
+            isLoading: $isLoading,
+            isDisabled: $isDisabled
+        )
     }
     
     var navigationLink: some View {
@@ -130,23 +127,6 @@ private extension BirthYearView {
     
     var backgroundColor: Color {
         Color(red: 249/255, green: 249/255, blue: 253/255)
-    }
-    
-    func proceedToNext() {
-        isNextButtonDisabled = true
-        
-        withAnimation(.easeInOut(duration: 0.5)) {
-            progressViewModel.advanceProgress()
-        }
-        vibrate()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.isNavigatingToNextScreen = true
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isNextButtonDisabled = false
-        }
     }
     
     func goBack() {

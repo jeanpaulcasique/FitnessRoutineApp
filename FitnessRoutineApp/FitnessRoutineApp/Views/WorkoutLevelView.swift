@@ -8,6 +8,7 @@ struct WorkoutLevelView: View {
 
     @State private var navigateToNextScreen = false
     @State private var isNextButtonDisabled = false
+    @State private var isNextButtonLoading = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -27,7 +28,14 @@ struct WorkoutLevelView: View {
 
             Spacer()
 
-            nextButton
+            // Integración de NextButton
+            NextButton(
+                title: "Next",
+                action: proceedToNext,
+                isLoading: $isNextButtonLoading,
+                isDisabled: $isNextButtonDisabled
+            )
+            .padding(.bottom, 15)
 
             NavigationLink(
                 destination: NewScreenView(progressViewModel: progressViewModel),
@@ -79,30 +87,10 @@ struct WorkoutLevelView: View {
         )
         .onTapGesture {
             viewModel.selectLevel(at: index)
-            triggerHapticFeedback()
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            // Habilitar Next tras selección
+            isNextButtonDisabled = false
         }
-    }
-
-    private var nextButton: some View {
-        Button(action: proceedToNext) {
-            Text("Next")
-                .font(.system(size: 18, weight: .bold))
-                .foregroundColor(.white)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .cornerRadius(10)
-                .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
-        }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 15)
-        .disabled(isNextButtonDisabled || viewModel.selectedIndex == nil)
     }
 
     private var backButton: some ToolbarContent {
@@ -118,28 +106,18 @@ struct WorkoutLevelView: View {
     private func proceedToNext() {
         guard let selectedIndex = viewModel.selectedIndex else { return }
 
-        // Guardar el nivel seleccionado en UserDefaults
+        // Guardar el nivel seleccionado
         let selectedLevel = viewModel.levels[selectedIndex].0
         UserDefaults.standard.set(selectedLevel, forKey: "selectedWorkoutLevel")
 
-        isNextButtonDisabled = true
-
+        // Avanzar progreso y navegar
         withAnimation(.easeInOut(duration: 0.5)) {
             progressViewModel.advanceProgress()
         }
-        triggerHapticFeedback()
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             navigateToNextScreen = true
         }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isNextButtonDisabled = false
-        }
-    }
-
-    private func triggerHapticFeedback() {
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
     }
 
     private func goBack() {
@@ -147,6 +125,7 @@ struct WorkoutLevelView: View {
         presentationMode.wrappedValue.dismiss()
     }
 }
+
 
 struct WorkoutLevelView_Previews: PreviewProvider {
     static var previews: some View {

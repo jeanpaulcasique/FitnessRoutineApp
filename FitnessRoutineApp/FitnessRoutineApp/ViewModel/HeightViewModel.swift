@@ -6,6 +6,9 @@ class HeightViewModel: ObservableObject {
     @Published var selectedHeightFt: Int = 5
     @Published var selectedHeightInch: Int = 9
     @Published var isCmSelected: Bool = true
+    @Published var isLoading: Bool = false
+    @Published var isButtonDisabled: Bool = false
+
 
     // MARK: - Unit Toggle
     func toggleUnit(toCm: Bool) {

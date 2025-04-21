@@ -4,9 +4,9 @@ import UIKit
 struct BodyCurrentView: View {
     @ObservedObject var viewModel = BodyCurrentViewModel()
     @ObservedObject var progressViewModel: ProgressViewModel
-    @State private var isButtonPressed = false // Para animación del botón
     @State private var navigateToNextView = false // Control de navegación
     @State private var isButtonDisabled = false // Estado para deshabilitar el botón "Next"
+    @State private var isLoading = false // Estado de carga para el botón
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -43,34 +43,12 @@ struct BodyCurrentView: View {
 
             // Botón "Next", visible solo si hay una opción seleccionada
             if viewModel.selectedBodyShape != nil {
-                Button(action: {
-                    if !isButtonDisabled {
-                        isButtonDisabled = true
-                        proceedToNext()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                            isButtonDisabled = false
-                        }
-                    }
-                }) {
-                    Text("Next")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(10)
-                        .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
-                        .scaleEffect(isButtonPressed ? 0.95 : 1.0)
-                        .animation(.easeInOut, value: isButtonPressed)
-                }
-                .padding(.horizontal, 20)
-                .disabled(isButtonDisabled)
+                NextButton(
+                    title: "Next",
+                    action: proceedToNext,
+                    isLoading: $isLoading,
+                    isDisabled: $isButtonDisabled
+                )
             }
 
             // Navegación a DesiredBodyView
@@ -97,7 +75,6 @@ struct BodyCurrentView: View {
     // Función para avanzar a la siguiente pantalla
     private func proceedToNext() {
         vibrate()
-        isButtonPressed = true
         progressViewModel.advanceProgress() // Aumentar progreso
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             navigateToNextView = true
@@ -116,6 +93,7 @@ struct BodyCurrentView: View {
         generator.impactOccurred()
     }
 }
+
 
 // Vista de la opción de cuerpo
 struct BodyOptionView: View {

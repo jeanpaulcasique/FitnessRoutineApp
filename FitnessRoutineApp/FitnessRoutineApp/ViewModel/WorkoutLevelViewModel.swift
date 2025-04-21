@@ -16,6 +16,8 @@ class WorkoutLevelViewModel: ObservableObject {
         }
     }
     
+    @Published var isNextButtonDisabled: Bool = false
+
     init() {
         // Recuperar la selección guardada desde UserDefaults
         if let savedSelection = UserDefaults.standard.value(forKey: "workoutLevelSelection") as? Int {

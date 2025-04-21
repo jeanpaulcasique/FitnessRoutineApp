@@ -44,8 +44,12 @@
 		69CDFF1D2D668007006199E9 /* GymEquipmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CDFF1C2D667FF9006199E9 /* GymEquipmentView.swift */; };
 		69CDFF1F2D668022006199E9 /* GymEquipmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CDFF1E2D66801F006199E9 /* GymEquipmentViewModel.swift */; };
 		69CDFF222D6797AE006199E9 /* showInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CDFF212D679153006199E9 /* showInfo.swift */; };
-		69F834DF2D69318900C604B4 /* CoachProcessingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F834DE2D69317F00C604B4 /* CoachProcessingView.swift */; };
-		69F834E12D69319F00C604B4 /* CoachProcessingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F834E02D69319A00C604B4 /* CoachProcessingViewModel.swift */; };
+		69EB923F2DA96C38001121A2 /* ShowInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69EB923E2DA96C35001121A2 /* ShowInfoViewModel.swift */; };
+		69EB92422DA9959B001121A2 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 69EB92412DA9959B001121A2 /* SDWebImageSwiftUI */; };
+		69EB92442DA99A10001121A2 /* loginBackground.gif in Resources */ = {isa = PBXBuildFile; fileRef = 69EB92432DA99A10001121A2 /* loginBackground.gif */; };
+		69EB92482DAE67B9001121A2 /* NextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69EB92472DAE67B7001121A2 /* NextButton.swift */; };
+		69EB924C2DAE8387001121A2 /* fase1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 69EB924B2DAE8387001121A2 /* fase1.gif */; };
+		69F834DF2D69318900C604B4 /* fase1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F834DE2D69317F00C604B4 /* fase1View.swift */; };
 		69FAB4C22D3FFAE900147987 /* NewScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FAB4C12D3FFAE400147987 /* NewScreenView.swift */; };
 		69FAB4C42D3FFB3000147987 /* NewScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FAB4C32D3FFB2900147987 /* NewScreenViewModel.swift */; };
 		69FDC18A2CD7E64D0075F0CA /* HowOfgtenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FDC1892CD7E6460075F0CA /* HowOfgtenView.swift */; };
@@ -111,8 +115,11 @@
 		69CDFF1C2D667FF9006199E9 /* GymEquipmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymEquipmentView.swift; sourceTree = "<group>"; };
 		69CDFF1E2D66801F006199E9 /* GymEquipmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymEquipmentViewModel.swift; sourceTree = "<group>"; };
 		69CDFF212D679153006199E9 /* showInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = showInfo.swift; sourceTree = "<group>"; };
-		69F834DE2D69317F00C604B4 /* CoachProcessingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachProcessingView.swift; sourceTree = "<group>"; };
-		69F834E02D69319A00C604B4 /* CoachProcessingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachProcessingViewModel.swift; sourceTree = "<group>"; };
+		69EB923E2DA96C35001121A2 /* ShowInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowInfoViewModel.swift; sourceTree = "<group>"; };
+		69EB92432DA99A10001121A2 /* loginBackground.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loginBackground.gif; sourceTree = "<group>"; };
+		69EB92472DAE67B7001121A2 /* NextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButton.swift; sourceTree = "<group>"; };
+		69EB924B2DAE8387001121A2 /* fase1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = fase1.gif; sourceTree = "<group>"; };
+		69F834DE2D69317F00C604B4 /* fase1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fase1View.swift; sourceTree = "<group>"; };
 		69FAB4C12D3FFAE400147987 /* NewScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewScreenView.swift; sourceTree = "<group>"; };
 		69FAB4C32D3FFB2900147987 /* NewScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewScreenViewModel.swift; sourceTree = "<group>"; };
 		69FDC1892CD7E6460075F0CA /* HowOfgtenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowOfgtenView.swift; sourceTree = "<group>"; };
@@ -124,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69EB92422DA9959B001121A2 /* SDWebImageSwiftUI in Frameworks */,
 				6920446F2D5A9A04001CFCD0 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -226,7 +234,7 @@
 		693B07E22C9614A400722E48 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				69F834DE2D69317F00C604B4 /* CoachProcessingView.swift */,
+				69F834DE2D69317F00C604B4 /* fase1View.swift */,
 				69B752432CADB6E000C0C126 /* ProgressBarView.swift */,
 				69969F582C9F6C1A00682635 /* LoginView.swift */,
 				69969F5E2CA09E4800682635 /* GenderSelectionView.swift */,
@@ -241,6 +249,8 @@
 				69C6CC722CDC6FDD0043B135 /* LevelActivityView.swift */,
 				69C6CC762CEADD690043B135 /* WorkoutLevelView.swift */,
 				69FAB4C12D3FFAE400147987 /* NewScreenView.swift */,
+				69EB924B2DAE8387001121A2 /* fase1.gif */,
+				69EB92432DA99A10001121A2 /* loginBackground.gif */,
 				69CDFF202D679149006199E9 /* gymFlow */,
 				69CDFF1B2D667FDF006199E9 /* HomeFlow */,
 			);
@@ -250,6 +260,7 @@
 		693B07E32C9614AB00722E48 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				69EB923E2DA96C35001121A2 /* ShowInfoViewModel.swift */,
 				69CDFF1E2D66801F006199E9 /* GymEquipmentViewModel.swift */,
 				69FAB4C32D3FFB2900147987 /* NewScreenViewModel.swift */,
 				69C6CC782CEADD8D0043B135 /* WorkoutLevelViewModel.swift */,
@@ -265,7 +276,7 @@
 				69969F5C2CA09E2300682635 /* GenderSelecctionViewModel.swift */,
 				69969F5A2C9F6C2A00682635 /* LoginViewModel.swift */,
 				69B752412CA734CA00C0C126 /* ProgressViewModel.swift */,
-				69F834E02D69319A00C604B4 /* CoachProcessingViewModel.swift */,
+				69EB92472DAE67B7001121A2 /* NextButton.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -373,6 +384,9 @@
 				Base,
 			);
 			mainGroup = 692562C02C92FB8D0002524D;
+			packageReferences = (
+				69EB92402DA9959B001121A2 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
 			productRefGroup = 692562CA2C92FB8D0002524D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -389,6 +403,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69EB92442DA99A10001121A2 /* loginBackground.gif in Resources */,
+				69EB924C2DAE8387001121A2 /* fase1.gif in Resources */,
 				692562D42C92FB8E0002524D /* Preview Assets.xcassets in Resources */,
 				692562D12C92FB8E0002524D /* Assets.xcassets in Resources */,
 			);
@@ -415,12 +431,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69EB92482DAE67B9001121A2 /* NextButton.swift in Sources */,
 				69FDC18C2CD7E65A0075F0CA /* HowOftenViewModel.swift in Sources */,
 				695D27492CC3506E00821610 /* WeightView.swift in Sources */,
 				69C6CC732CDC6FE60043B135 /* LevelActivityView.swift in Sources */,
 				69C6CC792CEADDB20043B135 /* WorkoutLevelViewModel.swift in Sources */,
 				690495B52CB80EA700E82BC9 /* BirthYearView.swift in Sources */,
-				69F834DF2D69318900C604B4 /* CoachProcessingView.swift in Sources */,
+				69F834DF2D69318900C604B4 /* fase1View.swift in Sources */,
 				690495B92CB8C7C200E82BC9 /* HeightView.swift in Sources */,
 				69969F5F2CA09E5700682635 /* GenderSelectionView.swift in Sources */,
 				69B752462CB4B59F00C0C126 /* DesiredBodyView.swift in Sources */,
@@ -441,8 +458,8 @@
 				69FAB4C42D3FFB3000147987 /* NewScreenViewModel.swift in Sources */,
 				692562D62C92FB8E0002524D /* Persistence.swift in Sources */,
 				69B752422CA734D800C0C126 /* ProgressViewModel.swift in Sources */,
+				69EB923F2DA96C38001121A2 /* ShowInfoViewModel.swift in Sources */,
 				69CDFF1F2D668022006199E9 /* GymEquipmentViewModel.swift in Sources */,
-				69F834E12D69319F00C604B4 /* CoachProcessingViewModel.swift in Sources */,
 				69969F572C9F6BE900682635 /* User.swift in Sources */,
 				696BBAB12CCB1A270087724E /* TargetWeightView.swift in Sources */,
 				69CDFF1D2D668007006199E9 /* GymEquipmentView.swift in Sources */,
@@ -777,6 +794,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		69EB92402DA9959B001121A2 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		69EB92412DA9959B001121A2 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69EB92402DA9959B001121A2 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		694115232D5D001600D74C0D /* modelDataCore.xcdatamodeld */ = {

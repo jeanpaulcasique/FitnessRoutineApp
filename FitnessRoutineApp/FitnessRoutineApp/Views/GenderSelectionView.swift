@@ -1,24 +1,22 @@
 import SwiftUI
 import UIKit
 
-// MARK: - GenderSelectionView
 struct GenderSelectionView: View {
     @ObservedObject var viewModel: GenderSelectionViewModel
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToGoal = false
     @State private var showInfo = false
-    @State private var progressUpdating = false // Nuevo estado para manejar la animación
-    @State private var isButtonDisabled = false // Estado para deshabilitar el botón temporalmente
+    @State private var progressUpdating = false
+    @State private var isButtonDisabled = false
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         ZStack {
             VStack {
-                // Barra de progreso con animación condicional
                 ProgressBarView(progressViewModel: progressViewModel)
                     .padding(.top, 20)
                     .padding(.horizontal)
-                    .opacity(progressUpdating ? 0.5 : 1.0) // Reducir opacidad durante la actualización
+                    .opacity(progressUpdating ? 0.5 : 1.0)
 
                 Text("What's your gender?")
                     .font(.largeTitle)
@@ -29,12 +27,10 @@ struct GenderSelectionView: View {
                 HStack(spacing: 37) {
                     GenderSelectionCard(gender: .male, isSelected: viewModel.selectedGender == .male) {
                         viewModel.selectGender(.male)
-                        saveSelection(key: "gender", value: "Male") // Guardar selección
                         generateHapticFeedback()
                     }
                     GenderSelectionCard(gender: .female, isSelected: viewModel.selectedGender == .female) {
                         viewModel.selectGender(.female)
-                        saveSelection(key: "gender", value: "Female") // Guardar selección
                         generateHapticFeedback()
                     }
                 }
@@ -46,31 +42,37 @@ struct GenderSelectionView: View {
                 if viewModel.selectedGender != nil {
                     Button(action: {
                         if !isButtonDisabled {
-                            isButtonDisabled = true // Deshabilitar el botón
+                            isButtonDisabled = true
                             proceedToNext()
-                            
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                                isButtonDisabled = false // Volver a habilitar el botón después de 2 segundos
+                                isButtonDisabled = false
                             }
                         }
                     }) {
-                        Text("Next")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
+                        ZStack {
+                            if isButtonDisabled {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            } else {
+                                Text("Next")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
+                                startPoint: .leading,
+                                endPoint: .trailing
                             )
-                            .cornerRadius(10)
-                            .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
+                        )
+                        .cornerRadius(10)
+                        .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
                     }
                     .padding(.horizontal, 20)
-                    .disabled(isButtonDisabled) // Deshabilita el botón temporalmente
+                    .disabled(isButtonDisabled)
 
                     NavigationLink(
                         destination: GoalView(viewModel: GoalViewModel(), progressViewModel: progressViewModel),
@@ -101,18 +103,11 @@ struct GenderSelectionView: View {
     }
 
     private func proceedToNext() {
-        // Actualizar la barra de progreso con animación antes de continuar
         withAnimation(.easeInOut(duration: 0.5)) {
             progressUpdating = true
         }
-
-        // Avanzar en la barra de progreso
         progressViewModel.advanceProgress()
-
-        // Generar feedback háptico
         generateHapticFeedback()
-
-        // Esperar un poco antes de navegar a la siguiente vista
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.navigateToGoal = true
             withAnimation {
@@ -130,11 +125,6 @@ struct GenderSelectionView: View {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
     }
-
-    // Función para guardar la selección en UserDefaults
-    private func saveSelection(key: String, value: String) {
-        UserDefaults.standard.set(value, forKey: key)
-    }
 }
 
 // MARK: - GenderInfoView
@@ -149,7 +139,6 @@ struct GenderInfoView: View {
                     .font(.title)
                     .padding(.top, -290)
                     .onTapGesture { withAnimation { showInfo.toggle() } }
-
                 Text("Why we ask this?")
                     .font(.headline)
                     .padding(.top, -285)
