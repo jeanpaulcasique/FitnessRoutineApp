@@ -14,13 +14,7 @@ struct Fase1View: View {
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
-                .onAppear {
-                    // Estimar duración del GIF si no tienes acceso directo a la duración
-                    // Por ejemplo, si tu gif dura 4 segundos:
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
-                        navigateToNext = true
-                    }
-                }
+                .accessibilityIdentifier("fase1Gif")
 
             NavigationLink(
                 destination: GenderSelectionView(
@@ -32,7 +26,20 @@ struct Fase1View: View {
                 EmptyView()
             }
         }
+        .onAppear {
+            // Ajusta el tiempo al que dura exactamente tu gif
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4.4) {
+                navigateToNext = true
+            }
+        }
         .navigationBarBackButtonHidden(true)
     }
+}
+
+#Preview {
+    Fase1View(
+        genderSelectionViewModel: GenderSelectionViewModel(),
+        progressViewModel: ProgressViewModel()
+    )
 }
 

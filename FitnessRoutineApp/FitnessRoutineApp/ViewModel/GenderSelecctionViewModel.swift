@@ -1,10 +1,10 @@
+// GenderSelectionViewModel.swift
 import SwiftUI
 
 class GenderSelectionViewModel: ObservableObject {
     @Published var selectedGender: Gender? {
         didSet { saveGenderToUserDefaults() }
     }
-    
     @Published var isButtonDisabled = false
     @Published var isLoading = false
     @Published var navigateToGoal = false
@@ -12,16 +12,16 @@ class GenderSelectionViewModel: ObservableObject {
     @Published var showInfo = false
 
     private let userDefaultsKey = "gender"
-    
+
     init() {
         loadGenderFromUserDefaults()
     }
-    
+
     func selectGender(_ gender: Gender) {
         selectedGender = gender
         HapticManager.generateImpact()
     }
-    
+
     func onNextTapped(progressViewModel: ProgressViewModel) {
         guard selectedGender != nil && !isButtonDisabled else { return }
 
@@ -57,10 +57,12 @@ class GenderSelectionViewModel: ObservableObject {
     }
 }
 
+// Gender enum
 enum Gender: String, CaseIterable {
     case male, female
 }
 
+// Haptic Manager
 enum HapticManager {
     static func generateImpact() {
         let generator = UIImpactFeedbackGenerator(style: .medium)

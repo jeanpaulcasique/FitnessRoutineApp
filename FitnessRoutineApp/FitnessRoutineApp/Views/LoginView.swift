@@ -3,10 +3,9 @@ import SDWebImageSwiftUI
 
 struct LoginView: View {
     @ObservedObject var viewModel = LoginViewModel()
-    @State private var navigateToFase1 = false
-    @State private var isButtonDisabled = false
     @StateObject var genderSelectionViewModel = GenderSelectionViewModel()
     @StateObject var progressViewModel = ProgressViewModel()
+    @EnvironmentObject var sessionManager: UserSessionManager
 
     var body: some View {
         NavigationView {
@@ -25,27 +24,24 @@ struct LoginView: View {
                 VStack {
                     Spacer()
 
-                    Button(action: {
-                        guard !isButtonDisabled else { return }
-                        isButtonDisabled = true
-                        
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred()
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                            navigateToFase1 = true
+                    Button(action: viewModel.handleStartButtonTap(sessionManager: sessionManager)) {
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                        } else {
+                            Text("START")
+                                .fontWeight(.bold)
+                                .foregroundColor(.black)
+                                .padding()
+                                .frame(maxWidth: .infinity)
                         }
-                    }) {
-                        Text("START")
-                            .fontWeight(.bold)
-                            .foregroundColor(.black)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(isButtonDisabled ? Color.gray : Color.yellow)
-                            .cornerRadius(10)
-                            .padding(.horizontal, 20)
                     }
-                    .disabled(isButtonDisabled)
+                    .background(viewModel.isDisabled ? Color.gray : Color.yellow)
+                    .cornerRadius(10)
+                    .padding(.horizontal, 20)
+                    .disabled(viewModel.isDisabled)
                     .padding(.bottom, 0)
 
                     NavigationLink(
@@ -53,7 +49,7 @@ struct LoginView: View {
                             genderSelectionViewModel: genderSelectionViewModel,
                             progressViewModel: progressViewModel
                         ),
-                        isActive: $navigateToFase1
+                        isActive: $viewModel.navigateToFase1
                     ) {
                         EmptyView()
                     }
@@ -62,9 +58,7 @@ struct LoginView: View {
                         .foregroundColor(.white)
                         .padding(.top, 5)
 
-                    Button(action: {
-                        viewModel.showExistingAccountOptions()
-                    }) {
+                    Button(action: viewModel.showExistingAccountOptions) {
                         Text("Continuar con tu cuenta existente")
                             .font(.footnote)
                             .foregroundColor(.white)
@@ -73,11 +67,7 @@ struct LoginView: View {
                     .padding(.bottom, 18)
                 }
                 .padding(.bottom, 0)
-                .edgesIgnoringSafeArea(.bottom)
                 .allowsHitTesting(!viewModel.showLoginOptions)
-                .onAppear {
-                    isButtonDisabled = false
-                }
 
                 if viewModel.showLoginOptions {
                     optionsView
@@ -85,6 +75,9 @@ struct LoginView: View {
             }
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
+            .onAppear {
+                viewModel.resetButton()
+            }
         }
     }
 
@@ -135,9 +128,7 @@ struct LoginView: View {
     }
 
     func socialLoginButton(imageName: String, text: String, backgroundColor: Color, action: @escaping () -> Void) -> some View {
-        Button(action: {
-            action()
-        }) {
+        Button(action: action) {
             HStack {
                 Image(systemName: imageName)
                 Text(text)
@@ -155,6 +146,7 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
+            .environmentObject(UserSessionManager())
     }
 }
 

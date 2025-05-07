@@ -1,22 +1,21 @@
 import SwiftUI
-import UIKit
 
 struct GenderSelectionView: View {
     @ObservedObject var viewModel: GenderSelectionViewModel
     @ObservedObject var progressViewModel: ProgressViewModel
-    @State private var navigateToGoal = false
-    @State private var showInfo = false
-    @State private var progressUpdating = false
-    @State private var isButtonDisabled = false
     @Environment(\.presentationMode) var presentationMode
-
+    @State private var navigateToGoal = false
+    @State private var isLoading = false
+    @State private var isButtonDisabled = false
+    
+    
     var body: some View {
         ZStack {
             VStack {
                 ProgressBarView(progressViewModel: progressViewModel)
                     .padding(.top, 20)
                     .padding(.horizontal)
-                    .opacity(progressUpdating ? 0.5 : 1.0)
+                    .opacity(viewModel.progressUpdating ? 0.5 : 1.0)
 
                 Text("What's your gender?")
                     .font(.largeTitle)
@@ -24,70 +23,36 @@ struct GenderSelectionView: View {
                     .foregroundColor(.black)
                     .padding(.top, 0)
 
-                HStack(spacing: 37) {
-                    GenderSelectionCard(gender: .male, isSelected: viewModel.selectedGender == .male) {
-                        viewModel.selectGender(.male)
-                        generateHapticFeedback()
-                    }
-                    GenderSelectionCard(gender: .female, isSelected: viewModel.selectedGender == .female) {
-                        viewModel.selectGender(.female)
-                        generateHapticFeedback()
-                    }
-                }
-                .padding(.top, 150)
-                .padding()
+                genderSelectionCards
+                    .padding(.top, 150)
+                    .padding()
 
                 Spacer()
 
                 if viewModel.selectedGender != nil {
-                    Button(action: {
-                        if !isButtonDisabled {
-                            isButtonDisabled = true
-                            proceedToNext()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                                isButtonDisabled = false
-                            }
-                        }
-                    }) {
-                        ZStack {
-                            if isButtonDisabled {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                            } else {
-                                Text("Next")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                            }
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(10)
-                        .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
-                    }
+                   
+                        NextButton(
+                            title: "Next",
+                            action: proceedToNext,
+                            isLoading: $isLoading,
+                            isDisabled: $isButtonDisabled
+                    )
                     .padding(.horizontal, 20)
-                    .disabled(isButtonDisabled)
 
                     NavigationLink(
                         destination: GoalView(viewModel: GoalViewModel(), progressViewModel: progressViewModel),
-                        isActive: $navigateToGoal
+                        isActive: $viewModel.navigateToGoal
                     ) {
                         EmptyView()
                     }
-                    .padding(.bottom, 0)
+                    .hidden()
                 }
             }
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
             .background(Color(red: 249/255, green: 249/255, blue: 253/255))
-
-            GenderInfoView(showInfo: $showInfo)
+            
+            GenderInfoView(showInfo: $viewModel.showInfo)
                 .padding()
                 .zIndex(1)
         }
@@ -102,28 +67,28 @@ struct GenderSelectionView: View {
         }
     }
 
-    private func proceedToNext() {
-        withAnimation(.easeInOut(duration: 0.5)) {
-            progressUpdating = true
-        }
-        progressViewModel.advanceProgress()
-        generateHapticFeedback()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.navigateToGoal = true
-            withAnimation {
-                progressUpdating = false
+    private var genderSelectionCards: some View {
+        HStack(spacing: 37) {
+            GenderSelectionCard(gender: .male, isSelected: viewModel.selectedGender == .male) {
+                viewModel.selectGender(.male)
             }
+            GenderSelectionCard(gender: .female, isSelected: viewModel.selectedGender == .female) {
+                viewModel.selectGender(.female)
+            }
+        }
+    }
+
+    private func proceedToNext() {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        progressViewModel.advanceProgress()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.viewModel.navigateToGoal = true
         }
     }
 
     private func goBack() {
         progressViewModel.decreaseProgress()
         presentationMode.wrappedValue.dismiss()
-    }
-
-    private func generateHapticFeedback() {
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
     }
 }
 
