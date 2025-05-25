@@ -20,10 +20,11 @@ struct LoginView: View {
                         .clipped()
                         .edgesIgnoringSafeArea(.all)
                 }
-
+                
                 VStack {
                     Spacer()
-
+                    
+                    
                     Button(action: viewModel.handleStartButtonTap(sessionManager: sessionManager)) {
                         if viewModel.isLoading {
                             ProgressView()
@@ -80,6 +81,7 @@ struct LoginView: View {
             }
         }
     }
+      
 
     var optionsView: some View {
         ZStack {

@@ -1,0 +1,51 @@
+# Xcode
+DerivedData/
+*.xcworkspace
+*.xcuserstate
+*.xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# Swift Package Manager
+.build/
+Packages/
+.swiftpm/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/screenshots
+fastlane/test_output
+
+# Archives
+*.xcarchive
+
+# iOS Device support files
+DeviceSupport/
+
+# User-specific
+*.DS_Store
+*.swp
+*.lock
+.idea/
+*.orig
+
+# Logs
+*.log
+
+# Ignorar GIFs grandes u otros recursos no necesarios
+*.gif
+
+# Firebase (si usas configuraciones locales)
+GoogleService-Info.plist
+
+# Otros archivos personales
+*.p12
+*.key
+*.cer

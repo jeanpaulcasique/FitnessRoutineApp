@@ -29,3 +29,16 @@ struct SectionHeader: View {
             .padding(.horizontal)
     }
 }
+struct GroceryItem: Identifiable {
+  let id = UUID()
+  let name: String
+  let quantity: String
+  var purchased: Bool
+}
+
+
+struct Macros {
+  var carbs: Int  // en gramos
+  var protein: Int
+  var fat: Int
+}

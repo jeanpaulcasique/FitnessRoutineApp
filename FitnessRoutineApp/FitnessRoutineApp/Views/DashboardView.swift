@@ -13,7 +13,7 @@ struct DashboardView: View {
                 }
 
             // Pestaña Diet
-            Text("Diet")
+            DietView()
                 .tabItem {
                     Image(systemName: "fork.knife")
                     Text("Diet")

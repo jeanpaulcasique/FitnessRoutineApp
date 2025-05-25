@@ -37,7 +37,7 @@ struct GenderSelectionView: View {
                             isLoading: $isLoading,
                             isDisabled: $isButtonDisabled
                     )
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 0)
 
                     NavigationLink(
                         destination: GoalView(viewModel: GoalViewModel(), progressViewModel: progressViewModel),

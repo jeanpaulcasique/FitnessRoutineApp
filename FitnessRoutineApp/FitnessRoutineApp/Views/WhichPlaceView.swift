@@ -20,7 +20,6 @@ struct NewScreenView: View {
             optionsList
             Spacer()
 
-            // NextButton simplificado
             NextButton(
                 title: "Next",
                 action: proceedToNext,
@@ -30,7 +29,6 @@ struct NewScreenView: View {
             .padding(.bottom, 0)
             .opacity(viewModel.selectedIndex == nil ? 0 : 1)
 
-            // NavigationLink que nos llevará a GymEquipmentView si navigateToNextView es true
             NavigationLink(
                 destination: GymEquipmentView(progressViewModel: progressViewModel),
                 isActive: $navigateToNextView

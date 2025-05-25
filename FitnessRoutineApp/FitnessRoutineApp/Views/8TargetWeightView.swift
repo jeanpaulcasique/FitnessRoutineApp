@@ -65,7 +65,7 @@ struct TargetWeightView: View {
             Spacer()
 
             NavigationLink(
-                destination: HowOftenView(progressViewModel: progressViewModel),
+                destination: DietTypeView(progressViewModel: progressViewModel),
                 isActive: $navigateToHowOftenView
             ) {
                 EmptyView()

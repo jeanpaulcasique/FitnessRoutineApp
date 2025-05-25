@@ -29,7 +29,7 @@ class ShowInfoViewModel: ObservableObject {
         let target = UserDefaults.standard.string(forKey: "selectedTarget") ?? "Not Set"
         let workoutLevel = UserDefaults.standard.string(forKey: "selectedWorkoutLevel") ?? "Not Set"
         let levelActivity = UserDefaults.standard.string(forKey: "selectedLevelActivity") ?? "Not Set"
-        let howOften = UserDefaults.standard.string(forKey: "selectedHowOften") ?? "Not Set"
+        let howOften = UserDefaults.standard.string(forKey: "selectedDietType") ?? "Not Set"
 
         infoItems = [
             ("Gender", gender),
