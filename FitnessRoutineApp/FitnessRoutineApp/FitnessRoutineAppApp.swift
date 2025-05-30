@@ -2,23 +2,29 @@ import SwiftUI
 
 @main
 struct FitnessRoutineAppApp: App {
-    
     @StateObject private var progressViewModel = ProgressViewModel()
-    @StateObject private var sessionManager = UserSessionManager() // ✅ Añadir el UserSessionManager
+    @StateObject private var sessionManager = UserSessionManager()
+    
+    // 1) Añadimos el DietViewModel aquí
+    @StateObject private var dietViewModel = DietViewModel()
 
     var body: some Scene {
         WindowGroup {
             Group {
                 if sessionManager.isLoggedIn {
-                    // Tu pantalla principal si ya está logueado
                     DashboardView()
+                        // 2) Inyectamos el DietViewModel si lo quieres en el entorno
+                        .environmentObject(dietViewModel)
+                        // 3) Arrancamos los recordatorios al aparecer la pantalla principal
+                        .onAppear {
+                            dietViewModel.startWaterRemindersThreeTimes()
+                        }
                 } else {
-                    // Si no ha iniciado sesión, muestra el login
                     LoginView(viewModel: LoginViewModel())
                 }
             }
             .environmentObject(progressViewModel)
-            .environmentObject(sessionManager) // ✅ Pasamos el session manager como environment object
+            .environmentObject(sessionManager)
         }
     }
 }

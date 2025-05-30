@@ -3,11 +3,8 @@ import Foundation
 /// Maneja ajustes avanzados de recetas según perfil de usuario
 class RecipeAdjuster {
     // MARK: - Configurables
-    /// Kcal a sumar/restar para ganancia/pérdida de peso
     private static let calorieAdjustment: Double = 500
-    /// Porcentaje de calorías de grasas
     private static let fatRatio: Double = 0.25
-    /// Proteína base en g/kg
     private static let proteinPerKg: Double = 1.2
 
     private let user: UserProfile
@@ -20,12 +17,10 @@ class RecipeAdjuster {
 
     // MARK: - API Pública
 
-    /// Obtiene calorías diarias objetivo
     func getDailyCaloriesTarget() -> Double {
         dailyCaloriesTarget
     }
 
-    /// Calcula distribución de macronutrientes: proteína, grasa, carbohidratos (en gramos)
     func calculateMacros() -> (protein: Double, fat: Double, carbs: Double) {
         let cals = dailyCaloriesTarget
         let proteinG = RecipeAdjuster.proteinPerKg * user.weightKg
@@ -36,10 +31,8 @@ class RecipeAdjuster {
         return (RecipeAdjuster.rounded(proteinG), RecipeAdjuster.rounded(fatG), RecipeAdjuster.rounded(carbG))
     }
 
-    /// Ajusta una receta a las necesidades del usuario
     func adjust(_ recipe: Recipe) -> Recipe {
-        let baseFactor = dailyCaloriesTarget / Double(recipe.calories)
-        let overallFactor = baseFactor * user.adjustmentFactor()
+        let overallFactor = dailyCaloriesTarget / Double(recipe.calories)
 
         let adjustedIngredients = recipe.ingredients.map { ing in
             let (baseQty, unit) = RecipeAdjuster.parseQuantity(ing.quantity)
@@ -59,7 +52,7 @@ class RecipeAdjuster {
         )
     }
 
-    // MARK: - Internals: Cálculos
+    // MARK: - Internals
 
     private static func calculateBMR(for user: UserProfile) -> Double {
         let weight = user.weightKg
@@ -68,10 +61,28 @@ class RecipeAdjuster {
         let birthYear = Int(user.birthYear) ?? (currentYear - 30)
         let age = currentYear - birthYear
 
-        if user.gender.lowercased().contains("male") {
+        guard age > 0 && age < 120 else {
+            print("⚠️ Edad inválida detectada: \(age). Se usa valor por defecto 30.")
+            return defaultBMR(for: user)
+        }
+
+        let genderNormalized = user.gender.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let isMale = ["male", "m", "hombre", "masculino"].contains(genderNormalized)
+
+        if isMale {
             return 66.5 + (13.8 * weight) + (5.0 * height) - (6.8 * Double(age))
         }
         return 655.0 + (9.6 * weight) + (1.85 * height) - (4.7 * Double(age))
+    }
+
+    private static func defaultBMR(for user: UserProfile) -> Double {
+        let weight = user.weightKg
+        let height = Double(user.resolvedHeightCm)
+        let isMale = ["male", "m", "hombre", "masculino"].contains(user.gender.lowercased())
+        if isMale {
+            return 66.5 + (13.8 * weight) + (5.0 * height) - (6.8 * 30)
+        }
+        return 655.0 + (9.6 * weight) + (1.85 * height) - (4.7 * 30)
     }
 
     private static func calculateDailyCalories(for user: UserProfile) -> Double {
@@ -82,11 +93,18 @@ class RecipeAdjuster {
             "high": 1.725, "active": 1.725,
             "veryhigh": 1.9
         ]
-        let key = user.levelActivity.lowercased().replacingOccurrences(of: " ", with: "")
-        let factor = activityFactors[key] ?? 1.2
-        var calories = bmr * factor
 
-        // Ajuste objetivo: ±calorieAdjustment
+        let key = user.levelActivity
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+            .replacingOccurrences(of: " ", with: "")
+
+        guard let factor = activityFactors[key] else {
+            print("⚠️ Nivel de actividad '\(user.levelActivity)' no reconocido. Usando 1.2 (baja).")
+            return max(bmr * 1.2, 1200)
+        }
+
+        var calories = bmr * factor
         let diff = user.targetWeightKg - user.weightKg
         if diff > 0 { calories += calorieAdjustment }
         else if diff < 0 { calories -= calorieAdjustment }
@@ -94,7 +112,7 @@ class RecipeAdjuster {
         return max(calories, 1200)
     }
 
-    // MARK: - Helpers de parseo y formateo
+    // MARK: - Helpers
 
     private static func parseQuantity(_ s: String) -> (Double, String) {
         let fractionPattern = #"(\d+)\/(\d+)"#
@@ -105,12 +123,15 @@ class RecipeAdjuster {
             let decimal = num / den
             string = s.replacingOccurrences(of: "\(s[numR])/\(s[denR])", with: "\(decimal)")
         }
+
         let pattern = #"([0-9]*\.?[0-9]+)\s*([a-zA-Z%]+)?"#
         guard let regex = try? NSRegularExpression(pattern: pattern),
               let match = regex.firstMatch(in: string, range: NSRange(string.startIndex..., in: string)),
               let r1 = Range(match.range(at: 1), in: string) else {
+            print("⚠️ No se pudo parsear cantidad: \(s)")
             return (0, s)
         }
+
         let number = Double(string[r1]) ?? 0
         var unit = ""
         if let r2 = Range(match.range(at: 2), in: string) {
@@ -122,15 +143,30 @@ class RecipeAdjuster {
     private static func formatQuantity(_ value: Double, unit: String) -> String {
         let roundedVal = rounded(value)
         let measure: Measurement<Unit> = {
-            // Asumimos unidad métrica simple. Para unidades complejas, ajustar aquí
             switch unit.lowercased() {
             case "g": return Measurement(value: roundedVal, unit: UnitMass.grams)
+            case "kg": return Measurement(value: roundedVal, unit: UnitMass.kilograms)
+            case "mg": return Measurement(value: roundedVal, unit: UnitMass.milligrams)
             case "ml": return Measurement(value: roundedVal, unit: UnitVolume.milliliters)
-            default: return Measurement(value: roundedVal, unit: Unit(symbol: unit))
+            case "l", "lt", "ltr": return Measurement(value: roundedVal, unit: UnitVolume.liters)
+            case "tsp", "cucharadita":
+                return Measurement(value: roundedVal, unit: UnitVolume.teaspoons)
+            case "tbsp", "cucharada":
+                return Measurement(value: roundedVal, unit: UnitVolume.tablespoons)
+            case "cup", "taza":
+                return Measurement(value: roundedVal, unit: UnitVolume.cups)
+            case "oz", "onza":
+                return Measurement(value: roundedVal, unit: UnitMass.ounces)
+            default:
+                if !unit.isEmpty {
+                    print("⚠️ Unidad desconocida: '\(unit)'. Mostrando valor sin unidad formateada.")
+                }
+                return Measurement(value: roundedVal, unit: Unit(symbol: unit))
             }
         }()
         let formatter = MeasurementFormatter()
         formatter.unitOptions = .providedUnit
+        formatter.numberFormatter.maximumFractionDigits = 1
         return formatter.string(from: measure)
     }
 
@@ -138,4 +174,3 @@ class RecipeAdjuster {
         (x * 10).rounded() / 10
     }
 }
-

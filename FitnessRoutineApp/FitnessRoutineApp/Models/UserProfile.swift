@@ -1,6 +1,14 @@
 import Foundation
 
 struct UserProfile {
+    enum Gender: String {
+        case male, female, other, notSet
+    }
+    
+    enum ActivityLevel: String {
+        case low, sedentary, medium, moderate, high, active, notSet
+    }
+
     let gender: String
     let heightCm: Int?
     let heightFt: Int?
@@ -17,14 +25,26 @@ struct UserProfile {
     let levelActivity: String
     let dietType: String
 
+    // Computed enums for safer handling
+    var genderEnum: Gender {
+        Gender(rawValue: gender.lowercased()) ?? .notSet
+    }
+    
+    var activityLevelEnum: ActivityLevel {
+        ActivityLevel(rawValue: levelActivity.lowercased()) ?? .notSet
+    }
+
     init() {
         let defaults = UserDefaults.standard
+        
         gender = defaults.string(forKey: "gender") ?? "Not Set"
         heightCm = defaults.value(forKey: "selectedHeightCm") as? Int
         heightFt = defaults.value(forKey: "selectedHeightFt") as? Int
         heightInch = defaults.value(forKey: "selectedHeightInch") as? Int
-        weightKg = defaults.double(forKey: "selectedWeightKg")
-        targetWeightKg = defaults.double(forKey: "selectedTargetWeight")
+        
+        weightKg = defaults.object(forKey: "selectedWeightKg") as? Double ?? 70.0
+        targetWeightKg = defaults.object(forKey: "selectedTargetWeight") as? Double ?? 65.0
+        
         goal = defaults.string(forKey: "selectedGoal") ?? "Not Set"
         equipmentPreference = defaults.string(forKey: "equipmentPreference") ?? "Not Set"
         bodyCurrentImage = defaults.string(forKey: "bodyCurrentImage") ?? "Not Set"
@@ -39,13 +59,12 @@ struct UserProfile {
     var totalHeightInCm: Int? {
         if let cm = heightCm, cm > 0 {
             return cm
-        }
-        if let ft = heightFt, let inch = heightInch {
+        } else if let ft = heightFt, let inch = heightInch {
             return Int(Double(ft) * 30.48 + Double(inch) * 2.54)
         }
         return nil
     }
-    
+
     var resolvedHeightCm: Int {
         totalHeightInCm ?? 170
     }
@@ -53,15 +72,15 @@ struct UserProfile {
     func adjustmentFactor() -> Double {
         var factor = 1.0
 
-        switch gender.lowercased() {
-        case "male":
+        // Gender adjustment
+        switch genderEnum {
+        case .male:
             factor *= 1.1
-        case "female":
-            factor *= 1.0
-        default:
+        case .female, .other, .notSet:
             factor *= 1.0
         }
 
+        // Age adjustment
         if let year = Int(birthYear), year > 1900 {
             let age = Calendar.current.component(.year, from: Date()) - year
             switch age {
@@ -78,21 +97,26 @@ struct UserProfile {
             }
         }
 
+        // Weight adjustment (avoiding division by zero)
         if weightKg > 0 {
             factor *= weightKg / 70.0
+        } else {
+            factor *= 1.0
         }
 
+        // Height adjustment
         factor *= Double(resolvedHeightCm) / 170.0
 
-        switch levelActivity.lowercased() {
-        case "low", "sedentary":
+        // Activity level adjustment
+        switch activityLevelEnum {
+        case .low, .sedentary:
             factor *= 0.9
-        case "medium", "moderate":
+        case .medium, .moderate:
             factor *= 1.0
-        case "high", "active":
+        case .high, .active:
             factor *= 1.2
-        default:
-            break
+        case .notSet:
+            factor *= 1.0
         }
 
         return factor

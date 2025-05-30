@@ -1,23 +1,34 @@
 import SwiftUI
 
+// Botón animado al presionar
+struct PressableButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
+    }
+}
+
 struct DietView: View {
     @StateObject private var vm = DietViewModel()
     @State private var showGrocerySheet = false
 
-    // Formatter para días cortos en inglés
     private let shortFormatter: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "en_US_POSIX")
         f.dateFormat = "E"
         return f
     }()
-
-    private let totalCaloriesGoal = 2000
+    
+    private var totalCaloriesGoal: Int {
+        return Int(vm.getDailyCaloriesTarget())
+    }
 
     private var caloriesByMeal: [MealType: Int] {
         var dict: [MealType: Int] = [:]
         for meal in MealType.allCases {
-            dict[meal] = vm.recipes(for: meal).first?.calories ?? 0
+            // Suma todas las calorías de las recetas para ese mealType en el día seleccionado
+            dict[meal] = vm.recipes(for: meal).reduce(0) { $0 + $1.calories }
         }
         return dict
     }
@@ -26,83 +37,35 @@ struct DietView: View {
         NavigationView {
             ZStack {
                 Color.black.ignoresSafeArea()
-                VStack(spacing: 16) {
-                    // Header
-                    Text("Your \(vm.selectedDiet) Plan")
-                        .font(.title2).bold()
-                        .foregroundColor(.yellow)
-                        .padding(.top)
 
-                    // Recomendación de agua
-                    Text("💧 Recommended water: \(vm.calculateRecommendedWaterIntake()) per day")
-                        .foregroundColor(.cyan)
-                        .font(.subheadline)
+                VStack(spacing: 20) {
+                    headerSection
+                    waterRecommendationSection
+                    caloriesSection
+                    daySelector
 
-                    // Calorías totales y desglose
-                    VStack(alignment: .leading) {
-                        Text("Daily Calorie Goal: \(totalCaloriesGoal) kcal")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                        ForEach(MealType.allCases, id: \.self) { meal in
-                            HStack {
-                                Text(meal.rawValue.capitalized + ":")
-                                    .foregroundColor(.white)
-                                Spacer()
-                                Text("\(caloriesByMeal[meal] ?? 0) kcal")
-                                    .foregroundColor(.yellow)
-                                    .bold()
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-
-                    // Selector horizontal de días alineado lunes a domingo
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 12) {
-                            ForEach(vm.days, id: \.self) { day in
-                                let label = shortFormatter.string(from: day)
-                                VStack {
-                                    Text(label)
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                    Text(vm.dayNumber(from: day))
-                                        .font(.headline)
-                                        .foregroundColor(vm.selectedDay == day ? .black : .white)
-                                        .frame(width: 45, height: 45)
-                                        .background(vm.selectedDay == day ? Color.yellow : Color.gray.opacity(0.3))
-                                        .clipShape(Circle())
-                                }
-                                .onTapGesture { vm.select(day: day) }
-                            }
-                        }
-                        .padding(.horizontal)
-                        .padding(.trailing, 12)
-                    }
-
-                    // Scroll vertical con cards de recetas
-                    ScrollView(showsIndicators: false) {
-                        VStack(spacing: 20) {
-                            ForEach(MealType.allCases, id: \.self) { meal in
-                                if let recipe = vm.recipes(for: meal).first {
-                                    NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
-                                        RecipeCard(recipe: recipe)
-                                            .padding(.horizontal)
+                    ZStack(alignment: .bottom) {
+                        ScrollView(showsIndicators: false) {
+                            VStack(spacing: 20) {
+                                ForEach(MealType.allCases, id: \.self) { meal in
+                                    ForEach(vm.recipes(for: meal)) { recipe in
+                                        NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
+                                            StyledRecipeCard(recipe: recipe)
+                                                .padding(.horizontal)  // padding inside tappable area
+                                        }
+                                        .buttonStyle(PressableButtonStyle())
+                                        .contentShape(Rectangle()) // tap only card
                                     }
                                 }
                             }
+                            .padding(.vertical)
+                            .padding(.bottom, 100)
                         }
-                    }
 
-                    // Botón para ver hoja de compras
-                    Button(action: { showGrocerySheet = true }) {
-                        HStack {
-                            Image(systemName: "cart")
-                            Text("View Grocery List")
-                        }
-                        .foregroundColor(.black)
-                        .padding()
-                        .background(Color.yellow)
-                        .cornerRadius(10)
+                        groceryButton
+                            .padding(.horizontal)
+                            .padding(.bottom, 20)
+                            .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
@@ -113,150 +76,186 @@ struct DietView: View {
             GroceryListSheetView(vm: vm)
         }
     }
-}
 
-// MARK: - Subviews
+    // MARK: - Sections
 
-struct RecipeCard: View {
-    let recipe: Recipe
-    var body: some View {
+    private var headerSection: some View {
         HStack {
-            Image(recipe.imageName)
-                .resizable()
-                .frame(width: 80, height: 80)
-                .cornerRadius(8)
+            Text("\(vm.selectedDiet) Plan")
+                .font(.largeTitle).fontWeight(.black).foregroundColor(.yellow)
             Spacer()
         }
-        .padding()
-        .background(Color.gray.opacity(0.2))
-        .cornerRadius(12)
+        .padding(.horizontal).padding(.top)
+    }
+
+    private var waterRecommendationSection: some View {
+        HStack {
+            Image(systemName: "drop.fill").foregroundColor(.cyan).font(.title2)
+            Text("Water recommended: ")
+                .foregroundColor(.white).font(.body).fontWeight(.semibold)
+            Text("\(vm.calculateRecommendedWaterIntake())/day")
+                .foregroundColor(.yellow).font(.body).fontWeight(.semibold)
+            Spacer()
+        }
+        .padding(.horizontal)
+    }
+
+    private var caloriesSection: some View {
+        let total = caloriesByMeal.values.reduce(0, +)
+        return HStack(spacing: 12) {
+            Image(systemName: "flame.fill").foregroundColor(.yellow).font(.title3)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Daily Calories")
+                    .font(.body).fontWeight(.semibold).foregroundColor(.white)
+                Text("\(total) / \(totalCaloriesGoal) kcal")
+                    .font(.caption).foregroundColor(.yellow)
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+    }
+
+    private var daySelector: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(vm.days, id: \.self) { day in
+                    let label = shortFormatter.string(from: day)
+                    VStack(spacing: 8) {
+                        Text(label)
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.7))
+                        Text(vm.dayNumber(from: day))
+                            .font(.headline).fontWeight(.bold)
+                            .foregroundColor(vm.selectedDay == day ? .black : .white)
+                            .frame(width: 45, height: 45)
+                            .background(vm.selectedDay == day ? Color.yellow : Color.white.opacity(0.1))
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(vm.selectedDay == day ? Color.clear : Color.yellow.opacity(0.3), lineWidth: 2)
+                            )
+                            .shadow(color: vm.selectedDay == day ? Color.yellow.opacity(0.3) : Color.clear,
+                                    radius: 8, x: 0, y: 4)
+                    }
+                    .onTapGesture {
+                        withAnimation(.spring()) { vm.select(day: day) }
+                    }
+                }
+            }
+            .padding(.horizontal)
+        }
+    }
+
+    private var groceryButton: some View {
+        Button { showGrocerySheet = true } label: {
+            HStack {
+                Image(systemName: "cart")
+                Text("View Grocery List")
+            }
+            .foregroundColor(.black)
+            .padding()
+            .background(Color.yellow)
+            .cornerRadius(12)
+        }
     }
 }
 
+// MARK: StyledRecipeCard
+
+struct StyledRecipeCard: View {
+    let recipe: Recipe
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            Image(recipe.imageName)
+                .resizable().aspectRatio(contentMode: .fill)
+                .frame(height: 140).clipped()
+
+            LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.7), .clear]),
+                           startPoint: .bottom, endPoint: .center)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(recipe.title)
+                    .font(.headline).fontWeight(.bold).foregroundColor(.yellow)
+                    .lineLimit(2)
+
+                HStack {
+                    Text(recipe.mealType.displayName)
+                        .font(.caption).foregroundColor(.white.opacity(0.9))
+                    Spacer()
+                    Text("\(recipe.calories) kcal")
+                        .font(.caption).fontWeight(.semibold)
+                        .foregroundColor(.yellow)
+                        .padding(.horizontal, 8).padding(.vertical, 2)
+                        .background(Color.black.opacity(0.6))
+                        .cornerRadius(8)
+                }
+            }
+            .padding()
+        }
+        .background(Color(white: 0.15))
+        .cornerRadius(16)
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.yellow, lineWidth: 2))
+        .shadow(color: Color.yellow.opacity(0.3), radius: 8, x: 0, y: 4)
+    }
+}
+
+// MARK: RecipeDetailView
+
 struct RecipeDetailView: View {
     let recipe: Recipe
+
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Image(recipe.imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 200)
-                    .clipped()
-                Text(recipe.title)
-                    .font(.title)
-                    .foregroundColor(.yellow)
-                Text("Ingredients:")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                ForEach(recipe.ingredients) { ing in
-                    Text("• \(ing.name): \(ing.quantity)").foregroundColor(.white)
+            VStack(alignment: .leading, spacing: 20) {
+                ZStack(alignment: .bottomTrailing) {
+                    Image(recipe.imageName)
+                        .resizable().aspectRatio(contentMode: .fill)
+                        .frame(height: 250).clipped().cornerRadius(16)
+                    Text("\(recipe.calories) kcal")
+                        .font(.headline).fontWeight(.bold)
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 12).padding(.vertical, 6)
+                        .background(Color.yellow).cornerRadius(20).padding()
                 }
-                Text("Instructions:")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                Text(recipe.instructions).foregroundColor(.white)
+                // Título y tipo
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(recipe.title)
+                        .font(.title).fontWeight(.bold).foregroundColor(.yellow)
+                    Text(recipe.mealType.displayName)
+                        .font(.subheadline).foregroundColor(.white.opacity(0.7))
+                }
+                // Ingredientes
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Ingredients")
+                        .font(.title2).fontWeight(.bold).foregroundColor(.yellow)
+                    ForEach(recipe.ingredients) { ing in
+                        Text("• \(ing.name): \(ing.quantity)")
+                            .foregroundColor(.white)
+                            .font(.body)
+                    }
+                }
+                .padding(.top, 4)
+                // Instrucciones
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Instructions")
+                        .font(.title2).fontWeight(.bold).foregroundColor(.yellow)
+                    Text(recipe.instructions)
+                        .foregroundColor(.white)
+                        .font(.body)
+                }
             }
             .padding()
         }
         .background(Color.black.ignoresSafeArea())
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-struct GroceryListSheetView: View {
-    @ObservedObject var vm: DietViewModel
-    @Environment(\.dismiss) var dismiss
-    @State private var showShareSheet = false
-    @State private var showUncheckedOnly = false
-
-    var filteredIngredients: [Ingredient] {
-        if showUncheckedOnly {
-            return vm.groceryList.filter { !$0.isChecked }
-        } else {
-            return vm.groceryList
-        }
-    }
-
-    var body: some View {
-        NavigationView {
-            VStack(alignment: .leading, spacing: 16) {
-                Toggle("Show unchecked only", isOn: $showUncheckedOnly)
-                    .padding(.horizontal)
-
-                List {
-                    ForEach(filteredIngredients) { item in
-                        HStack {
-                            Button(action: {
-                                vm.toggleCheck(for: item)
-                            }) {
-                                Image(systemName: item.isChecked ? "checkmark.square.fill" : "square")
-                                    .foregroundColor(item.isChecked ? .yellow : .white)
-                            }
-                            Text(item.name)
-                                .foregroundColor(.white)
-                            Spacer()
-                            Text(item.quantity)
-                                .foregroundColor(.gray)
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-                .listStyle(PlainListStyle())
-                .animation(.default, value: filteredIngredients)
-
-                Spacer()
-
-                Button(action: { showShareSheet = true }) {
-                    HStack {
-                        Image(systemName: "square.and.arrow.up")
-                        Text("Share List")
-                    }
-                    .foregroundColor(.black)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.yellow)
-                    .cornerRadius(12)
-                }
-                .padding(.horizontal)
-
-            }
-            .navigationTitle("Grocery List")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Reset") {
-                        for idx in vm.groceryList.indices {
-                            vm.groceryList[idx].isChecked = false
-                        }
-                        vm.saveCheckedIngredientNames()
-                    }
-                    .foregroundColor(.yellow)
-                }
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") { dismiss() }
-                        .foregroundColor(.yellow)
-                }
-            }
-            .sheet(isPresented: $showShareSheet) {
-                ShareSheet(activityItems: [vm.groceryListText])
-            }
-            .background(Color.black.ignoresSafeArea())
-        }
-    }
-}
-
-struct ShareSheet: UIViewControllerRepresentable {
-    let activityItems: [Any]
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-    }
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
-
-// MARK: - Preview
+// MARK: Preview
 
 struct DietView_Previews: PreviewProvider {
     static var previews: some View {
         DietView()
     }
 }
-

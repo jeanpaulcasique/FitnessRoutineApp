@@ -49,6 +49,9 @@
 		69B3AC202DDD0F2000BBF828 /* RecipeAdjuster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B3AC1F2DDD0F1800BBF828 /* RecipeAdjuster.swift */; };
 		69B3AC242DE3782300BBF828 /* DashBoardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B3AC232DE3781600BBF828 /* DashBoardViewModel.swift */; };
 		69B3AC262DE37BF000BBF828 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 69B3AC252DE37BE700BBF828 /* .gitignore */; };
+		69B3AC282DE8824A00BBF828 /* GroceryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B3AC272DE8823C00BBF828 /* GroceryListView.swift */; };
+		69B3AC2B2DE8904D00BBF828 /* NotificationWater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B3AC2A2DE8904800BBF828 /* NotificationWater.swift */; };
+		69B3AC2D2DE8A72C00BBF828 /* QuantityParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B3AC2C2DE8A72A00BBF828 /* QuantityParser.swift */; };
 		69B40B1F2DCBD51D0037060A /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B40B1E2DCBD51A0037060A /* SubscriptionView.swift */; };
 		69B40B222DCBD9420037060A /* CoachesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B40B212DCBD93C0037060A /* CoachesView.swift */; };
 		69B40B252DCBD9720037060A /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B40B242DCBD96B0037060A /* AnalyticsView.swift */; };
@@ -149,6 +152,9 @@
 		69B3AC1F2DDD0F1800BBF828 /* RecipeAdjuster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeAdjuster.swift; sourceTree = "<group>"; };
 		69B3AC232DE3781600BBF828 /* DashBoardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashBoardViewModel.swift; sourceTree = "<group>"; };
 		69B3AC252DE37BE700BBF828 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		69B3AC272DE8823C00BBF828 /* GroceryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroceryListView.swift; sourceTree = "<group>"; };
+		69B3AC2A2DE8904800BBF828 /* NotificationWater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationWater.swift; sourceTree = "<group>"; };
+		69B3AC2C2DE8A72A00BBF828 /* QuantityParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuantityParser.swift; sourceTree = "<group>"; };
 		69B40B1E2DCBD51A0037060A /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
 		69B40B212DCBD93C0037060A /* CoachesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachesView.swift; sourceTree = "<group>"; };
 		69B40B242DCBD96B0037060A /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
@@ -246,6 +252,7 @@
 		692562CB2C92FB8D0002524D /* FitnessRoutineApp */ = {
 			isa = PBXGroup;
 			children = (
+				69B3AC292DE8904100BBF828 /* Notification */,
 				693B07E32C9614AB00722E48 /* ViewModel */,
 				693B07E22C9614A400722E48 /* Views */,
 				693B07E12C96149000722E48 /* Models */,
@@ -286,6 +293,7 @@
 		693B07E12C96149000722E48 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				69B3AC2C2DE8A72A00BBF828 /* QuantityParser.swift */,
 				69B3AC1F2DDD0F1800BBF828 /* RecipeAdjuster.swift */,
 				69B3AC1D2DDCEAF500BBF828 /* UserProfile.swift */,
 				69B3AC1B2DDCD2AE00BBF828 /* RecipesKetos.swift */,
@@ -366,6 +374,7 @@
 			isa = PBXGroup;
 			children = (
 				699DB77E2DB7EA020013B5CC /* DietView.swift */,
+				69B3AC272DE8823C00BBF828 /* GroceryListView.swift */,
 			);
 			path = Diet;
 			sourceTree = "<group>";
@@ -407,6 +416,14 @@
 				69B3AC192DCFDB0D00BBF828 /* DietViewModel.swift */,
 			);
 			path = DietViewModel;
+			sourceTree = "<group>";
+		};
+		69B3AC292DE8904100BBF828 /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				69B3AC2A2DE8904800BBF828 /* NotificationWater.swift */,
+			);
+			path = Notification;
 			sourceTree = "<group>";
 		};
 		69B40B1D2DCBD4F00037060A /* Subscription */ = {
@@ -658,6 +675,7 @@
 				699DB77F2DB7EA070013B5CC /* DietView.swift in Sources */,
 				69EB92482DAE67B9001121A2 /* NextButton.swift in Sources */,
 				69C456772DB90E3D00E0AA1B /* ImagePicker.swift in Sources */,
+				69B3AC282DE8824A00BBF828 /* GroceryListView.swift in Sources */,
 				69FDC18C2CD7E65A0075F0CA /* DietTypeViewModel.swift in Sources */,
 				695D27492CC3506E00821610 /* 7WeightView.swift in Sources */,
 				69C6CC732CDC6FE60043B135 /* 10LevelActivityView.swift in Sources */,
@@ -682,6 +700,7 @@
 				69B40B222DCBD9420037060A /* CoachesView.swift in Sources */,
 				69B40B2B2DCBDF8D0037060A /* TellAFView.swift in Sources */,
 				699DB77C2DB7E9E40013B5CC /* WorkoutView.swift in Sources */,
+				69B3AC2D2DE8A72C00BBF828 /* QuantityParser.swift in Sources */,
 				695D274B2CC3507800821610 /* WeightViewModel.swift in Sources */,
 				69B3AC1A2DCFDB3500BBF828 /* DietViewModel.swift in Sources */,
 				69C6CC772CEADD780043B135 /* WorkoutLevelView.swift in Sources */,
@@ -710,6 +729,7 @@
 				69CDFF1F2D668022006199E9 /* GymEquipmentViewModel.swift in Sources */,
 				69969F572C9F6BE900682635 /* RecipesCalorieDeficit.swift in Sources */,
 				696BBAB12CCB1A270087724E /* 8TargetWeightView.swift in Sources */,
+				69B3AC2B2DE8904D00BBF828 /* NotificationWater.swift in Sources */,
 				69CDFF1D2D668007006199E9 /* GymEquipmentView.swift in Sources */,
 				69C456722DB90C0F00E0AA1B /* ProfileView.swift in Sources */,
 				69B3AC1C2DDCD2AF00BBF828 /* RecipesKetos.swift in Sources */,

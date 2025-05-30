@@ -1,310 +1,253 @@
 import Foundation
 
-// MARK: - Recetas Déficit Calórico (21 recetas: 7 días x 3 comidas)
-
 struct RecipesDeficit {
-    static let recipes: [Recipe] = [
-        // DÍA 1
-        Recipe(title: "Overnight Oats with Berries", mealType: .Breakfast, imageName: "deficit_overnight_oats",
-               ingredients: [
-                Ingredient(name: "Rolled oats", quantity: "40g"),
-                Ingredient(name: "Greek yogurt (low fat)", quantity: "100g"),
-                Ingredient(name: "Mixed berries", quantity: "80g"),
-                Ingredient(name: "Chia seeds", quantity: "10g"),
-                Ingredient(name: "Almond milk", quantity: "100ml")
-               ],
-               instructions: "Mix oats, Greek yogurt, chia seeds, and almond milk in a jar. Refrigerate overnight. In the morning, top with fresh berries and enjoy cold.",
-               calories: 320),
+    static func getWeeklyRecipes() -> [Recipe] {
+        return [
+            // DÍA 1
+            Recipe(title: "Oatmeal with Berries", mealType: .Breakfast, imageName: "deficit_oatmeal_berries",
+                   ingredients: [
+                    Ingredient(name: "Oats", quantity: "40g"),
+                    Ingredient(name: "Skim milk", quantity: "200ml"),
+                    Ingredient(name: "Strawberries", quantity: "50g"),
+                    Ingredient(name: "Blueberries", quantity: "30g"),
+                    Ingredient(name: "Chia seeds", quantity: "5g")
+                   ],
+                   instructions: "Cook oats in milk over medium heat. Top with sliced strawberries, blueberries, and chia seeds.",
+                   calories: 300),
 
-        Recipe(title: "Grilled Chicken Salad", mealType: .Lunch, imageName: "deficit_chicken_salad",
-               ingredients: [
-                Ingredient(name: "Grilled chicken breast", quantity: "120g"),
-                Ingredient(name: "Mixed greens", quantity: "100g"),
-                Ingredient(name: "Cherry tomatoes", quantity: "80g"),
-                Ingredient(name: "Cucumber", quantity: "60g"),
-                Ingredient(name: "Bell pepper", quantity: "50g"),
-                Ingredient(name: "Olive oil", quantity: "10ml"),
-                Ingredient(name: "Lemon juice", quantity: "15ml")
-               ],
-               instructions: "Grill chicken breast seasoned with herbs. Chop all vegetables and arrange on a plate with mixed greens. Slice chicken and place on top. Drizzle with olive oil and lemon juice.",
-               calories: 380),
+            Recipe(title: "Grilled Chicken Salad", mealType: .Lunch, imageName: "deficit_chicken_salad",
+                   ingredients: [
+                    Ingredient(name: "Grilled chicken breast", quantity: "100g"),
+                    Ingredient(name: "Mixed greens", quantity: "80g"),
+                    Ingredient(name: "Cherry tomatoes", quantity: "50g"),
+                    Ingredient(name: "Cucumber", quantity: "50g"),
+                    Ingredient(name: "Avocado", quantity: "30g"),
+                    Ingredient(name: "Olive oil", quantity: "10ml"),
+                    Ingredient(name: "Lemon juice", quantity: "10ml")
+                   ],
+                   instructions: "Slice all veggies and chicken. Toss everything in a bowl and dress with olive oil and lemon juice.",
+                   calories: 400),
 
-        Recipe(title: "Baked Cod with Vegetables", mealType: .Dinner, imageName: "deficit_cod_vegetables",
-               ingredients: [
-                Ingredient(name: "Cod fillet", quantity: "150g"),
-                Ingredient(name: "Broccoli", quantity: "100g"),
-                Ingredient(name: "Carrots", quantity: "80g"),
-                Ingredient(name: "Zucchini", quantity: "80g"),
-                Ingredient(name: "Olive oil", quantity: "8ml"),
-                Ingredient(name: "Lemon", quantity: "1/2 unit"),
-                Ingredient(name: "Herbs (dill/parsley)", quantity: "5g")
-               ],
-               instructions: "Season cod with herbs, salt, and pepper. Bake at 180°C for 15 minutes. Steam vegetables until tender. Drizzle everything with olive oil and lemon juice before serving.",
-               calories: 350),
+            Recipe(title: "Baked Salmon with Broccoli", mealType: .Dinner, imageName: "deficit_salmon_broccoli",
+                   ingredients: [
+                    Ingredient(name: "Salmon filet", quantity: "120g"),
+                    Ingredient(name: "Broccoli", quantity: "100g"),
+                    Ingredient(name: "Garlic", quantity: "2 cloves"),
+                    Ingredient(name: "Olive oil", quantity: "10ml"),
+                    Ingredient(name: "Lemon", quantity: "1/2 unit")
+                   ],
+                   instructions: "Preheat oven to 180°C. Place salmon and broccoli on baking sheet, drizzle olive oil and crushed garlic, bake for 15–20 minutes. Squeeze lemon on top before serving.",
+                   calories: 420),
 
-        // DÍA 2
-        Recipe(title: "Vegetable Scrambled Eggs", mealType: .Breakfast, imageName: "deficit_veggie_eggs",
-               ingredients: [
-                Ingredient(name: "Eggs", quantity: "2 units"),
-                Ingredient(name: "Spinach", quantity: "50g"),
-                Ingredient(name: "Mushrooms", quantity: "60g"),
-                Ingredient(name: "Tomatoes", quantity: "40g"),
-                Ingredient(name: "Bell pepper", quantity: "30g"),
-                Ingredient(name: "Cooking spray", quantity: "2ml")
-               ],
-               instructions: "Heat pan with cooking spray. Sauté diced vegetables until tender. Beat eggs and pour into pan with vegetables. Scramble until eggs are set but still creamy.",
-               calories: 280),
+            // DÍA 2
+            Recipe(title: "Greek Yogurt with Nuts & Honey", mealType: .Breakfast, imageName: "deficit_yogurt_nuts",
+                   ingredients: [
+                    Ingredient(name: "Greek yogurt (low-fat)", quantity: "150g"),
+                    Ingredient(name: "Walnuts", quantity: "15g"),
+                    Ingredient(name: "Almonds", quantity: "10g"),
+                    Ingredient(name: "Honey", quantity: "5g")
+                   ],
+                   instructions: "Serve yogurt in a bowl. Top with chopped nuts and drizzle with honey.",
+                   calories: 320),
 
-        Recipe(title: "Turkey and Quinoa Bowl", mealType: .Lunch, imageName: "deficit_turkey_quinoa",
-               ingredients: [
-                Ingredient(name: "Ground turkey (lean)", quantity: "100g"),
-                Ingredient(name: "Cooked quinoa", quantity: "80g"),
-                Ingredient(name: "Black beans", quantity: "60g"),
-                Ingredient(name: "Corn kernels", quantity: "40g"),
-                Ingredient(name: "Avocado", quantity: "30g"),
-                Ingredient(name: "Salsa", quantity: "30g"),
-                Ingredient(name: "Lime juice", quantity: "10ml")
-               ],
-               instructions: "Cook ground turkey with seasonings until browned. Arrange quinoa in a bowl, top with turkey, black beans, corn, and diced avocado. Add salsa and squeeze lime juice over everything.",
-               calories: 420),
+            Recipe(title: "Tuna Lettuce Wraps", mealType: .Lunch, imageName: "deficit_tuna_wraps",
+                   ingredients: [
+                    Ingredient(name: "Canned tuna in water", quantity: "100g"),
+                    Ingredient(name: "Lettuce leaves", quantity: "4 large leaves"),
+                    Ingredient(name: "Greek yogurt", quantity: "20g"),
+                    Ingredient(name: "Celery", quantity: "20g"),
+                    Ingredient(name: "Mustard", quantity: "5g"),
+                    Ingredient(name: "Black pepper", quantity: "To taste")
+                   ],
+                   instructions: "Mix tuna, yogurt, mustard, diced celery and pepper. Fill lettuce leaves with mixture and roll.",
+                   calories: 330),
 
-        Recipe(title: "Zucchini Noodles with Shrimp", mealType: .Dinner, imageName: "deficit_zucchini_shrimp",
-               ingredients: [
-                Ingredient(name: "Shrimp", quantity: "140g"),
-                Ingredient(name: "Zucchini noodles", quantity: "150g"),
-                Ingredient(name: "Cherry tomatoes", quantity: "80g"),
-                Ingredient(name: "Garlic", quantity: "2 cloves"),
-                Ingredient(name: "Olive oil", quantity: "8ml"),
-                Ingredient(name: "Basil", quantity: "5g"),
-                Ingredient(name: "Lemon juice", quantity: "10ml")
-               ],
-               instructions: "Sauté garlic in olive oil. Add shrimp and cook until pink. Add cherry tomatoes and cook until softened. Toss with zucchini noodles, fresh basil, and lemon juice. Cook for 2 minutes until heated through.",
-               calories: 320),
+            Recipe(title: "Zucchini Noodles with Turkey", mealType: .Dinner, imageName: "deficit_zoodles_turkey",
+                   ingredients: [
+                    Ingredient(name: "Ground turkey", quantity: "120g"),
+                    Ingredient(name: "Zucchini", quantity: "150g"),
+                    Ingredient(name: "Tomato sauce (no sugar)", quantity: "50g"),
+                    Ingredient(name: "Onion", quantity: "40g"),
+                    Ingredient(name: "Garlic", quantity: "1 clove"),
+                    Ingredient(name: "Olive oil", quantity: "10ml")
+                   ],
+                   instructions: "Spiralize zucchini. Cook onion, garlic, and turkey in olive oil. Add tomato sauce and serve over zucchini noodles.",
+                   calories: 390),
 
-        // DÍA 3
-        Recipe(title: "Smoothie Bowl", mealType: .Breakfast, imageName: "deficit_smoothie_bowl",
-               ingredients: [
-                Ingredient(name: "Frozen banana", quantity: "100g"),
-                Ingredient(name: "Frozen berries", quantity: "80g"),
-                Ingredient(name: "Protein powder", quantity: "20g"),
-                Ingredient(name: "Almond milk", quantity: "150ml"),
-                Ingredient(name: "Granola (low sugar)", quantity: "20g"),
-                Ingredient(name: "Fresh strawberries", quantity: "50g")
-               ],
-               instructions: "Blend frozen fruits with protein powder and almond milk until thick. Pour into a bowl and top with granola and sliced fresh strawberries.",
-               calories: 340),
+            // DÍA 3
+            Recipe(title: "Boiled Eggs and Whole Wheat Toast", mealType: .Breakfast, imageName: "deficit_eggs_toast",
+                   ingredients: [
+                    Ingredient(name: "Eggs", quantity: "2 units"),
+                    Ingredient(name: "Whole wheat toast", quantity: "1 slice"),
+                    Ingredient(name: "Avocado", quantity: "30g"),
+                    Ingredient(name: "Salt and pepper", quantity: "To taste")
+                   ],
+                   instructions: "Boil eggs to desired doneness. Toast bread and spread avocado on top. Serve eggs on side.",
+                   calories: 340),
 
-        Recipe(title: "Lentil and Vegetable Soup", mealType: .Lunch, imageName: "deficit_lentil_soup",
-               ingredients: [
-                Ingredient(name: "Red lentils", quantity: "80g"),
-                Ingredient(name: "Carrots", quantity: "60g"),
-                Ingredient(name: "Celery", quantity: "50g"),
-                Ingredient(name: "Onion", quantity: "40g"),
-                Ingredient(name: "Vegetable broth", quantity: "400ml"),
-                Ingredient(name: "Canned tomatoes", quantity: "100g"),
-                Ingredient(name: "Spinach", quantity: "40g")
-               ],
-               instructions: "Sauté diced onion, carrots, and celery. Add lentils, broth, and canned tomatoes. Simmer for 20 minutes until lentils are tender. Stir in spinach until wilted. Season with herbs and spices.",
-               calories: 360),
+            Recipe(title: "Quinoa Veggie Bowl", mealType: .Lunch, imageName: "deficit_quinoa_veggies",
+                   ingredients: [
+                    Ingredient(name: "Quinoa (cooked)", quantity: "100g"),
+                    Ingredient(name: "Bell peppers", quantity: "50g"),
+                    Ingredient(name: "Carrots", quantity: "40g"),
+                    Ingredient(name: "Zucchini", quantity: "40g"),
+                    Ingredient(name: "Chickpeas", quantity: "60g"),
+                    Ingredient(name: "Olive oil", quantity: "10ml")
+                   ],
+                   instructions: "Sauté vegetables in olive oil. Combine with cooked quinoa and chickpeas.",
+                   calories: 410),
 
-        Recipe(title: "Grilled Salmon with Asparagus", mealType: .Dinner, imageName: "deficit_salmon_asparagus",
-               ingredients: [
-                Ingredient(name: "Salmon fillet", quantity: "130g"),
-                Ingredient(name: "Asparagus", quantity: "150g"),
-                Ingredient(name: "Sweet potato", quantity: "100g"),
-                Ingredient(name: "Olive oil", quantity: "8ml"),
-                Ingredient(name: "Lemon", quantity: "1/2 unit"),
-                Ingredient(name: "Garlic powder", quantity: "2g")
-               ],
-               instructions: "Season salmon with garlic powder, salt, and pepper. Grill for 4-5 minutes per side. Roast asparagus and cubed sweet potato at 200°C for 20 minutes with a drizzle of olive oil. Serve with lemon wedges.",
-               calories: 400),
+            Recipe(title: "Eggplant Lasagna", mealType: .Dinner, imageName: "deficit_eggplant_lasagna",
+                   ingredients: [
+                    Ingredient(name: "Eggplant", quantity: "150g"),
+                    Ingredient(name: "Ground beef (lean)", quantity: "100g"),
+                    Ingredient(name: "Tomato sauce", quantity: "50g"),
+                    Ingredient(name: "Mozzarella (light)", quantity: "30g"),
+                    Ingredient(name: "Basil", quantity: "To taste")
+                   ],
+                   instructions: "Slice and bake eggplant. Cook beef with tomato sauce. Layer eggplant, meat, and cheese. Bake at 180°C for 15 minutes.",
+                   calories: 400),
 
-        // DÍA 4
-        Recipe(title: "Greek Yogurt Parfait", mealType: .Breakfast, imageName: "deficit_yogurt_parfait",
-               ingredients: [
-                Ingredient(name: "Greek yogurt (fat-free)", quantity: "150g"),
-                Ingredient(name: "Mixed berries", quantity: "100g"),
-                Ingredient(name: "Honey", quantity: "10ml"),
-                Ingredient(name: "Almonds (sliced)", quantity: "15g"),
-                Ingredient(name: "Cinnamon", quantity: "1g")
-               ],
-               instructions: "Layer Greek yogurt with berries in a glass. Drizzle with honey, sprinkle with sliced almonds and cinnamon. Repeat layers and enjoy immediately.",
-               calories: 300),
+            // DÍA 4
+            Recipe(title: "Smoothie Bowl", mealType: .Breakfast, imageName: "deficit_smoothie_bowl",
+                   ingredients: [
+                    Ingredient(name: "Frozen berries", quantity: "100g"),
+                    Ingredient(name: "Banana", quantity: "1 unit"),
+                    Ingredient(name: "Almond milk", quantity: "150ml"),
+                    Ingredient(name: "Protein powder", quantity: "15g"),
+                    Ingredient(name: "Chia seeds", quantity: "5g")
+                   ],
+                   instructions: "Blend berries, banana, milk and protein. Pour in bowl and top with chia seeds.",
+                   calories: 330),
 
-        Recipe(title: "Chickpea and Veggie Wrap", mealType: .Lunch, imageName: "deficit_chickpea_wrap",
-               ingredients: [
-                Ingredient(name: "Whole wheat tortilla", quantity: "1 unit"),
-                Ingredient(name: "Chickpeas (cooked)", quantity: "100g"),
-                Ingredient(name: "Hummus", quantity: "30g"),
-                Ingredient(name: "Lettuce", quantity: "30g"),
-                Ingredient(name: "Tomatoes", quantity: "50g"),
-                Ingredient(name: "Cucumber", quantity: "40g"),
-                Ingredient(name: "Red onion", quantity: "20g")
-               ],
-               instructions: "Mash chickpeas slightly and season with spices. Spread hummus on tortilla, add lettuce, diced tomatoes, cucumber, and red onion. Add seasoned chickpeas, roll tightly, and slice in half.",
-               calories: 390),
+            Recipe(title: "Turkey Wrap", mealType: .Lunch, imageName: "deficit_turkey_wrap",
+                   ingredients: [
+                    Ingredient(name: "Whole wheat tortilla", quantity: "1 unit"),
+                    Ingredient(name: "Turkey breast slices", quantity: "100g"),
+                    Ingredient(name: "Spinach", quantity: "30g"),
+                    Ingredient(name: "Tomato", quantity: "30g"),
+                    Ingredient(name: "Greek yogurt", quantity: "20g")
+                   ],
+                   instructions: "Fill tortilla with turkey, spinach, tomato, and yogurt. Wrap and slice in half.",
+                   calories: 360),
 
-        Recipe(title: "Chicken and Vegetable Stir-Fry", mealType: .Dinner, imageName: "deficit_chicken_stirfry",
-               ingredients: [
-                Ingredient(name: "Chicken breast", quantity: "120g"),
-                Ingredient(name: "Broccoli florets", quantity: "100g"),
-                Ingredient(name: "Bell peppers", quantity: "80g"),
-                Ingredient(name: "Snow peas", quantity: "60g"),
-                Ingredient(name: "Brown rice (cooked)", quantity: "80g"),
-                Ingredient(name: "Soy sauce (low sodium)", quantity: "15ml"),
-                Ingredient(name: "Sesame oil", quantity: "5ml")
-               ],
-               instructions: "Cut chicken into strips. Heat sesame oil in wok, cook chicken until done. Add vegetables and stir-fry until tender-crisp. Season with soy sauce. Serve over brown rice.",
-               calories: 380),
+            Recipe(title: "Shrimp Stir-Fry", mealType: .Dinner, imageName: "deficit_shrimp_stirfry",
+                   ingredients: [
+                    Ingredient(name: "Shrimp", quantity: "120g"),
+                    Ingredient(name: "Bell peppers", quantity: "50g"),
+                    Ingredient(name: "Broccoli", quantity: "50g"),
+                    Ingredient(name: "Carrots", quantity: "40g"),
+                    Ingredient(name: "Soy sauce", quantity: "10ml"),
+                    Ingredient(name: "Sesame oil", quantity: "5ml")
+                   ],
+                   instructions: "Stir-fry shrimp and vegetables in sesame oil. Add soy sauce before serving.",
+                   calories: 380),
 
-        // DÍA 5
-        Recipe(title: "Avocado Toast", mealType: .Breakfast, imageName: "deficit_avocado_toast",
-               ingredients: [
-                Ingredient(name: "Whole grain bread", quantity: "2 slices"),
-                Ingredient(name: "Avocado", quantity: "80g"),
-                Ingredient(name: "Cherry tomatoes", quantity: "60g"),
-                Ingredient(name: "Lime juice", quantity: "10ml"),
-                Ingredient(name: "Everything bagel seasoning", quantity: "2g"),
-                Ingredient(name: "Red pepper flakes", quantity: "1g")
-               ],
-               instructions: "Toast bread until golden. Mash avocado with lime juice, salt, and pepper. Spread on toast, top with halved cherry tomatoes, and sprinkle with seasoning and red pepper flakes.",
-               calories: 350),
+            // DÍA 5
+            Recipe(title: "Avocado Toast with Egg", mealType: .Breakfast, imageName: "deficit_avocado_toast",
+                   ingredients: [
+                    Ingredient(name: "Whole wheat bread", quantity: "1 slice"),
+                    Ingredient(name: "Avocado", quantity: "40g"),
+                    Ingredient(name: "Egg", quantity: "1 unit"),
+                    Ingredient(name: "Chili flakes", quantity: "To taste")
+                   ],
+                   instructions: "Toast bread, spread avocado, top with fried or poached egg and sprinkle chili flakes.",
+                   calories: 330),
 
-        Recipe(title: "Mediterranean Bowl", mealType: .Lunch, imageName: "deficit_mediterranean_bowl",
-               ingredients: [
-                Ingredient(name: "Quinoa (cooked)", quantity: "100g"),
-                Ingredient(name: "Cucumber", quantity: "80g"),
-                Ingredient(name: "Cherry tomatoes", quantity: "80g"),
-                Ingredient(name: "Olives", quantity: "20g"),
-                Ingredient(name: "Feta cheese", quantity: "30g"),
-                Ingredient(name: "Red onion", quantity: "20g"),
-                Ingredient(name: "Olive oil", quantity: "10ml"),
-                Ingredient(name: "Lemon juice", quantity: "15ml")
-               ],
-               instructions: "Arrange quinoa in a bowl. Top with diced cucumber, halved tomatoes, sliced red onion, olives, and crumbled feta. Drizzle with olive oil and lemon juice. Mix before eating.",
-               calories: 410),
+            Recipe(title: "Lentil Soup", mealType: .Lunch, imageName: "deficit_lentil_soup",
+                   ingredients: [
+                    Ingredient(name: "Lentils", quantity: "100g"),
+                    Ingredient(name: "Carrot", quantity: "50g"),
+                    Ingredient(name: "Celery", quantity: "40g"),
+                    Ingredient(name: "Onion", quantity: "40g"),
+                    Ingredient(name: "Olive oil", quantity: "10ml")
+                   ],
+                   instructions: "Cook all ingredients in water until tender. Blend partially for creamy texture.",
+                   calories: 390),
 
-        Recipe(title: "Turkey Meatballs with Zucchini", mealType: .Dinner, imageName: "deficit_turkey_meatballs",
-               ingredients: [
-                Ingredient(name: "Ground turkey (lean)", quantity: "140g"),
-                Ingredient(name: "Zucchini", quantity: "200g"),
-                Ingredient(name: "Egg white", quantity: "1 unit"),
-                Ingredient(name: "Breadcrumbs", quantity: "20g"),
-                Ingredient(name: "Marinara sauce", quantity: "100g"),
-                Ingredient(name: "Italian herbs", quantity: "3g")
-               ],
-               instructions: "Mix ground turkey with egg white, breadcrumbs, and herbs. Form into meatballs and bake at 180°C for 20 minutes. Spiralize zucchini and sauté briefly. Serve meatballs over zucchini noodles with marinara sauce.",
-               calories: 360),
+            Recipe(title: "Chicken & Veggie Skewers", mealType: .Dinner, imageName: "deficit_chicken_skewers",
+                   ingredients: [
+                    Ingredient(name: "Chicken breast", quantity: "100g"),
+                    Ingredient(name: "Zucchini", quantity: "50g"),
+                    Ingredient(name: "Bell pepper", quantity: "50g"),
+                    Ingredient(name: "Onion", quantity: "40g"),
+                    Ingredient(name: "Olive oil", quantity: "10ml")
+                   ],
+                   instructions: "Cube and skewer all ingredients. Grill or bake with olive oil until cooked.",
+                   calories: 400),
 
-        // DÍA 6
-        Recipe(title: "Cottage Cheese Bowl", mealType: .Breakfast, imageName: "deficit_cottage_cheese",
-               ingredients: [
-                Ingredient(name: "Cottage cheese (low fat)", quantity: "150g"),
-                Ingredient(name: "Pineapple chunks", quantity: "80g"),
-                Ingredient(name: "Walnuts", quantity: "15g"),
-                Ingredient(name: "Cinnamon", quantity: "1g"),
-                Ingredient(name: "Vanilla extract", quantity: "2ml")
-               ],
-               instructions: "Mix cottage cheese with vanilla extract and cinnamon. Top with pineapple chunks and chopped walnuts. Serve chilled.",
-               calories: 290),
+            // DÍA 6
+            Recipe(title: "Cottage Cheese & Pineapple", mealType: .Breakfast, imageName: "deficit_cottage_pineapple",
+                   ingredients: [
+                    Ingredient(name: "Cottage cheese", quantity: "150g"),
+                    Ingredient(name: "Pineapple", quantity: "60g")
+                   ],
+                   instructions: "Serve cottage cheese in a bowl and top with diced pineapple.",
+                   calories: 280),
 
-        Recipe(title: "Tuna and White Bean Salad", mealType: .Lunch, imageName: "deficit_tuna_bean_salad",
-               ingredients: [
-                Ingredient(name: "Canned tuna (in water)", quantity: "120g"),
-                Ingredient(name: "White beans", quantity: "100g"),
-                Ingredient(name: "Arugula", quantity: "60g"),
-                Ingredient(name: "Cherry tomatoes", quantity: "80g"),
-                Ingredient(name: "Red onion", quantity: "20g"),
-                Ingredient(name: "Olive oil", quantity: "10ml"),
-                Ingredient(name: "Balsamic vinegar", quantity: "15ml")
-               ],
-               instructions: "Drain tuna and flake into pieces. Rinse white beans. Combine with arugula, halved tomatoes, and sliced red onion. Dress with olive oil and balsamic vinegar.",
-               calories: 370),
+            Recipe(title: "Chicken Veggie Bowl", mealType: .Lunch, imageName: "deficit_chicken_veggie_bowl",
+                   ingredients: [
+                    Ingredient(name: "Grilled chicken", quantity: "100g"),
+                    Ingredient(name: "Brown rice", quantity: "100g"),
+                    Ingredient(name: "Broccoli", quantity: "50g"),
+                    Ingredient(name: "Carrots", quantity: "50g"),
+                    Ingredient(name: "Sesame seeds", quantity: "5g")
+                   ],
+                   instructions: "Assemble all ingredients in a bowl. Sprinkle sesame seeds on top.",
+                   calories: 420),
 
-        Recipe(title: "Stuffed Bell Peppers", mealType: .Dinner, imageName: "deficit_stuffed_peppers",
-               ingredients: [
-                Ingredient(name: "Bell peppers", quantity: "2 units"),
-                Ingredient(name: "Ground turkey (lean)", quantity: "100g"),
-                Ingredient(name: "Brown rice (cooked)", quantity: "60g"),
-                Ingredient(name: "Diced tomatoes", quantity: "80g"),
-                Ingredient(name: "Onion", quantity: "30g"),
-                Ingredient(name: "Low-fat cheese", quantity: "20g"),
-                Ingredient(name: "Italian seasoning", quantity: "3g")
-               ],
-               instructions: "Cut tops off peppers and remove seeds. Cook turkey with diced onion until browned. Mix with rice, tomatoes, and seasoning. Stuff peppers with mixture, top with cheese. Bake at 180°C for 25 minutes.",
-               calories: 380),
+            Recipe(title: "Stuffed Bell Peppers", mealType: .Dinner, imageName: "deficit_stuffed_peppers",
+                   ingredients: [
+                    Ingredient(name: "Bell peppers", quantity: "2 units"),
+                    Ingredient(name: "Ground chicken", quantity: "120g"),
+                    Ingredient(name: "Brown rice (cooked)", quantity: "80g"),
+                    Ingredient(name: "Tomato sauce", quantity: "60g"),
+                    Ingredient(name: "Onion", quantity: "40g"),
+                    Ingredient(name: "Garlic", quantity: "2 cloves"),
+                    Ingredient(name: "Cheese (light)", quantity: "30g")
+                   ],
+                   instructions: "Cut tops off bell peppers and remove seeds. Sauté onion and garlic, then add chicken. Stir in rice and sauce. Stuff peppers, top with cheese and bake.",
+                   calories: 390),
 
-        // DÍA 7
-        Recipe(title: "Protein Pancakes", mealType: .Breakfast, imageName: "deficit_protein_pancakes",
-               ingredients: [
-                Ingredient(name: "Egg whites", quantity: "4 units"),
-                Ingredient(name: "Banana", quantity: "1 small unit"),
-                Ingredient(name: "Protein powder", quantity: "25g"),
-                Ingredient(name: "Oat flour", quantity: "20g"),
-                Ingredient(name: "Blueberries", quantity: "60g"),
-                Ingredient(name: "Cooking spray", quantity: "2ml")
-               ],
-               instructions: "Blend egg whites, banana, protein powder, and oat flour until smooth. Heat pan with cooking spray. Pour batter to make small pancakes. Cook until bubbles form, flip, and cook until golden. Serve with blueberries.",
-               calories: 330),
+            // DÍA 7
+            Recipe(title: "Protein Pancakes", mealType: .Breakfast, imageName: "deficit_protein_pancakes",
+                   ingredients: [
+                    Ingredient(name: "Oats", quantity: "40g"),
+                    Ingredient(name: "Banana", quantity: "1 small"),
+                    Ingredient(name: "Eggs", quantity: "1 unit"),
+                    Ingredient(name: "Egg whites", quantity: "2 units"),
+                    Ingredient(name: "Protein powder", quantity: "15g"),
+                    Ingredient(name: "Baking powder", quantity: "2g"),
+                    Ingredient(name: "Cinnamon", quantity: "1g")
+                   ],
+                   instructions: "Blend all ingredients. Cook pancakes on a non-stick pan until golden.",
+                   calories: 350),
 
-        Recipe(title: "Asian Lettuce Wraps", mealType: .Lunch, imageName: "deficit_lettuce_wraps",
-               ingredients: [
-                Ingredient(name: "Ground chicken (lean)", quantity: "120g"),
-                Ingredient(name: "Butter lettuce", quantity: "8 leaves"),
-                Ingredient(name: "Water chestnuts", quantity: "40g"),
-                Ingredient(name: "Carrots", quantity: "30g"),
-                Ingredient(name: "Green onions", quantity: "20g"),
-                Ingredient(name: "Soy sauce (low sodium)", quantity: "15ml"),
-                Ingredient(name: "Rice vinegar", quantity: "10ml"),
-                Ingredient(name: "Sesame oil", quantity: "3ml")
-               ],
-               instructions: "Cook ground chicken until browned. Add diced water chestnuts, carrots, and green onions. Season with soy sauce, rice vinegar, and sesame oil. Serve mixture in lettuce cups.",
-               calories: 320),
+            Recipe(title: "Grilled Veggie & Hummus Plate", mealType: .Lunch, imageName: "deficit_veggie_plate",
+                   ingredients: [
+                    Ingredient(name: "Zucchini", quantity: "100g"),
+                    Ingredient(name: "Eggplant", quantity: "100g"),
+                    Ingredient(name: "Bell peppers", quantity: "80g"),
+                    Ingredient(name: "Hummus", quantity: "50g"),
+                    Ingredient(name: "Whole wheat pita bread", quantity: "1/2 unit"),
+                    Ingredient(name: "Olive oil", quantity: "10ml"),
+                    Ingredient(name: "Lemon juice", quantity: "10ml")
+                   ],
+                   instructions: "Grill veggies. Serve with hummus and half pita. Drizzle with olive oil and lemon juice.",
+                   calories: 380),
 
-        Recipe(title: "Baked Tilapia with Roasted Vegetables", mealType: .Dinner, imageName: "deficit_tilapia_vegetables",
-               ingredients: [
-                Ingredient(name: "Tilapia fillets", quantity: "150g"),
-                Ingredient(name: "Brussels sprouts", quantity: "100g"),
-                Ingredient(name: "Cauliflower", quantity: "100g"),
-                Ingredient(name: "Red bell pepper", quantity: "80g"),
-                Ingredient(name: "Olive oil", quantity: "10ml"),
-                Ingredient(name: "Lemon", quantity: "1/2 unit"),
-                Ingredient(name: "Paprika", quantity: "2g")
-               ],
-               instructions: "Season tilapia with paprika, salt, and pepper. Chop vegetables and toss with half the olive oil. Roast vegetables at 200°C for 20 minutes. Bake tilapia for 12 minutes. Drizzle with remaining oil and lemon juice.",
-               calories: 340)
-    ]
-    
-    // Función para obtener todas las recetas
-    static func getAllRecipes() -> [Recipe] {
-        return recipes
-    }
-    
-    // Función para obtener recetas por tipo de comida
-    static func getRecipes(for mealType: MealType) -> [Recipe] {
-        return recipes.filter { $0.mealType == mealType }
-    }
-    
-    // Función para obtener recetas organizadas por día (7 días, 3 comidas por día)
-    static func getRecipesOrganizedByDay() -> [[Recipe]] {
-        var result: [[Recipe]] = []
-        
-        let breakfasts = getRecipes(for: .Breakfast)
-        let lunches = getRecipes(for: .Lunch)
-        let dinners = getRecipes(for: .Dinner)
-        
-        // Asumimos que hay 7 desayunos, 7 almuerzos y 7 cenas
-        let daysCount = 7
-        
-        for day in 0..<daysCount {
-            let dayRecipes = [
-                breakfasts[day],
-                lunches[day],
-                dinners[day]
-            ]
-            result.append(dayRecipes)
-        }
-        
-        return result
+            Recipe(title: "Beef Stir-Fry with Cauliflower Rice", mealType: .Dinner, imageName: "deficit_beef_stirfry",
+                   ingredients: [
+                    Ingredient(name: "Beef strips (lean)", quantity: "120g"),
+                    Ingredient(name: "Cauliflower rice", quantity: "150g"),
+                    Ingredient(name: "Broccoli", quantity: "80g"),
+                    Ingredient(name: "Carrots", quantity: "60g"),
+                    Ingredient(name: "Garlic", quantity: "2 cloves"),
+                    Ingredient(name: "Soy sauce (low sodium)", quantity: "15ml"),
+                    Ingredient(name: "Sesame oil", quantity: "5ml")
+                   ],
+                   instructions: "Sauté garlic in oil. Add beef, then vegetables. Stir-fry and finish with soy sauce.",
+                   calories: 400)
+        ]
     }
 }
