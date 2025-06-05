@@ -18,7 +18,7 @@ struct GymEquipmentView: View {
             Text("Do you have gym equipment?")
                 .font(.system(size: 35, weight: .bold))
                 .multilineTextAlignment(.center)
-                .foregroundColor(.black)
+                .foregroundColor(.yellow)
                 .padding(.top, 20)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 50)
@@ -54,7 +54,7 @@ struct GymEquipmentView: View {
                 EmptyView()
             }
         }
-        .background(Color(red: 249/255, green: 249/255, blue: 253/255))
+        .background(Color.black)
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarBackButtonHidden(true)
         .toolbar { backButton }
@@ -64,7 +64,7 @@ struct GymEquipmentView: View {
         ToolbarItem(placement: .navigationBarLeading) {
             Button(action: goBack) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .imageScale(.large)
             }
         }
@@ -103,23 +103,23 @@ struct GymEquipmentButton: View {
                     .cornerRadius(12)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(viewModel.selectedIndex == index ? Color.blue : Color.clear,
+                            .stroke(viewModel.selectedIndex == index ? Color.yellow : Color.clear,
                                     lineWidth: viewModel.selectedIndex == index ? 6 : 4)
                     )
                     .scaleEffect(viewModel.selectedIndex == index ? 1.01 : 0.95)
-                    .shadow(color: viewModel.selectedIndex == index ? Color.blue.opacity(0.5) : Color.clear,
+                    .shadow(color: viewModel.selectedIndex == index ? Color.yellow.opacity(0.5) : Color.clear,
                             radius: 7)
                     .overlay(
                         viewModel.selectedIndex == index ?
                             AnyView(RoundedRectangle(cornerRadius: 12)
-                                .fill(Color.blue.opacity(0.1))) :
+                                .fill(Color.yellow.opacity(0.1))) :
                             AnyView(EmptyView())
                     )
                 if viewModel.selectedIndex == index {
                     HStack {
                         Spacer()
                         Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.yellow)
                             .padding(.trailing, 10)
                             .padding(.top, -60)
                     }
@@ -139,5 +139,3 @@ struct GymEquipmentView_Previews: PreviewProvider {
         }
     }
 }
-
-

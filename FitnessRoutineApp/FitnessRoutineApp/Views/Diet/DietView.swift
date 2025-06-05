@@ -20,17 +20,14 @@ struct DietView: View {
         return f
     }()
     
+    // Usar el nuevo sistema nutricional para obtener calorías objetivo
     private var totalCaloriesGoal: Int {
         return Int(vm.getDailyCaloriesTarget())
     }
 
+    // Usar el nuevo método mejorado para obtener calorías por comida
     private var caloriesByMeal: [MealType: Int] {
-        var dict: [MealType: Int] = [:]
-        for meal in MealType.allCases {
-            // Suma todas las calorías de las recetas para ese mealType en el día seleccionado
-            dict[meal] = vm.recipes(for: meal).reduce(0) { $0 + $1.calories }
-        }
-        return dict
+        return vm.getConsumedCalories()
     }
 
     var body: some View {
@@ -101,14 +98,13 @@ struct DietView: View {
     }
 
     private var caloriesSection: some View {
-        let total = caloriesByMeal.values.reduce(0, +)
         return HStack(spacing: 12) {
             Image(systemName: "flame.fill").foregroundColor(.yellow).font(.title3)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Daily Calories")
+                Text("Daily Calories Target")
                     .font(.body).fontWeight(.semibold).foregroundColor(.white)
-                Text("\(total) / \(totalCaloriesGoal) kcal")
-                    .font(.caption).foregroundColor(.yellow)
+                Text("\(totalCaloriesGoal) kcal")
+                    .font(.title2).fontWeight(.bold).foregroundColor(.yellow)
             }
             Spacer()
         }
@@ -208,41 +204,110 @@ struct RecipeDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                // Imagen principal con overlay de calorías
                 ZStack(alignment: .bottomTrailing) {
                     Image(recipe.imageName)
-                        .resizable().aspectRatio(contentMode: .fill)
-                        .frame(height: 250).clipped().cornerRadius(16)
-                    Text("\(recipe.calories) kcal")
-                        .font(.headline).fontWeight(.bold)
-                        .foregroundColor(.black)
-                        .padding(.horizontal, 12).padding(.vertical, 6)
-                        .background(Color.yellow).cornerRadius(20).padding()
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 250)
+                        .clipped()
+                        .cornerRadius(16)
+                    
+                    VStack(spacing: 4) {
+                        Text("\(recipe.calories)")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                        
+                        Text("kcal")
+                            .font(.caption)
+                            .foregroundColor(.black.opacity(0.8))
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color.yellow)
+                    .cornerRadius(12)
+                    .padding()
                 }
-                // Título y tipo
+                
+                // Información básica
                 VStack(alignment: .leading, spacing: 8) {
                     Text(recipe.title)
-                        .font(.title).fontWeight(.bold).foregroundColor(.yellow)
-                    Text(recipe.mealType.displayName)
-                        .font(.subheadline).foregroundColor(.white.opacity(0.7))
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.yellow)
+                    
+                    HStack {
+                        Text(recipe.mealType.displayName)
+                            .font(.subheadline)
+                            .foregroundColor(.white.opacity(0.7))
+                        
+                        Spacer()
+                        
+                        HStack(spacing: 4) {
+                            Image(systemName: "clock")
+                                .font(.caption)
+                                .foregroundColor(.yellow)
+                            
+                            Text("~30 min")
+                                .font(.caption)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                    }
                 }
-                // Ingredientes
+                
+                // Ingredientes mejorados
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Ingredients")
-                        .font(.title2).fontWeight(.bold).foregroundColor(.yellow)
-                    ForEach(recipe.ingredients) { ing in
-                        Text("• \(ing.name): \(ing.quantity)")
-                            .foregroundColor(.white)
-                            .font(.body)
+                    HStack {
+                        Image(systemName: "list.bullet")
+                            .foregroundColor(.yellow)
+                        Text("Ingredients")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.yellow)
+                    }
+                    
+                    LazyVStack(alignment: .leading, spacing: 8) {
+                        ForEach(recipe.ingredients) { ingredient in
+                            HStack(alignment: .top, spacing: 12) {
+                                Circle()
+                                    .fill(Color.yellow.opacity(0.3))
+                                    .frame(width: 6, height: 6)
+                                    .padding(.top, 6)
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(ingredient.name)
+                                        .font(.body)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.white)
+                                    
+                                    Text(ingredient.quantity)
+                                        .font(.caption)
+                                        .foregroundColor(.yellow)
+                                }
+                                
+                                Spacer()
+                            }
+                        }
                     }
                 }
                 .padding(.top, 4)
-                // Instrucciones
+                
+                // Instrucciones mejoradas
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Instructions")
-                        .font(.title2).fontWeight(.bold).foregroundColor(.yellow)
+                    HStack {
+                        Image(systemName: "doc.text")
+                            .foregroundColor(.yellow)
+                        Text("Instructions")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.yellow)
+                    }
+                    
                     Text(recipe.instructions)
-                        .foregroundColor(.white)
                         .font(.body)
+                        .foregroundColor(.white)
+                        .lineSpacing(4)
                 }
             }
             .padding()
@@ -251,6 +316,7 @@ struct RecipeDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
 
 // MARK: Preview
 

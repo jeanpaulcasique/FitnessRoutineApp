@@ -21,7 +21,7 @@ struct BodyCurrentView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding(.top, 20)
-                .foregroundColor(.black)
+                .foregroundColor(.yellow)
                 .minimumScaleFactor(0.5)
 
             // Opciones de forma corporal
@@ -64,12 +64,12 @@ struct BodyCurrentView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: goBack) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.yellow)
                         .imageScale(.large)
                 }
             }
         }
-        .background(Color(red: 249/255, green: 249/255, blue: 253/255))
+        .background(Color.black)
     }
 
     // Función para avanzar a la siguiente pantalla
@@ -111,18 +111,18 @@ struct BodyOptionView: View {
 
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .font(.title)
             }
         }
         .padding()
-        .background(Color.white)
+        .background(Color.black)
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 2)
+                .stroke(isSelected ? Color.yellow : Color.clear, lineWidth: 2)
         )
-        .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+        .shadow(color: isSelected ? Color.yellow.opacity(0.8) : Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
         .scaleEffect(isSelected ? 1.05 : 1.0)
         .animation(.easeInOut, value: isSelected)
     }
@@ -134,4 +134,3 @@ struct BodyCurrentView_Previews: PreviewProvider {
         BodyCurrentView(progressViewModel: ProgressViewModel())
     }
 }
-

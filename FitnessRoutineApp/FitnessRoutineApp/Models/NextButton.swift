@@ -21,22 +21,16 @@ struct NextButton: View {
             ZStack {
                 if isLoading {
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
                 } else {
                     Text(title)
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.black.opacity(0.6), Color.black]),
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            )
+            .background(Color.yellow)
             .cornerRadius(10)
             .shadow(color: Color.gray.opacity(0.4), radius: 5, x: 0, y: 5)
         }
@@ -44,4 +38,3 @@ struct NextButton: View {
         .disabled(isDisabled)
     }
 }
-

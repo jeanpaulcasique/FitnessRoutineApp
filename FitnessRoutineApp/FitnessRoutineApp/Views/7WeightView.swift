@@ -6,6 +6,7 @@ struct WeightView: View {
     @State private var isNavigatingToTargetWeightView = false
     @State private var isNextButtonDisabled = false
     @State private var isNextButtonLoading = false
+    @State private var showBMIInfo = false // Nuevo estado para mostrar info
     var userHeight: Double
 
     @Environment(\.presentationMode) var presentationMode
@@ -29,7 +30,10 @@ struct WeightView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar { backButton }
-        .background(backgroundColor)
+        .background(Color.black)
+        .sheet(isPresented: $showBMIInfo) {
+            BMIInfoView()
+        }
     }
 }
 
@@ -44,7 +48,7 @@ private extension WeightView {
     var title: some View {
         Text("What's your current weight?")
             .font(.system(size: 27, weight: .bold))
-            .foregroundColor(.black)
+            .foregroundColor(.yellow)
             .padding(.top, 40)
             .padding(.bottom, 10)
             .padding(.horizontal, 20)
@@ -57,9 +61,9 @@ private extension WeightView {
             }) {
                 Text("kg")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(viewModel.isKgSelected ? .white : .black)
+                    .foregroundColor(viewModel.isKgSelected ? .black : .yellow)
                     .padding()
-                    .background(viewModel.isKgSelected ? Color.black : Color.clear)
+                    .background(viewModel.isKgSelected ? Color.yellow : Color.clear)
                     .cornerRadius(15)
             }
             Button(action: {
@@ -67,9 +71,9 @@ private extension WeightView {
             }) {
                 Text("lb")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(!viewModel.isKgSelected ? .white : .black)
+                    .foregroundColor(!viewModel.isKgSelected ? .black : .yellow)
                     .padding()
-                    .background(!viewModel.isKgSelected ? Color.black : Color.clear)
+                    .background(!viewModel.isKgSelected ? Color.yellow : Color.clear)
                     .cornerRadius(15)
             }
         }
@@ -95,23 +99,61 @@ private extension WeightView {
                 }
             }
         ), in: viewModel.isKgSelected ? minWeightKg...maxWeightKg : minWeightLb...maxWeightLb, step: 0.1)
-        .accentColor(.blue)
+        .accentColor(.yellow)
         .padding(.horizontal, 30)
     }
 
     var selectedWeightDisplay: some View {
         Text(String(format: "%.1f", viewModel.weightInPreferredUnit) + (viewModel.isKgSelected ? " kg" : " lb"))
             .font(.system(size: 44, weight: .bold))
-            .foregroundColor(.black)
+            .foregroundColor(.yellow)
             .padding(.bottom, 10)
     }
 
+    // OPCIÓN 1: BMI con botón de información
     var bmiDisplay: some View {
         let bmi = viewModel.calculateBMI(heightInCm: userHeight)
-        return Text(String(format: "BMI: %.1f", bmi))
-            .font(.system(size: 20, weight: .medium))
-            .foregroundColor(.black)
-            .padding(.bottom, 30)
+        return HStack(spacing: 8) {
+            Text(String(format: "BMI: %.1f", bmi))
+                .font(.system(size: 20, weight: .medium))
+                .foregroundColor(.yellow)
+            
+            Button(action: {
+                showBMIInfo = true
+            }) {
+                Image(systemName: "info.circle")
+                    .foregroundColor(.yellow.opacity(0.7))
+                    .font(.system(size: 16))
+            }
+        }
+        .padding(.bottom, 30)
+    }
+    
+    // OPCIÓN 2: BMI con categoría (alternativa)
+    var bmiDisplayWithCategory: some View {
+        let bmi = viewModel.calculateBMI(heightInCm: userHeight)
+        let category = getBMICategory(bmi: bmi)
+        
+        return VStack(spacing: 4) {
+            HStack(spacing: 8) {
+                Text(String(format: "BMI: %.1f", bmi))
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundColor(.yellow)
+                
+                Button(action: {
+                    showBMIInfo = true
+                }) {
+                    Image(systemName: "info.circle")
+                        .foregroundColor(.yellow.opacity(0.7))
+                        .font(.system(size: 16))
+                }
+            }
+            
+            Text(category)
+                .font(.system(size: 14, weight: .regular))
+                .foregroundColor(.yellow.opacity(0.8))
+        }
+        .padding(.bottom, 30)
     }
 
     var nextButton: some View {
@@ -136,7 +178,7 @@ private extension WeightView {
         ToolbarItem(placement: .navigationBarLeading) {
             Button(action: goBack) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .imageScale(.large)
             }
         }
@@ -144,6 +186,20 @@ private extension WeightView {
 
     var backgroundColor: Color {
         Color(red: 249/255, green: 249/255, blue: 253/255)
+    }
+    
+    // Función helper para categorías de BMI
+    func getBMICategory(bmi: Double) -> String {
+        switch bmi {
+        case ..<18.5:
+            return "Underweight"
+        case 18.5..<25:
+            return "Normal weight"
+        case 25..<30:
+            return "Overweight"
+        default:
+            return "Obese"
+        }
     }
 
     func proceedToNext() {
@@ -167,10 +223,81 @@ private extension WeightView {
     }
 }
 
+// MARK: - BMI Info View
+struct BMIInfoView: View {
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        NavigationView {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Body Mass Index (BMI)")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.yellow)
+                    .padding(.bottom, 10)
+                
+                Text("BMI is a measure that uses your height and weight to work out if your weight is healthy.")
+                    .font(.system(size: 16))
+                    .foregroundColor(.white.opacity(0.8))
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("BMI Categories:")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.yellow)
+                    
+                    BMICategoryRow(range: "Below 18.5", category: "Underweight", color: .cyan)
+                    BMICategoryRow(range: "18.5 - 24.9", category: "Normal weight", color: .green)
+                    BMICategoryRow(range: "25.0 - 29.9", category: "Overweight", color: .orange)
+                    BMICategoryRow(range: "30.0 and above", category: "Obese", color: .red)
+                }
+                
+                Text("Note: BMI is a useful screening tool, but it doesn't directly measure body fat. For a complete health assessment, consult with a healthcare professional.")
+                    .font(.system(size: 14))
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(.top, 10)
+                
+                Spacer()
+            }
+            .padding(20)
+            .background(Color.black)
+            .navigationTitle("BMI Information")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: Button("Done") {
+                presentationMode.wrappedValue.dismiss()
+            }
+            .foregroundColor(.yellow))
+        }
+        .preferredColorScheme(.dark)
+    }
+}
+
+struct BMICategoryRow: View {
+    let range: String
+    let category: String
+    let color: Color
+    
+    var body: some View {
+        HStack {
+            Circle()
+                .fill(color)
+                .frame(width: 12, height: 12)
+            
+            Text(range)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.white)
+                .frame(width: 80, alignment: .leading)
+            
+            Text(category)
+                .font(.system(size: 14))
+                .foregroundColor(.white.opacity(0.8))
+            
+            Spacer()
+        }
+    }
+}
+
 // MARK: - Preview
 struct WeightView_Previews: PreviewProvider {
     static var previews: some View {
         WeightView(progressViewModel: ProgressViewModel(), userHeight: 170.0)
     }
 }
-

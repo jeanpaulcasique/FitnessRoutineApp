@@ -20,7 +20,7 @@ struct GenderSelectionView: View {
                 Text("What's your gender?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(.yellow)
                     .padding(.top, 0)
 
                 genderSelectionCards
@@ -38,6 +38,7 @@ struct GenderSelectionView: View {
                             isDisabled: $isButtonDisabled
                     )
                     .padding(.horizontal, 0)
+                    .tint(.yellow)
 
                     NavigationLink(
                         destination: GoalView(viewModel: GoalViewModel(), progressViewModel: progressViewModel),
@@ -50,7 +51,7 @@ struct GenderSelectionView: View {
             }
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
-            .background(Color(red: 249/255, green: 249/255, blue: 253/255))
+            .background(Color.black)
             
             GenderInfoView(showInfo: $viewModel.showInfo)
                 .padding()
@@ -100,14 +101,14 @@ struct GenderInfoView: View {
         ZStack {
             HStack {
                 Image(systemName: "info.circle")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .font(.title)
                     .padding(.top, -290)
                     .onTapGesture { withAnimation { showInfo.toggle() } }
                 Text("Why we ask this?")
                     .font(.headline)
                     .padding(.top, -285)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .onTapGesture { withAnimation { showInfo.toggle() } }
                 Spacer()
             }
@@ -116,7 +117,7 @@ struct GenderInfoView: View {
             if showInfo {
                 Text("This will help us tailor your workout to match your metabolic rate perfectly.")
                     .padding()
-                    .background(Color.blue.opacity(0.1))
+                    .background(Color.yellow.opacity(0.1))
                     .cornerRadius(10)
                     .font(.subheadline)
                     .multilineTextAlignment(.center)
@@ -125,6 +126,7 @@ struct GenderInfoView: View {
                     .padding(.top, -290)
                     .zIndex(1)
                     .offset(y: 50)
+                    .foregroundColor(.yellow)
             }
         }
     }
@@ -146,15 +148,15 @@ struct GenderSelectionCard: View {
                     .cornerRadius(15)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 3)
+                            .stroke(isSelected ? Color.yellow : Color.clear, lineWidth: 3)
                     )
             }
             .scaleEffect(isSelected ? 1.05 : 1.0)
-            .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.clear, radius: 10, x: 0, y: 5)
+            .shadow(color: isSelected ? Color.yellow.opacity(0.8) : Color.clear, radius: 15, x: 0, y: 10)
 
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .font(.largeTitle)
                     .offset(x: 55, y: -120)
             }
@@ -168,4 +170,3 @@ struct GenderSelectionView_Previews: PreviewProvider {
         GenderSelectionView(viewModel: GenderSelectionViewModel(), progressViewModel: ProgressViewModel())
     }
 }
-

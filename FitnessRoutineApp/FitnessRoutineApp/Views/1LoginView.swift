@@ -43,7 +43,7 @@ struct LoginView: View {
                     .cornerRadius(10)
                     .padding(.horizontal, 20)
                     .disabled(viewModel.isDisabled)
-                    .padding(.bottom, 0)
+                    .padding(.bottom, 5)
 
                     NavigationLink(
                         destination: Fase1View(
@@ -65,7 +65,7 @@ struct LoginView: View {
                             .foregroundColor(.white)
                             .underline()
                     }
-                    .padding(.bottom, 18)
+                    .padding(.bottom, -18)
                 }
                 .padding(.bottom, 0)
                 .allowsHitTesting(!viewModel.showLoginOptions)
@@ -151,4 +151,3 @@ struct LoginView_Previews: PreviewProvider {
             .environmentObject(UserSessionManager())
     }
 }
-

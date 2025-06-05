@@ -41,7 +41,7 @@ private extension HeightView {
             .font(.title)
             .fontWeight(.bold)
             .padding(.top, 20)
-            .foregroundColor(.black)
+            .foregroundColor(.yellow)
     }
 
     var unitSelector: some View {
@@ -49,17 +49,17 @@ private extension HeightView {
             Button(action: { viewModel.toggleUnit(toCm: true) }) {
                 Text("cm")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(viewModel.isCmSelected ? .white : .black)
+                    .foregroundColor(viewModel.isCmSelected ? .black : .white)
                     .padding()
-                    .background(viewModel.isCmSelected ? Color.black : Color.gray.opacity(0.2))
+                    .background(viewModel.isCmSelected ? Color.yellow : Color.gray.opacity(0.2))
                     .cornerRadius(10)
             }
             Button(action: { viewModel.toggleUnit(toCm: false) }) {
                 Text("ft/in")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(!viewModel.isCmSelected ? .white : .black)
+                    .foregroundColor(!viewModel.isCmSelected ? .black : .white)
                     .padding()
-                    .background(!viewModel.isCmSelected ? Color.black : Color.gray.opacity(0.2))
+                    .background(!viewModel.isCmSelected ? Color.yellow : Color.gray.opacity(0.2))
                     .cornerRadius(10)
             }
         }
@@ -72,14 +72,14 @@ private extension HeightView {
                 ForEach(100...230, id: \.self) { height in
                     Text("\(height) cm")
                         .tag(height)
-                        .foregroundColor(viewModel.selectedHeightCm == height ? .blue : .black)
+                        .foregroundColor(viewModel.selectedHeightCm == height ? .yellow : .white)
                 }
             } else {
                 ForEach(3...7, id: \.self) { feet in
                     ForEach(0...11, id: \.self) { inch in
                         Text("\(feet) ft \(inch) in")
                             .tag(feet * 12 + inch)
-                            .foregroundColor(viewModel.selectedHeightFt * 12 + viewModel.selectedHeightInch == feet * 12 + inch ? .blue : .black)
+                            .foregroundColor(viewModel.selectedHeightFt * 12 + viewModel.selectedHeightInch == feet * 12 + inch ? .yellow : .white)
                     }
                 }
             }
@@ -115,14 +115,14 @@ private extension HeightView {
     }
 
     var backgroundColor: Color {
-        Color(red: 249/255, green: 249/255, blue: 253/255)
+        Color.black
     }
 
     var backButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
             Button(action: goBack) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .imageScale(.large)
             }
         }
@@ -154,4 +154,3 @@ struct HeightView_Previews: PreviewProvider {
         HeightView(progressViewModel: ProgressViewModel())
     }
 }
-

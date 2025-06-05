@@ -53,6 +53,8 @@ struct MeView: View {
     @ViewBuilder
     private func destination(for title: String) -> some View {
         switch title {
+        case "Subscription":
+            SubscriptionView()
         case "Settings":
             SettingsView()
         default:
@@ -85,4 +87,3 @@ struct MeView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
-

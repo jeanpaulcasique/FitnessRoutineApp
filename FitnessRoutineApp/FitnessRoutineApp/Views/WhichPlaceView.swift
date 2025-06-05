@@ -44,7 +44,7 @@ struct NewScreenView: View {
                 EmptyView()
             }
         }
-        .background(backgroundColor)
+        .background(Color.black)
         .edgesIgnoringSafeArea(.bottom)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
@@ -65,7 +65,7 @@ private extension NewScreenView {
         Text("Which place do you prefer for your workout?")
             .font(.system(size: 29, weight: .bold))
             .multilineTextAlignment(.center)
-            .foregroundColor(.black)
+            .foregroundColor(.yellow)
             .padding(.top, 20)
             .padding(.horizontal, 20)
     }
@@ -75,23 +75,23 @@ private extension NewScreenView {
             ForEach(viewModel.options.indices, id: \.self) { index in
                 HStack {
                     Image(systemName: viewModel.options[index].icon)
-                        .foregroundColor(index == viewModel.selectedIndex ? .blue : .black)
+                        .foregroundColor(index == viewModel.selectedIndex ? .yellow : .white)
                     Text(viewModel.options[index].title)
                         .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(index == viewModel.selectedIndex ? .blue : .black)
+                        .foregroundColor(index == viewModel.selectedIndex ? .yellow : .white)
                     Spacer()
                     if index == viewModel.selectedIndex {
                         Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.yellow)
                     }
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(index == viewModel.selectedIndex ? Color.blue.opacity(0.1) : Color.white)
+                .background(index == viewModel.selectedIndex ? Color.yellow.opacity(0.1) : Color.black)
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(index == viewModel.selectedIndex ? Color.blue : Color.gray.opacity(0.3), lineWidth: 1)
+                        .stroke(index == viewModel.selectedIndex ? Color.yellow : Color.white.opacity(0.2), lineWidth: 1)
                 )
                 .onTapGesture {
                     viewModel.selectOption(at: index)
@@ -106,7 +106,7 @@ private extension NewScreenView {
         ToolbarItem(placement: .navigationBarLeading) {
             Button(action: goBack) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .imageScale(.large)
             }
         }
@@ -163,4 +163,3 @@ struct NewScreenView_Previews: PreviewProvider {
         }
     }
 }
-

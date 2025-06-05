@@ -20,7 +20,7 @@ struct GoalView: View {
             Text("What's your main goal?")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-                .foregroundColor(.black)
+                .foregroundColor(.yellow)
                 .padding(.top, 20)
 
             // Información sobre los objetivos
@@ -46,14 +46,14 @@ struct GoalView: View {
             }
         }
         .padding(.top)
-        .background(Color(red: 249/255, green: 249/255, blue: 253/255))
+        .background(Color.black)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: goBack) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.yellow)
                         .imageScale(.large)
                 }
             }
@@ -118,17 +118,16 @@ struct GoalOptionImageView: View {
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(isSelected ? Color.blue : Color.clear, lineWidth: 3)
+                        .stroke(isSelected ? Color.yellow : Color.clear, lineWidth: 3)
                 )
-                .shadow(color: isSelected ? Color.blue.opacity(0.5) : Color.clear, radius: 10, x: 0, y: 5)
+                .shadow(color: isSelected ? Color.yellow.opacity(0.8) : Color.clear, radius: 10, x: 0, y: 5)
                 .scaleEffect(isSelected ? 1.05 : 1.0)
 
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .font(.largeTitle)
                     .offset(x: 170, y: -25)
-                    
             }
         }
     }
@@ -142,12 +141,12 @@ struct GoalInfoView: View {
         VStack {
             HStack {
                 Image(systemName: "info.circle")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .font(.title)
                     .onTapGesture { withAnimation { showInfo.toggle() } }
                 Text("Why we ask this?")
                     .font(.headline)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .onTapGesture { withAnimation { showInfo.toggle() } }
                 Spacer()
             }
@@ -156,9 +155,10 @@ struct GoalInfoView: View {
             if showInfo {
                 Text("Your goal shapes your workout. We'll tailor the best mix of cardio and strength training for you!")
                     .padding()
-                    .background(Color.blue.opacity(0.1))
+                    .background(Color.yellow.opacity(0.1))
                     .cornerRadius(10)
                     .font(.subheadline)
+                    .foregroundColor(.yellow)
                     .multilineTextAlignment(.center)
                     .transition(.opacity)
                     .padding(.horizontal, 20)
@@ -176,4 +176,3 @@ struct GoalView_Previews: PreviewProvider {
         }
     }
 }
-

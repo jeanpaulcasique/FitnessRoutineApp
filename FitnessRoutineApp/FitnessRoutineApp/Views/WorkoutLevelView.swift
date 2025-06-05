@@ -19,7 +19,7 @@ struct WorkoutLevelView: View {
             Text("Choose your preferred workout level")
                 .font(.system(size: 29, weight: .bold))
                 .multilineTextAlignment(.center)
-                .foregroundColor(.black)
+                .foregroundColor(.yellow)
                 .padding(.top, 10)
                 .padding(.bottom, 15)
                 .padding(.horizontal, 20)
@@ -44,7 +44,7 @@ struct WorkoutLevelView: View {
                 EmptyView()
             }
         }
-        .background(Color(red: 249 / 255, green: 249 / 255, blue: 253 / 255))
+        .background(Color.black)
         .edgesIgnoringSafeArea(.bottom)
         .navigationBarBackButtonHidden(true)
         .toolbar { backButton }
@@ -64,26 +64,26 @@ struct WorkoutLevelView: View {
 
         return HStack {
             Image(systemName: viewModel.levels[index].1)
-                .foregroundColor(isSelected ? .blue : .black)
+                .foregroundColor(isSelected ? .yellow : .white)
 
             Text(viewModel.levels[index].0)
                 .font(.system(size: 18, weight: .bold))
-                .foregroundColor(isSelected ? .blue : .black)
+                .foregroundColor(isSelected ? .yellow : .white)
 
             Spacer()
 
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
             }
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(isSelected ? Color.blue.opacity(0.1) : Color.white)
+        .background(isSelected ? Color.yellow.opacity(0.15) : Color.black)
         .cornerRadius(10)
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: 1)
+                .stroke(isSelected ? Color.yellow : Color.white.opacity(0.2), lineWidth: 1)
         )
         .onTapGesture {
             viewModel.selectLevel(at: index)
@@ -97,7 +97,7 @@ struct WorkoutLevelView: View {
         ToolbarItem(placement: .navigationBarLeading) {
             Button(action: goBack) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .imageScale(.large)
             }
         }
@@ -132,4 +132,3 @@ struct WorkoutLevelView_Previews: PreviewProvider {
         WorkoutLevelView(progressViewModel: ProgressViewModel())
     }
 }
-

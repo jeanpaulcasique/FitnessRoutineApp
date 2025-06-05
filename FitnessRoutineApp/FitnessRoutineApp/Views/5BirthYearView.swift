@@ -25,7 +25,7 @@ struct BirthYearView: View {
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .toolbar { backButton }
-        .background(backgroundColor)
+        .background(Color.black)
         .onAppear {
             viewModel.selectedYear = UserDefaults.standard.integer(forKey: "selectedBirthYear")
         }
@@ -45,13 +45,13 @@ private extension BirthYearView {
             .font(.title)
             .fontWeight(.bold)
             .padding(.top, 20)
-            .foregroundColor(.black)
+            .foregroundColor(.yellow)
     }
     
     var descriptionText: some View {
         Text("This will help us tailor workouts to suit your body's capabilities and ensure safe training.")
             .font(.body)
-            .foregroundColor(.gray)
+            .foregroundColor(.white)
             .padding(.horizontal, 30)
             .padding(.top, 10)
             .multilineTextAlignment(.center)
@@ -62,7 +62,7 @@ private extension BirthYearView {
             ForEach(1900..<Calendar.current.component(.year, from: Date()) + 1, id: \.self) { year in
                 Text(String(year))
                     .font(.system(size: viewModel.selectedYear == year ? 36 : 24, weight: .bold))
-                    .foregroundColor(viewModel.selectedYear == year ? .blue : .gray)
+                    .foregroundColor(viewModel.selectedYear == year ? .yellow : .white)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.horizontal)
                     .scaleEffect(viewModel.selectedYear == year ? 1.2 : 1.0)
@@ -85,7 +85,7 @@ private extension BirthYearView {
         Text("Selected Birth Year: \(viewModel.selectedYear)")
             .font(.title2)
             .padding()
-            .foregroundColor(.black)
+            .foregroundColor(.yellow)
             .opacity(0)
     }
     
@@ -119,7 +119,7 @@ private extension BirthYearView {
         ToolbarItem(placement: .navigationBarLeading) {
             Button(action: goBack) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .imageScale(.large)
             }
         }
@@ -146,4 +146,3 @@ struct BirthYearView_Previews: PreviewProvider {
         BirthYearView(viewModel: BirthYearViewModel(), progressViewModel: ProgressViewModel())
     }
 }
-

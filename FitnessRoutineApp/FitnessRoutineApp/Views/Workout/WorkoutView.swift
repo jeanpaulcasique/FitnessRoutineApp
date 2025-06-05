@@ -58,9 +58,7 @@ struct WorkoutView: View {
                     .font(.largeTitle)
                     .fontWeight(.black)
                     .foregroundColor(.yellow)
-                Text("Your personalized workout dashboard")
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.7))
+               
             }
             Spacer()
         }

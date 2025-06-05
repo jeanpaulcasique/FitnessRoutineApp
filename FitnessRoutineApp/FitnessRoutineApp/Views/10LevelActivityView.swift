@@ -28,7 +28,7 @@ struct LevelActivityView: View {
 
             navigationLink
         }
-        .background(backgroundColor.ignoresSafeArea())
+        .background(Color.black.ignoresSafeArea())
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -49,7 +49,7 @@ private extension LevelActivityView {
             .font(.system(size: 29, weight: .bold))
             .multilineTextAlignment(.center)
             .padding(.vertical, 20)
-            .foregroundColor(.black)
+            .foregroundColor(.yellow)
             .padding(.horizontal, 20)
     }
 
@@ -65,12 +65,12 @@ private extension LevelActivityView {
         Text(viewModel.activityDescription)
             .multilineTextAlignment(.center)
             .padding(.horizontal)
-            .foregroundColor(.black)
+            .foregroundColor(.white)
     }
 
     var activitySlider: some View {
         Slider(value: $viewModel.sliderValue, in: 0...3, step: 1)
-            .accentColor(.blue)
+            .accentColor(.yellow)
             .padding(.horizontal, 30)
             .onChange(of: viewModel.sliderValue) { _ in
                 viewModel.updateActivityLevel()
@@ -83,8 +83,8 @@ private extension LevelActivityView {
             Spacer()
             Text("Very active")
         }
-        .font(.system(size: 14))
-        .foregroundColor(.black)
+        .font(.system(size: 18))
+        .foregroundColor(.yellow)
         .padding(.horizontal, 30)
         .padding(.top, 5)
     }
@@ -102,7 +102,7 @@ private extension LevelActivityView {
         ToolbarItem(placement: .navigationBarLeading) {
             Button(action: goBack) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.yellow)
                     .imageScale(.large)
             }
         }

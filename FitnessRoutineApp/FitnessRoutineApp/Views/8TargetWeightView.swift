@@ -17,7 +17,7 @@ struct TargetWeightView: View {
                 .font(.system(size: 29, weight: .bold))
                 .multilineTextAlignment(.center)
                 .padding(.top, 20)
-                .foregroundColor(.black)
+                .foregroundColor(.yellow)
 
             Spacer(minLength: 70)
 
@@ -29,8 +29,8 @@ struct TargetWeightView: View {
                     Text("kg")
                         .font(.system(size: 18, weight: .bold))
                         .frame(width: 60, height: 40)
-                        .background(viewModel.isKgSelected ? Color.black : Color.gray.opacity(0.2))
-                        .foregroundColor(viewModel.isKgSelected ? Color.white : Color.black)
+                        .background(viewModel.isKgSelected ? Color.yellow : .clear)
+                        .foregroundColor(viewModel.isKgSelected ? Color.black : .yellow)
                         .cornerRadius(20)
                 }
                 Button(action: {
@@ -40,8 +40,8 @@ struct TargetWeightView: View {
                     Text("lb")
                         .font(.system(size: 18, weight: .bold))
                         .frame(width: 60, height: 40)
-                        .background(viewModel.isKgSelected ? Color.gray.opacity(0.2) : Color.black)
-                        .foregroundColor(viewModel.isKgSelected ? Color.black : Color.white)
+                        .background(viewModel.isKgSelected ? .clear : Color.yellow)
+                        .foregroundColor(viewModel.isKgSelected ? .yellow : Color.black)
                         .cornerRadius(20)
                 }
             }
@@ -50,12 +50,11 @@ struct TargetWeightView: View {
 
             Text("\(Int(viewModel.weightInPreferredUnit)) \(viewModel.isKgSelected ? "kg" : "lb")")
                 .font(.system(size: 48, weight: .bold))
-                .foregroundColor(.black)
+                .foregroundColor(.yellow)
                 .padding(.bottom, 5)
 
             Slider(value: $viewModel.selectedWeightKg, in: 1...200, step: 0.5)
-
-                .accentColor(.blue)
+                .accentColor(.yellow)
                 .padding(.horizontal, 40)
                 .onChange(of: viewModel.selectedWeightKg) { newValue in
                     viewModel.updateWeight(newWeight: newValue)
@@ -89,12 +88,12 @@ struct TargetWeightView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: goBack) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.yellow)
                         .imageScale(.large)
                 }
             }
         }
-        .background(Color(red: 249/255, green: 249/255, blue: 253/255))
+        .background(Color.black)
     }
 
     // MARK: - Acciones
