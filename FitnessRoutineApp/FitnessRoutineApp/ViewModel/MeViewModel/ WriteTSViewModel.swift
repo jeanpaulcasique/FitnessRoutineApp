@@ -36,6 +36,31 @@ struct MessageAttachment: Identifiable, Codable {
     }
 }
 
+struct ConversationHistory: Identifiable, Codable {
+    var id = UUID()
+    let conversationNumber: Int
+    let startDate: Date
+    let endDate: Date
+    let messages: [SupportMessage]
+    let title: String
+    
+    init(conversationNumber: Int, messages: [SupportMessage]) {
+        self.id = UUID()
+        self.conversationNumber = conversationNumber
+        self.messages = messages
+        self.startDate = messages.first?.timestamp ?? Date()
+        self.endDate = messages.last?.timestamp ?? Date()
+        
+        // Generate title based on first user message or default
+        if let firstUserMessage = messages.first(where: { $0.isFromUser }) {
+            let truncatedText = String(firstUserMessage.text.prefix(30))
+            self.title = truncatedText.count < firstUserMessage.text.count ? truncatedText + "..." : truncatedText
+        } else {
+            self.title = "Support Conversation"
+        }
+    }
+}
+
 enum ContactMethod: String, CaseIterable {
     case chat = "chat"
     case email = "email"
@@ -69,6 +94,8 @@ final class WriteTSViewModel: ObservableObject {
     
     // MARK: - Published Properties
     @Published var messages: [SupportMessage] = []
+    @Published var conversationHistory: [ConversationHistory] = []
+    @Published var currentConversationNumber: Int = 1
     @Published var selectedContactMethod: ContactMethod = .chat
     @Published var isTyping: Bool = false
     @Published var isOnline: Bool = true
@@ -80,6 +107,8 @@ final class WriteTSViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let userDefaults = UserDefaults.standard
     private let conversationKey = "support_conversation"
+    private let historyKey = "conversation_history"
+    private let conversationNumberKey = "conversation_number"
     private var emailMessage: String = ""
     
     // User info for context
@@ -94,6 +123,8 @@ final class WriteTSViewModel: ObservableObject {
     
     // MARK: - Initialization
     init() {
+        loadCurrentConversationNumber()
+        loadConversationHistory()
         setupMockData()
         startTypingSimulation()
     }
@@ -206,6 +237,99 @@ final class WriteTSViewModel: ObservableObject {
     func clearConversation() {
         messages.removeAll()
         userDefaults.removeObject(forKey: conversationKey)
+    }
+    
+    // MARK: - Conversation Management
+    func startNewConversation() {
+        // Save current conversation to history if it has messages
+        if !messages.isEmpty {
+            saveCurrentConversationToHistory()
+        }
+        
+        // Clear current conversation
+        messages.removeAll()
+        attachments.removeAll()
+        
+        // Increment conversation number
+        currentConversationNumber += 1
+        saveCurrentConversationNumber()
+        
+        // Clear current conversation from UserDefaults
+        userDefaults.removeObject(forKey: conversationKey)
+        
+        // Add welcome message for new conversation
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let welcomeMessage = SupportMessage(
+                text: "Hello! This is a new conversation. How can I help you today?",
+                isFromUser: false,
+                timestamp: Date(),
+                attachments: [],
+                status: .delivered
+            )
+            self.messages.append(welcomeMessage)
+            self.saveConversation()
+        }
+    }
+    
+    func loadConversation(_ conversation: ConversationHistory) {
+        // Save current conversation if it has messages
+        if !messages.isEmpty {
+            saveCurrentConversationToHistory()
+        }
+        
+        // Load selected conversation
+        messages = conversation.messages
+        currentConversationNumber = conversation.conversationNumber
+        saveConversation()
+    }
+    
+    func deleteConversations(at indexSet: IndexSet) {
+        conversationHistory.remove(atOffsets: indexSet)
+        saveConversationHistory()
+    }
+    
+    private func saveCurrentConversationToHistory() {
+        let conversation = ConversationHistory(
+            conversationNumber: currentConversationNumber,
+            messages: messages
+        )
+        
+        // Remove existing conversation with same number if exists
+        conversationHistory.removeAll { $0.conversationNumber == currentConversationNumber }
+        
+        // Add to beginning of history (most recent first)
+        conversationHistory.insert(conversation, at: 0)
+        
+        // Keep only last 50 conversations
+        if conversationHistory.count > 50 {
+            conversationHistory = Array(conversationHistory.prefix(50))
+        }
+        
+        saveConversationHistory()
+    }
+    
+    private func loadConversationHistory() {
+        if let data = userDefaults.data(forKey: historyKey),
+           let history = try? JSONDecoder().decode([ConversationHistory].self, from: data) {
+            conversationHistory = history
+        }
+    }
+    
+    private func saveConversationHistory() {
+        if let data = try? JSONEncoder().encode(conversationHistory) {
+            userDefaults.set(data, forKey: historyKey)
+        }
+    }
+    
+    private func loadCurrentConversationNumber() {
+        currentConversationNumber = userDefaults.integer(forKey: conversationNumberKey)
+        if currentConversationNumber == 0 {
+            currentConversationNumber = 1
+        }
+    }
+    
+    private func saveCurrentConversationNumber() {
+        userDefaults.set(currentConversationNumber, forKey: conversationNumberKey)
     }
     
     // MARK: - Private Methods

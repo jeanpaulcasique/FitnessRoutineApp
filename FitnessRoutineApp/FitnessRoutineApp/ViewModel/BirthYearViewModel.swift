@@ -45,3 +45,27 @@ class BirthYearViewModel: ObservableObject {
         selectedYear = year
     }
 }
+
+// MARK: - BirthYearViewModel Extension
+extension BirthYearViewModel {
+    var calculatedAge: Int {
+        let currentYear = Calendar.current.component(.year, from: Date())
+        return max(0, currentYear - selectedYear)
+    }
+    
+    var fitnessCategory: String {
+        let age = calculatedAge
+        switch age {
+        case 0..<18:
+            return "Youth"
+        case 18..<30:
+            return "Peak"
+        case 30..<45:
+            return "Prime"
+        case 45..<60:
+            return "Mature"
+        default:
+            return "Wise"
+        }
+    }
+}

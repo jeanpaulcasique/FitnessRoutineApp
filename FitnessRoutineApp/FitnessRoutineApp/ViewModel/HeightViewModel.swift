@@ -75,4 +75,26 @@ class HeightViewModel: ObservableObject {
         }
     }
 }
-
+// MARK: - HeightViewModel Extensions
+extension HeightViewModel {
+    func getCurrentHeightString() -> String {
+        if isCmSelected {
+            return "\(selectedHeightCm) cm"
+        } else {
+            return "\(selectedHeightFt)'\(selectedHeightInch)\""
+        }
+    }
+    
+    func getAlternativeHeightString() -> String {
+        if isCmSelected {
+            let totalInches = Double(selectedHeightCm) / 2.54
+            let feet = Int(totalInches) / 12
+            let inches = Int(totalInches) % 12
+            return "\(feet)'\(inches)\""
+        } else {
+            let totalInches = (selectedHeightFt * 12) + selectedHeightInch
+            let cm = Int(Double(totalInches) * 2.54)
+            return "\(cm) cm"
+        }
+    }
+}

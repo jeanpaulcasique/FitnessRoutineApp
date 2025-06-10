@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 // MARK: - DietTypeView
 struct DietTypeView: View {
@@ -6,281 +7,257 @@ struct DietTypeView: View {
     @ObservedObject var progressViewModel: ProgressViewModel
     @State private var navigateToNextView = false
     @Environment(\.presentationMode) var presentationMode
-    @State private var isButtonDisabled = false
-    @State private var isLoading = false
-    @State private var showDietInfo = false
-    @State private var selectedDietForInfo: DietInfo?
+    @State private var selectedDietForInfo: DietDetails? = nil
+    @State private var showCardsAnimation = false
+    @State private var showHeaderAnimation = false
 
     var body: some View {
-        VStack(spacing: 20) {
-            // Progress bar
-            ProgressBarView(progressViewModel: progressViewModel)
-                .padding(.top, 20)
-                .padding(.horizontal, 20)
-
-            // Question
-            Text("Which type of diet suits your goal?")
-                .font(.system(size: 26, weight: .bold))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.yellow)
-                .padding(.horizontal)
-
-            // Diet options as cards
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 24) {
-                    ForEach(0..<viewModel.imageCount, id: \.self) { idx in
-                        DietCard(
-                            imageName: viewModel.imageNames[idx],
-                            title: viewModel.titles[idx],
-                            description: viewModel.longDescriptions[idx],
-                            isSelected: idx == viewModel.currentIndex
-                        )
-                        .frame(width: 220, height: 300)
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                                let wasNewSelection = viewModel.currentIndex != idx
-                                viewModel.currentIndex = idx
-                                
-                                // Mostrar información solo si es nueva selección y no se ha mostrado antes
-                                if wasNewSelection && !viewModel.hasShownInfoFor(index: idx) {
-                                    selectedDietForInfo = viewModel.getDietInfo(for: idx)
-                                    showDietInfo = true
-                                    viewModel.markInfoAsShown(for: idx)
-                                }
-                            }
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-            }
-
-            Spacer()
-
-            // Next button
-            NextButton(
-                title: "Next",
-                action: proceedToNext,
-                isLoading: $isLoading,
-                isDisabled: $isButtonDisabled
-        )
-            .padding(.horizontal, 0)
-            .padding(.bottom, -20)
-
-            NavigationLink(
-                destination: LevelActivityView(progressViewModel: progressViewModel),
-                isActive: $navigateToNextView
-            ) {
-                EmptyView()
-            }
+        ZStack {
+            backgroundGradient
+            mainContent
+            nextButtonOverlay
         }
-        .background(Color.black.ignoresSafeArea())
+        .navigationTitle("Diet Type")
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: goBack) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.yellow)
-                }
-            }
+        .navigationBarItems(leading: backButton)
+        .onAppear { setupAnimations() }
+        .sheet(item: $selectedDietForInfo) { dietDetails in
+            EpicDietInfoView(dietDetails: dietDetails)
         }
-        .sheet(isPresented: $showDietInfo) {
-            if let dietInfo = selectedDietForInfo {
-                DietInfoView(dietInfo: dietInfo)
-            }
-        }
-    }
-
-    private func proceedToNext() {
-        viewModel.disableNextButtonTemporarily()
-        withAnimation(.easeInOut) {
-            progressViewModel.advanceProgress()
-        }
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            navigateToNextView = true
-        }
-    }
-
-    private func goBack() {
-        progressViewModel.decreaseProgress()
-        presentationMode.wrappedValue.dismiss()
     }
 }
 
-// MARK: - DietCard
-struct DietCard: View {
-    let imageName: String
-    let title: String
-    let description: String
-    let isSelected: Bool
-
-    var body: some View {
-        ZStack(alignment: .bottom) {
-            // Background gradient
-            RoundedRectangle(cornerRadius: 20)
+// MARK: - Main Content
+private extension DietTypeView {
+    var backgroundGradient: some View {
+        LinearGradient(
+            colors: [Color.appBlack, Color.gray.opacity(0.3), Color.appBlack],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
+    }
+    
+    var mainContent: some View {
+        ScrollView {
+            VStack(spacing: 28) {
+                progressSection
+                headerSection
+                dietCardsSection
+                quickComparisonSection
+                Spacer(minLength: 80)
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 100)
+        }
+    }
+    
+    var progressSection: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Text("Setup Progress")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.appWhite.opacity(0.7))
+                Spacer()
+                Text("\(Int(progressViewModel.progress * 100))%")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.appYellow)
+            }
+            
+            ProgressBarView(progressViewModel: progressViewModel)
+        }
+        .padding(.top, 20)
+    }
+    
+    var headerSection: some View {
+        VStack(spacing: 16) {
+            if showHeaderAnimation {
+                dietIcon
+                headerText
+            }
+        }
+        .padding(.top, 15)
+    }
+    
+    var dietIcon: some View {
+        ZStack {
+            Circle()
                 .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: isSelected ? [Color.yellow.opacity(0.8), Color.yellow.opacity(0.6)] : [Color(.darkGray), Color(.black)]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+                    RadialGradient(
+                        colors: [Color.appYellow.opacity(0.4), Color.appYellow.opacity(0.1)],
+                        center: .center,
+                        startRadius: 30,
+                        endRadius: 70
                     )
                 )
-                .shadow(color: Color.black.opacity(isSelected ? 0.3 : 0.1), radius: isSelected ? 12 : 6, x: 0, y: 6)
-
-            VStack(spacing: 12) {
-                // Diet Image in circle
-                ZStack {
-                    Circle()
-                        .fill(isSelected ? Color.yellow.opacity(0.5) : Color.gray.opacity(0.3))
-                        .frame(width: 80, height: 80)
-                    Image(systemName: imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(isSelected ? .black : .yellow)
-                }
-                .padding(.top, 24)
-
-                // Title
-                Text(title)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(isSelected ? Color.yellow : Color.white)
-
-                // Description (short)
-                Text(description)
-                    .font(.system(size: 14))
-                    .foregroundColor(isSelected ? Color.yellow.opacity(0.9) : Color.white.opacity(0.8))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 16)
-
-                Spacer()
-            }
-            .padding(.bottom, 24)
+                .frame(width: 120, height: 120)
+            
+            Image(systemName: "fork.knife.circle.fill")
+                .font(.system(size: 50))
+                .foregroundColor(.appYellow)
         }
-        .scaleEffect(isSelected ? 1.01 : 0.95)
-        .animation(.spring(), value: isSelected)
+        .transition(.scale.combined(with: .opacity))
+    }
+    
+    var headerText: some View {
+        VStack(spacing: 12) {
+            Text("Which diet suits your goal?")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundColor(.appYellow)
+                .multilineTextAlignment(.center)
+            
+            Text("Choose the approach that fits your lifestyle and preferences")
+                .font(.system(size: 16))
+                .foregroundColor(.appWhite.opacity(0.8))
+                .multilineTextAlignment(.center)
+                .lineSpacing(4)
+        }
+        .transition(.move(edge: .top).combined(with: .opacity))
+    }
+    
+    var dietCardsSection: some View {
+        VStack(spacing: 20) {
+            if showCardsAnimation {
+                sectionHeader
+                dietCardsScrollView
+            }
+        }
+    }
+    
+    var sectionHeader: some View {
+        HStack {
+            Text("Select Your Diet")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.appYellow)
+            
+            Spacer()
+            
+            Text("Tap for details")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundColor(.appWhite.opacity(0.7))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(8)
+        }
+    }
+    
+    var dietCardsScrollView: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 20) {
+                ForEach(0..<viewModel.imageCount, id: \.self) { index in
+                    EpicDietCard(
+                        imageName: viewModel.imageNames[index],
+                        title: viewModel.titles[index],
+                        shortDescription: viewModel.shortDescriptions[index],
+                        detailedDescription: viewModel.detailedDescriptions[index],
+                        isSelected: index == viewModel.currentIndex,
+                        dietDetails: viewModel.getDietDetails(for: index),
+                        onTap: { handleDietSelection(index) },
+                        onLearnMore: {
+                            selectedDietForInfo = viewModel.getDietDetails(for: index)
+                        }
+                    )
+                    .frame(width: 260, height: 340)
+                }
+            }
+            .padding(.horizontal, 20)
+        }
+        .transition(.move(edge: .leading).combined(with: .opacity))
+    }
+    
+    var quickComparisonSection: some View {
+        VStack(spacing: 16) {
+            if showCardsAnimation {
+                VStack(spacing: 12) {
+                    HStack {
+                        Text("Quick Comparison")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.appYellow)
+                        Spacer()
+                    }
+                    
+                    QuickComparisonCard(viewModel: viewModel)
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
     }
 }
 
-// MARK: - Diet Info Model
-struct DietInfo: Identifiable {
-    let id = UUID()
-    let title: String
-    let description: String
-    let howItWorks: String
-    let benefits: [String]
-    let considerations: [String]
-    let color: Color
-    let icon: String
+// MARK: - Navigation & Actions
+private extension DietTypeView {
+    var backButton: some View {
+        Button(action: {
+            progressViewModel.decreaseProgress()
+            presentationMode.wrappedValue.dismiss()
+        }) {
+            Image(systemName: "chevron.left")
+                .foregroundColor(.appYellow)
+                .font(.system(size: 18))
+        }
+    }
+    
+    var nextButtonOverlay: some View {
+        VStack {
+            Spacer()
+            VStack {
+                NextButton(
+                    title: "Next",
+                    action: proceedToNext,
+                    isLoading: $viewModel.isLoading,
+                    isDisabled: $viewModel.isNextButtonDisabled
+                )
+                
+                NavigationLink(
+                    destination: LevelActivityView(progressViewModel: progressViewModel),
+                    isActive: $navigateToNextView
+                ) {
+                    EmptyView()
+                }
+                .hidden()
+            }
+            .padding(.horizontal, 0)
+            .padding(.bottom, 0)
+        }
+    }
 }
 
-// MARK: - DietInfoView
-struct DietInfoView: View {
-    let dietInfo: DietInfo
-    @Environment(\.presentationMode) var presentationMode
+// MARK: - Helper Functions
+private extension DietTypeView {
+    func setupAnimations() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                showHeaderAnimation = true
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                showCardsAnimation = true
+            }
+        }
+    }
     
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    // Header con icono
-                    HStack {
-                        ZStack {
-                            Circle()
-                                .fill(dietInfo.color.opacity(0.2))
-                                .frame(width: 60, height: 60)
-                            
-                            Image(systemName: dietInfo.icon)
-                                .font(.system(size: 28))
-                                .foregroundColor(dietInfo.color)
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text(dietInfo.title)
-                                .font(.system(size: 28, weight: .bold))
-                                .foregroundColor(.yellow)
-                        }
-                        
-                        Spacer()
-                    }
-                    .padding(.bottom, 10)
-                    
-                    // Descripción
-                    Text(dietInfo.description)
-                        .font(.system(size: 16))
-                        .foregroundColor(Color.white.opacity(0.9))
-                        .lineSpacing(4)
-                    
-                    // Cómo funciona
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("How it works")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.yellow)
-                        
-                        Text(dietInfo.howItWorks)
-                            .font(.system(size: 15))
-                            .foregroundColor(Color.white.opacity(0.8))
-                            .lineSpacing(4)
-                    }
-                    
-                    // Beneficios
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Key Benefits")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.yellow)
-                        
-                        ForEach(dietInfo.benefits, id: \.self) { benefit in
-                            HStack(alignment: .top, spacing: 12) {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
-                                    .font(.system(size: 16))
-                                    .padding(.top, 2)
-                                
-                                Text(benefit)
-                                    .font(.system(size: 15))
-                                    .foregroundColor(Color.white.opacity(0.8))
-                                    .lineSpacing(3)
-                                
-                                Spacer()
-                            }
-                        }
-                    }
-                    
-                    // Consideraciones
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Important Considerations")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.yellow)
-                        
-                        ForEach(dietInfo.considerations, id: \.self) { consideration in
-                            HStack(alignment: .top, spacing: 12) {
-                                Image(systemName: "info.circle.fill")
-                                    .foregroundColor(.orange)
-                                    .font(.system(size: 16))
-                                    .padding(.top, 2)
-                                
-                                Text(consideration)
-                                    .font(.system(size: 15))
-                                    .foregroundColor(Color.white.opacity(0.8))
-                                    .lineSpacing(3)
-                                
-                                Spacer()
-                            }
-                        }
-                    }
-                    
-                    Spacer(minLength: 30)
-                }
-                .padding(20)
-            }
-            .background(Color.black)
-            .navigationTitle("")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button("Got it!") {
-                presentationMode.wrappedValue.dismiss()
-            }
-            .foregroundColor(.yellow)
-            .font(.system(size: 16, weight: .semibold)))
+    func handleDietSelection(_ index: Int) {
+        print("🔥 Tocaste la dieta índice: \(index)")
+        // Solo actualizar selección, no abrir sheet
+        viewModel.selectDiet(index)
+    }
+    
+    func proceedToNext() {
+        viewModel.disableNextButtonTemporarily()
+        
+        withAnimation(.easeInOut(duration: 0.5)) {
+            progressViewModel.advanceProgress()
+        }
+        
+        let impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
+        impactFeedback.impactOccurred()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            navigateToNextView = true
         }
     }
 }
@@ -288,6 +265,9 @@ struct DietInfoView: View {
 // MARK: - Preview
 struct DietTypeView_Previews: PreviewProvider {
     static var previews: some View {
-        DietTypeView(progressViewModel: ProgressViewModel())
+        NavigationView {
+            DietTypeView(progressViewModel: ProgressViewModel())
+        }
+        .preferredColorScheme(.dark)
     }
 }

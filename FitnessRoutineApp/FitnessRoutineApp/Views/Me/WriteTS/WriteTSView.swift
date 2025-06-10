@@ -84,6 +84,8 @@ struct WriteTSView: View {
     @State private var showEmailComposer = false
     @State private var showImagePicker = false
     @State private var selectedImage: UIImage?
+    @State private var showConversationHistory = false
+    @State private var showNewConversationAlert = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
     
@@ -108,7 +110,14 @@ struct WriteTSView: View {
         }
         .navigationTitle("Support")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(trailing: helpButton)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: backButton,
+            trailing: HStack {
+                conversationHistoryButton
+                newConversationButton
+            }
+        )
         .onAppear {
             viewModel.loadPreviousConversations()
         }
@@ -131,6 +140,20 @@ struct WriteTSView: View {
                 viewModel.addAttachment(image: image)
                 selectedImage = nil // Reset para permitir seleccionar la misma imagen de nuevo
             }
+        }
+        .onTapGesture {
+            hideKeyboard()
+        }
+        .sheet(isPresented: $showConversationHistory) {
+            ConversationHistoryView(viewModel: viewModel)
+        }
+        .alert("New Conversation", isPresented: $showNewConversationAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Start New") {
+                viewModel.startNewConversation()
+            }
+        } message: {
+            Text("Are you sure you want to start a new conversation? Your current conversation will be saved to history.")
         }
         .alert("Support", isPresented: $showingAlert) {
             Button("OK") { }
@@ -339,6 +362,40 @@ private extension WriteTSView {
         }
     }
     
+    var backButton: some View {
+        Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }) {
+            Image(systemName: "chevron.left")
+                .foregroundColor(.appYellow)
+                .font(.system(size: 18))
+        }
+    }
+    
+    var conversationHistoryButton: some View {
+        Button(action: {
+            showConversationHistory = true
+        }) {
+            Image(systemName: "clock.arrow.circlepath")
+                .foregroundColor(.appYellow)
+                .font(.system(size: 20))
+        }
+    }
+    
+    var newConversationButton: some View {
+        Button(action: {
+            if !viewModel.messages.isEmpty {
+                showNewConversationAlert = true
+            } else {
+                viewModel.startNewConversation()
+            }
+        }) {
+            Image(systemName: "plus.message")
+                .foregroundColor(.appYellow)
+                .font(.system(size: 20))
+        }
+    }
+    
     var helpButton: some View {
         Button(action: {
             viewModel.showQuickHelp()
@@ -372,6 +429,11 @@ private extension WriteTSView {
             alertMessage = "Email is not configured on this device. Please set up Mail app first."
             showingAlert = true
         }
+    }
+    
+    // MARK: - Keyboard Helper
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
@@ -585,6 +647,110 @@ struct TypingIndicator: View {
                 animationOffset = 10
             }
         }
+    }
+}
+
+// MARK: - Conversation History View
+struct ConversationHistoryView: View {
+    @ObservedObject var viewModel: WriteTSViewModel
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        NavigationView {
+            ZStack {
+                Color.appBlack.ignoresSafeArea()
+                
+                if viewModel.conversationHistory.isEmpty {
+                    VStack(spacing: 20) {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .font(.system(size: 64))
+                            .foregroundColor(.appYellow.opacity(0.5))
+                        
+                        Text("No Previous Conversations")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(.appWhite)
+                        
+                        Text("Your conversation history will appear here once you start chatting with support.")
+                            .font(.system(size: 16))
+                            .foregroundColor(.appWhite.opacity(0.7))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                    }
+                } else {
+                    List {
+                        ForEach(viewModel.conversationHistory) { conversation in
+                            ConversationHistoryRow(conversation: conversation) {
+                                viewModel.loadConversation(conversation)
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                        }
+                        .onDelete { indexSet in
+                            viewModel.deleteConversations(at: indexSet)
+                        }
+                    }
+                    .listStyle(PlainListStyle())
+                    .background(Color.appBlack)
+                }
+            }
+            .navigationTitle("Conversation History")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(
+                leading: Button("Close") {
+                    presentationMode.wrappedValue.dismiss()
+                }.foregroundColor(.appYellow),
+                trailing: EditButton().foregroundColor(.appYellow)
+            )
+        }
+        .preferredColorScheme(.dark)
+    }
+}
+
+struct ConversationHistoryRow: View {
+    let conversation: ConversationHistory
+    let onSelect: () -> Void
+    
+    var body: some View {
+        Button(action: onSelect) {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Conversation #\(conversation.conversationNumber)")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.appWhite)
+                    
+                    Spacer()
+                    
+                    Text(conversation.startDate, style: .date)
+                        .font(.system(size: 12))
+                        .foregroundColor(.appWhite.opacity(0.6))
+                }
+                
+                if let lastMessage = conversation.messages.last {
+                    Text(lastMessage.text)
+                        .font(.system(size: 14))
+                        .foregroundColor(.appWhite.opacity(0.8))
+                        .lineLimit(2)
+                }
+                
+                HStack {
+                    Image(systemName: "message")
+                        .foregroundColor(.appYellow)
+                        .font(.system(size: 12))
+                    
+                    Text("\(conversation.messages.count) messages")
+                        .font(.system(size: 12))
+                        .foregroundColor(.appWhite.opacity(0.6))
+                    
+                    Spacer()
+                    
+                    Text(conversation.endDate, style: .time)
+                        .font(.system(size: 12))
+                        .foregroundColor(.appWhite.opacity(0.6))
+                }
+            }
+            .padding(.vertical, 8)
+        }
+        .buttonStyle(PlainButtonStyle())
+        .listRowBackground(Color.gray.opacity(0.1))
     }
 }
 

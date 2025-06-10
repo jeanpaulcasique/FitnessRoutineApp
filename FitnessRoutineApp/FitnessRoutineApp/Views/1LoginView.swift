@@ -1,5 +1,6 @@
 import SwiftUI
 import SDWebImageSwiftUI
+import AuthenticationServices
 
 struct LoginView: View {
     @ObservedObject var viewModel = LoginViewModel()
@@ -24,55 +25,52 @@ struct LoginView: View {
                 VStack {
                     Spacer()
                     
+                    Text("FitnessRoutine")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.bottom, 50)
                     
-                    Button(action: viewModel.handleStartButtonTap(sessionManager: sessionManager)) {
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .black))
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                        } else {
+                    // Navegación a Fase1 (Onboarding)
+                    NavigationLink(destination: Fase1View(
+                        genderSelectionViewModel: genderSelectionViewModel,
+                        progressViewModel: progressViewModel
+                    )) {
+                        // Botón START (para nuevo usuario)
+                        HStack {
                             Text("START")
                                 .fontWeight(.bold)
                                 .foregroundColor(.black)
                                 .padding()
                                 .frame(maxWidth: .infinity)
                         }
+                        .background(Color.yellow)
+                        .cornerRadius(10)
+                        .padding(.horizontal, 20)
                     }
-                    .background(viewModel.isDisabled ? Color.gray : Color.yellow)
-                    .cornerRadius(10)
-                    .padding(.horizontal, 20)
-                    .disabled(viewModel.isDisabled)
-                    .padding(.bottom, 5)
-
-                    NavigationLink(
-                        destination: Fase1View(
-                            genderSelectionViewModel: genderSelectionViewModel,
-                            progressViewModel: progressViewModel
-                        ),
-                        isActive: $viewModel.navigateToFase1
-                    ) {
-                        EmptyView()
+                    .padding(.bottom, 20)
+                    
+                    // Navegación a Dashboard
+                    NavigationLink(destination: DashboardView()) {
+                        // Botón LOG IN (para usuario existente)
+                        HStack {
+                            Text("LOG IN")
+                                .fontWeight(.bold)
+                                .foregroundColor(.yellow)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                        }
+                        .background(Color.black)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.yellow, lineWidth: 2)
+                        )
+                        .cornerRadius(10)
+                        .padding(.horizontal, 20)
                     }
-
-                    Text("¿Ya eres usuario?")
-                        .foregroundColor(.white)
-                        .padding(.top, 5)
-
-                    Button(action: viewModel.showExistingAccountOptions) {
-                        Text("Continuar con tu cuenta existente")
-                            .font(.footnote)
-                            .foregroundColor(.white)
-                            .underline()
-                    }
-                    .padding(.bottom, -18)
+                    .padding(.bottom, 50)
                 }
                 .padding(.bottom, 0)
-                .allowsHitTesting(!viewModel.showLoginOptions)
-
-                if viewModel.showLoginOptions {
-                    optionsView
-                }
             }
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
@@ -81,7 +79,39 @@ struct LoginView: View {
             }
         }
     }
-      
+    
+    // MARK: - Debug Controls (solo para development)
+    #if DEBUG
+    var debugControls: some View {
+        VStack {
+            HStack {
+                Button("Reset User") {
+                    viewModel.forceOnboardingFlow(sessionManager: sessionManager)
+                }
+                .padding(8)
+                .background(Color.red.opacity(0.7))
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                
+                Button("Complete Onboarding") {
+                    viewModel.simulateExistingUser(sessionManager: sessionManager)
+                }
+                .padding(8)
+                .background(Color.green.opacity(0.7))
+                .foregroundColor(.white)
+                .cornerRadius(8)
+            }
+            .padding(.bottom, 10)
+            
+            Text("Debug: \(sessionManager.shouldShowOnboarding ? "→ Onboarding" : "→ Dashboard")")
+                .font(.caption)
+                .foregroundColor(.yellow)
+                .padding(4)
+                .background(Color.black.opacity(0.7))
+                .cornerRadius(4)
+        }
+    }
+    #endif
 
     var optionsView: some View {
         ZStack {
@@ -110,15 +140,15 @@ struct LoginView: View {
                 }
 
                 socialLoginButton(imageName: "applelogo", text: "Iniciar sesión con Apple", backgroundColor: .black) {
-                    viewModel.signInWithApple()
+                    viewModel.signInWithApple(sessionManager: sessionManager)
                 }
 
                 socialLoginButton(imageName: "globe", text: "Google", backgroundColor: .red) {
-                    viewModel.signInWithGoogle()
+                    viewModel.signInWithGoogle(sessionManager: sessionManager)
                 }
 
                 socialLoginButton(imageName: "facebook", text: "Facebook", backgroundColor: .blue) {
-                    viewModel.signInWithFacebook()
+                    viewModel.signInWithFacebook(sessionManager: sessionManager)
                 }
             }
             .padding()

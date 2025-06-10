@@ -3,6 +3,7 @@ import SDWebImageSwiftUI
 
 struct Fase1View: View {
     @State private var navigateToNext = false
+    @State private var gifFinished = false
     let genderSelectionViewModel: GenderSelectionViewModel
     let progressViewModel: ProgressViewModel
 
@@ -16,6 +17,8 @@ struct Fase1View: View {
                 .ignoresSafeArea()
                 .accessibilityIdentifier("fase1Gif")
 
+          
+            // NavigationLink usando la nueva sintaxis
             NavigationLink(
                 destination: GenderSelectionView(
                     viewModel: genderSelectionViewModel,
@@ -27,19 +30,25 @@ struct Fase1View: View {
             }
         }
         .onAppear {
+            print("🎬 Fase1View apareció - iniciando timer de 4.4 segundos")
+            
             // Ajusta el tiempo al que dura exactamente tu gif
             DispatchQueue.main.asyncAfter(deadline: .now() + 4.4) {
+                print("🎬 Timer completado - activando navegación")
+                gifFinished = true
                 navigateToNext = true
             }
         }
+        .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
     }
 }
 
 #Preview {
-    Fase1View(
-        genderSelectionViewModel: GenderSelectionViewModel(),
-        progressViewModel: ProgressViewModel()
-    )
+    NavigationView {
+        Fase1View(
+            genderSelectionViewModel: GenderSelectionViewModel(),
+            progressViewModel: ProgressViewModel()
+        )
+    }
 }
-

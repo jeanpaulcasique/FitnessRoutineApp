@@ -22,7 +22,7 @@ struct SettingsView: View {
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .yellow))
 
-                NavigationLink(destination: PlaceholderView(title: "FAQ")) {
+                NavigationLink(destination: FAQView()) {
                     Label("FAQ", systemImage: "questionmark.circle")
                         .foregroundColor(.white)
                 }

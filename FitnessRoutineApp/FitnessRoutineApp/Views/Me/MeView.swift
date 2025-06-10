@@ -3,7 +3,8 @@ import SwiftUI
 struct MeView: View {
     @StateObject private var viewModel = MeViewModel()
     @EnvironmentObject var sessionManager: UserSessionManager
-
+    @State private var showLoginView = false
+    
     var body: some View {
         NavigationView {
             List {
@@ -12,17 +13,18 @@ struct MeView: View {
                         navLink(item)
                     }
                 }
-
+                
                 Section {
                     ForEach(viewModel.supportSection) { item in
                         navLink(item)
                     }
                 }
-
+                
                 Section {
                     ForEach(viewModel.signInSection) { item in
                         if item.title == "Logout" {
                             Button(action: {
+                                showLoginView = true
                                 sessionManager.logout()
                             }) {
                                 Label(item.title, systemImage: item.icon)
@@ -41,20 +43,31 @@ struct MeView: View {
             .foregroundColor(.appWhite)
         }
         .accentColor(.appYellow)
+        .fullScreenCover(isPresented: $showLoginView) {
+            LoginView()
+        }
     }
-
+    
     private func navLink(_ item: MeViewModel.MeMenuItem) -> some View {
         NavigationLink(destination: destination(for: item.title)) {
             Label(item.title, systemImage: item.icon)
                 .foregroundColor(item.color)
         }
     }
-
+    
     @ViewBuilder
     private func destination(for title: String) -> some View {
         switch title {
         case "Subscription":
             SubscriptionView()
+        case "Analytics":
+            AnalyticsView()
+        case "Write to support":
+            WriteTSView()
+        case "Tell a friend":
+            TellAFView()
+        case "Rate the app":
+            RateAppView()
         case "Settings":
             SettingsView()
         default:
@@ -62,7 +75,6 @@ struct MeView: View {
         }
     }
 }
-
 // MARK: - PlaceholderView
 struct PlaceholderView: View {
     let title: String

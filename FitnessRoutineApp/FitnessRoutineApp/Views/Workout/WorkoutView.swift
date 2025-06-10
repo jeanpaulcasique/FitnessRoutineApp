@@ -7,7 +7,14 @@ struct WorkoutView: View {
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            // Elegant gradient background
+            LinearGradient(
+                colors: [Color.black, Color.gray.opacity(0.3), Color.black],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+            
             VStack(spacing: 0) {
                 searchBar
                 ScrollView(showsIndicators: false) {
@@ -23,8 +30,10 @@ struct WorkoutView: View {
                 }
             }
         }
-        
         .navigationBarTitleDisplayMode(.large)
+        .onTapGesture {
+            hideKeyboard()
+        }
     }
 
     // MARK: - SearchBar
@@ -87,6 +96,11 @@ struct WorkoutView: View {
     private func filteredWorkouts(_ workouts: [String]) -> [String] {
         viewModel.filteredWorkouts(workouts, searchText: searchText)
     }
+    
+    // MARK: - Keyboard Helper
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }
 
 struct WorkoutView_Previews: PreviewProvider {
@@ -145,4 +159,3 @@ struct CardView: View {
         }
     }
 }
-
